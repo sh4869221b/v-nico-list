@@ -1,0 +1,3 @@
+# Keep text sources, scripts and documentation stable across Windows checkouts.
+# v fmt -verify compares line endings and requires LF-formatted V sources.
+* text=auto eol=lf
