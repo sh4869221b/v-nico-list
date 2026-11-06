@@ -47,15 +47,36 @@ Wall time includes process startup, transport, decoding, filtering, sorting and 
 
 The fixture listen backlog is 128 and accepted sockets use TCP_NODELAY. This avoids imposing a five-socket Python backlog or Nagle/delayed-ACK penalties on small responses sent over reused Go connections. Both binaries use exactly the same server settings.
 
-## Recorded runs
+## Published-source validation
+
+The reviewed source at [`f693080`](https://github.com/sh4869221b/v-nico-list/commit/f69308085c09e07154458ccecc2dad5c2c635c34) passed [native Linux and Windows CI](https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163). Both jobs passed all four V unit files, containing 31 test functions. Linux passed **55/55 integration tests** in 20.513 s and the benchmark smoke check. Windows built with MSVC and Mbed TLS and passed **49 tests, with 6 POSIX SIGINT cases skipped**, in 25.463 s. [CI metadata](provenance/github-actions.json), [Linux excerpt](provenance/github-actions-linux.txt), and [Windows excerpt](provenance/github-actions-windows.txt) retain the observations.
+
+Initial Windows execution exposed CRLF checkout formatting, compressed dispatch gaps after uneven connection setup, and cancellation waits that depended on local socket shutdown waking a readiness wait. The fixes preserve LF checkout, pace actual GET writes after setup, and poll TCP reads through the Mbed TLS handshake/read callbacks. Certificate and hostname verification remain enabled. [Original Windows failures](provenance/windows-before-fix.txt) and a controlled no-wakeup experiment ([before](provenance/cancel-no-wakeup-before.txt), [after](provenance/cancel-no-wakeup-after.txt)) are retained. New contracts exercise input-error cancellation during a delayed TLS response and a stalled handshake.
+
+Fresh Linux production builds passed **55/55** with OpenSSL in 20.537 s and with Mbed TLS in 20.780 s. [Recorded commands, hashes and environment](provenance/post-ci-validation.json), [OpenSSL log](provenance/post-ci-integration-openssl.txt), and [Mbed TLS log](provenance/post-ci-integration-mbedtls.txt) describe the exact runs. The OpenSSL production binary SHA-256 is `4c5f20d029db658e1e877c6261e262ca658b9f50cf166264379c3e805865f562`; the Mbed TLS binary is `a1cff9e7727721c8078f7545a4f1a623f283b5ce0458f8f501f8eecacd86f206`. Some successful raw logs include fixture disconnect tracebacks when a test deliberately cancels or rejects a connection; the unittest results remain successful.
+
+The unchanged Go reference's first run passed 46, failed the adaptive-growth assertion, and skipped 8. Its budget reacted to observed latency by dropping from 8 to 4 before growing to 5, whereas that contract requires growth beyond 8. The [initial failure](provenance/post-ci-integration-go-first-run.txt) is preserved. Three focused repeats passed, and one full rerun passed **47 with 8 exclusions** in 14.129 s ([log](provenance/post-ci-integration-go.txt)). This suggests timing sensitivity in that adaptive comparison; it is not evidence of an unconditional first-run pass. Both new TLS cancellation cases passed on the initial Go run. The Go checkout and binary were unchanged.
+
+After builds and tests stopped, the four benchmark scenarios were repeated with one warmup and five measurements per binary, the same 12 targets × 5 pages × 100 items and fixed concurrency. All 40 measured samples made 60 requests and returned the expected 6,000 IDs; complete JSON results matched. The common ID-sequence hash remains `ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b`.
+
+| Output / server delay | V median | Go median | V / Go | Raw samples |
+| --- | ---: | ---: | ---: | --- |
+| JSON / 0 ms | 167.850 ms | 57.405 ms | 2.924× | [JSON](provenance/post-ci-benchmark-json-0ms.json) |
+| JSON / 10 ms | 195.153 ms | 116.667 ms | 1.673× | [JSON](provenance/post-ci-benchmark-json-10ms.json) |
+| Lines / 0 ms | 163.696 ms | 50.894 ms | 3.216× | [JSON](provenance/post-ci-benchmark-lines-0ms.json) |
+| Lines / 10 ms | 198.089 ms | 120.795 ms | 1.640× | [JSON](provenance/post-ci-benchmark-lines-10ms.json) |
+
+**V remains slower in every measured scenario.** These local synthetic results do not demonstrate a speedup, measure live niconico throughput, or characterize Windows performance. No live API run or published release binary validation has been performed.
+
+## Initial Linux validation
 
 On 2026-11-06, Linux x86-64 (kernel 6.18.57), Python 3.12.14, V `0.5.2 6701135`, GCC 14.2.0 and OpenSSL 3.5.7 were used. The Go launcher used Go 1.27.1 with `GOTOOLCHAIN=local` (the reference requires at least 1.27.0 and requests toolchain 1.27.3). Full machine/compiler metadata, commands, harness hashes and binary hashes are in [linux-validation.json](provenance/linux-validation.json).
 
-The frozen V production binary passed **53/53 integration contracts** in 20.673 s: [V log](provenance/linux-integration-v.txt). The unchanged Go reference passed **45 contracts, with 8 documented exclusions** (3 proxy-loopback and 5 V-specific overflow regressions), in 14.060 s: [Go log](provenance/linux-integration-go.txt). The reference checkout remained clean. Python syntax compilation and CI YAML parsing also passed. Native unit/format checks are recorded separately in [linux-unit-tests.txt](provenance/linux-unit-tests.txt).
+Before the Windows transport corrections, source `f637e59` passed **53/53 integration contracts** in 20.673 s: [V log](provenance/linux-integration-v.txt). The unchanged Go reference passed **45 contracts, with 8 documented exclusions** (3 proxy-loopback and 5 V-specific overflow regressions), in 14.060 s: [Go log](provenance/linux-integration-go.txt). The reference checkout remained clean. Python syntax compilation and CI YAML parsing also passed. The initial unit/format checks are recorded separately in [linux-unit-tests.txt](provenance/linux-unit-tests.txt).
 
-The overflow regressions were first run against the old `7796bd44…` binary. The initial four-method run failed 11 subcases; the additional HTTPS timeout case also failed. Near-maximum minimum-interval checks already passed. [Expected failing output](provenance/overflow-before-fix.txt) retains the exact old binary hash and commands. All five regression methods pass on the corrected build. The final unit suite contains **29 functions across 4 files**, with format and Python/shell/CI syntax checks also passing.
+The overflow regressions were first run against the old `7796bd44…` binary. The initial four-method run failed 11 subcases; the additional HTTPS timeout case also failed. Near-maximum minimum-interval checks already passed. [Expected failing output](provenance/overflow-before-fix.txt) retains the exact old binary hash and commands. All five regression methods passed on the corrected build. This initial unit suite contained **29 functions across 4 files**, with format and Python/shell/CI syntax checks also passing.
 
-Final V binary SHA-256: `260525d3fdcaf882d87cc503a4f2404f14e0dc7757b8b9f83892865717261fda`. The benchmark reports all use this binary and Go reference binary `550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a`.
+Initial V binary SHA-256: `260525d3fdcaf882d87cc503a4f2404f14e0dc7757b8b9f83892865717261fda`. The following historical benchmark reports use this binary and Go reference binary `550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a`.
 
 All four benchmark scenarios used 12 targets × 5 pages × 100 items, fixed `-T4 -P4 -H8`, one warmup and five measured repetitions per binary. Builds/tests were not running during measurement. Every sample made 60 requests and returned the expected 6,000 IDs. Complete JSON payloads matched between binaries; the common ID-sequence SHA-256 across all formats/scenarios was `ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b`.
 
@@ -68,4 +89,4 @@ All four benchmark scenarios used 12 targets × 5 pages × 100 items, fixed `-T4
 
 **V was slower in every measured scenario. A performance improvement over the Go baseline has not been demonstrated.** These are local synthetic process measurements, not live niconico throughput, CPU/RSS comparisons or Windows results. They do not isolate the cost of the transport, scheduler, parsing or output code.
 
-Windows CI is prepared but has not run natively. Windows C generation, if recorded by the review, is not native Windows build/execution verification. No live API run or published release binary validation has been performed.
+At the initial measurement stage only Windows C generation had been checked. Native Windows verification and the later production measurements are recorded above.

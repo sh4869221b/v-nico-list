@@ -1,0 +1,2 @@
+Source commit: f69308085c09e07154458ccecc2dad5c2c635c34
+Command: /workspace/toolchains/v/v -cc gcc -prod -o bin/v-nico-list-mbedtls src

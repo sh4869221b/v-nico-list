@@ -2,7 +2,7 @@
 
 niconico のユーザーページ・マイリストから動画 ID を取得する V 製 CLI です。[go-nico-list](https://github.com/sh4869221b/go-nico-list/tree/6638228b9acfa6256805f5e57bdd75f4ca80e084) の現行オプションと出力形式を移植しています。
 
-Linux ではループバック統合テスト 53 件に合格しました。現在の合成ベンチマークでは Go 参照実装より遅い結果です。実測値と検証範囲は [VALIDATION.md](VALIDATION.md) を参照してください。
+Linux ではループバック統合テスト 55 件に合格しました。Windows ネイティブ CI は 49 件に合格し、POSIX シグナル専用の 6 件を除外しています。現在の合成ベンチマークでは Go 参照実装より遅い結果です。実測値と検証範囲は [VALIDATION.md](VALIDATION.md) を参照してください。
 
 [English](../README.md) · [互換性・通信の制限](COMPATIBILITY.md) · [検証・ベンチマーク](VALIDATION.md)
 
@@ -15,7 +15,7 @@ V=/path/to/v/v scripts/build.sh
 ./bin/v-nico-list --help
 ```
 
-curl コマンドや libcurl は使用しません。Linux は V の OpenSSL バックエンドを使用します。Windows は MSVC と V 標準 TLS バックエンドを使うネイティブ CI を用意していますが、この開発環境では Windows 上の実行を検証できていません。ビルド済みリリースはまだありません。
+curl コマンドや libcurl は使用しません。Linux は V の OpenSSL バックエンドを使用します。Windows は MSVC と V 標準の Mbed TLS バックエンドでビルド・実行し、[両 OS のネイティブ CI](https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163) が成功しました。ビルド済みリリースはまだありません。
 
 ## 使用例
 

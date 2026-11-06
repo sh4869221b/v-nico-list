@@ -1,0 +1,68 @@
+Successful native windows GitHub Actions verification.
+Source commit: f69308085c09e07154458ccecc2dad5c2c635c34
+Run: https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163
+Job: https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163/job/127678318632
+Selected build/test lines from the public job log; ANSI escapes removed.
+
+2026-11-06T02:48:53.5721493Z ##[group]Run v fmt -verify src
+2026-11-06T02:49:14.3824365Z ##[group]Run v -cc msvc test src
+2026-11-06T02:50:38.8857271Z Summary for all V _test.v files: 4 passed, 4 total. Elapsed time: 76888 ms, on 1 job. Comptime: 76013 ms. Runtime: 819 ms.
+2026-11-06T02:50:39.0060647Z v -cc msvc -prod -o bin/v-nico-list.exe src
+2026-11-06T02:51:16.5541630Z ##[group]Run python tests/integration.py --binary bin/v-nico-list.exe
+2026-11-06T02:51:20.0095122Z test_adaptive_429_pauses_new_requests_globally (__main__.CLIContracts.test_adaptive_429_pauses_new_requests_globally) ... ok
+2026-11-06T02:51:23.2542273Z test_adaptive_grows_with_sustained_known_total_supply (__main__.CLIContracts.test_adaptive_grows_with_sustained_known_total_supply) ... ok
+2026-11-06T02:51:23.3485956Z test_args_file_stdin_and_no_sort_input_order (__main__.CLIContracts.test_args_file_stdin_and_no_sort_input_order) ... ok
+2026-11-06T02:51:23.5989434Z test_broken_stdout_cancels_other_targets_promptly (__main__.CLIContracts.test_broken_stdout_cancels_other_targets_promptly) ... ok
+2026-11-06T02:51:23.6458737Z test_comment_is_exclusive_and_dates_are_utc_inclusive (__main__.CLIContracts.test_comment_is_exclusive_and_dates_are_utc_inclusive) ... ok
+2026-11-06T02:51:23.8650038Z test_earlier_empty_page_supersedes_later_error (__main__.CLIContracts.test_earlier_empty_page_supersedes_later_error) ... ok
+2026-11-06T02:51:23.8806169Z test_empty_arrays_and_404 (__main__.CLIContracts.test_empty_arrays_and_404) ... ok
+2026-11-06T02:51:23.9275825Z test_empty_positional_argument_counts_as_invalid (__main__.CLIContracts.test_empty_positional_argument_counts_as_invalid) ... ok
+2026-11-06T02:51:24.2713345Z test_exact_body_limit_is_accepted (__main__.CLIContracts.test_exact_body_limit_is_accepted) ... ok
+2026-11-06T02:51:24.2716973Z test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:51:24.2718497Z test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:51:24.2719922Z test_extreme_timeout_serves_normally_and_is_cancellable (__main__.CLIContracts.test_extreme_timeout_serves_normally_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:51:24.2721392Z test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:51:25.2561888Z test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) ... ok
+2026-11-06T02:51:25.3030105Z test_gzip_decoding (__main__.CLIContracts.test_gzip_decoding) ... ok
+2026-11-06T02:51:25.3341482Z test_help_and_version_without_inputs (__main__.CLIContracts.test_help_and_version_without_inputs) ... ok
+2026-11-06T02:51:25.4123720Z test_http_proxy_absolute_form_and_basic_auth (__main__.CLIContracts.test_http_proxy_absolute_form_and_basic_auth) ... ok
+2026-11-06T02:51:25.4905200Z test_http_redirect_loop_is_bounded (__main__.CLIContracts.test_http_redirect_loop_is_bounded) ... ok
+2026-11-06T02:51:25.7254735Z test_http_redirects_follow_relative_locations (__main__.CLIContracts.test_http_redirects_follow_relative_locations) ... ok
+2026-11-06T02:51:25.8505624Z test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly) ... ok
+2026-11-06T02:51:25.9293480Z test_input_line_limit_preserves_preceding_results (__main__.CLIContracts.test_input_line_limit_preserves_preceding_results) ... ok
+2026-11-06T02:51:26.0224524Z test_input_precedence_partial_regex_and_lengths (__main__.CLIContracts.test_input_precedence_partial_regex_and_lengths) ... ok
+2026-11-06T02:51:26.0536728Z test_integer_prefixes_and_native_width (__main__.CLIContracts.test_integer_prefixes_and_native_width) ... ok
+2026-11-06T02:51:26.0695761Z test_invalid_default_skips_and_bool_last_value_wins (__main__.CLIContracts.test_invalid_default_skips_and_bool_last_value_wins) ... ok
+2026-11-06T02:51:26.1631330Z test_invalid_json_utf8_duplicate_names_and_timestamps (__main__.CLIContracts.test_invalid_json_utf8_duplicate_names_and_timestamps) ... ok
+2026-11-06T02:51:26.1791365Z test_json_invalid_utf8_input_fails_without_partial_json (__main__.CLIContracts.test_json_invalid_utf8_input_fails_without_partial_json) ... ok
+2026-11-06T02:51:26.2724538Z test_json_target_items_remain_unsorted_and_undeduped (__main__.CLIContracts.test_json_target_items_remain_unsorted_and_undeduped) ... ok
+2026-11-06T02:51:26.3356131Z test_metrics_logfile_and_stdout_separation (__main__.CLIContracts.test_metrics_logfile_and_stdout_separation) ... ok
+2026-11-06T02:51:26.7136873Z test_mylist_total_count_fallbacks (__main__.CLIContracts.test_mylist_total_count_fallbacks) ... ok
+2026-11-06T02:51:26.7449286Z test_no_inputs_and_missing_input_file_are_errors (__main__.CLIContracts.test_no_inputs_and_missing_input_file_are_errors) ... ok
+2026-11-06T02:51:26.8855809Z test_no_proxy_cidr_and_host_port (__main__.CLIContracts.test_no_proxy_cidr_and_host_port) ... ok
+2026-11-06T02:51:27.9024543Z test_no_sort_streams_before_all_targets_finish (__main__.CLIContracts.test_no_sort_streams_before_all_targets_finish) ... ok
+2026-11-06T02:51:27.9494178Z test_numeric_sort_dedupe_urls_and_short_option_cluster (__main__.CLIContracts.test_numeric_sort_dedupe_urls_and_short_option_cluster) ... ok
+2026-11-06T02:51:28.2008095Z test_parallel_failure_keeps_only_ordered_prefix (__main__.CLIContracts.test_parallel_failure_keeps_only_ordered_prefix) ... ok
+2026-11-06T02:51:28.2946899Z test_partial_other_targets_and_best_effort (__main__.CLIContracts.test_partial_other_targets_and_best_effort) ... ok
+2026-11-06T02:51:28.3572559Z test_present_zero_negative_totals_do_not_become_unknown (__main__.CLIContracts.test_present_zero_negative_totals_do_not_become_unknown) ... ok
+2026-11-06T02:51:28.7168129Z test_retries_are_attempt_count_with_exponential_backoff (__main__.CLIContracts.test_retries_are_attempt_count_with_exponential_backoff) ... ok
+2026-11-06T02:51:31.0333050Z test_retry_after_seconds_and_http_date (__main__.CLIContracts.test_retry_after_seconds_and_http_date) ... ok
+2026-11-06T02:51:32.0620549Z test_retry_wait_releases_http_slot (__main__.CLIContracts.test_retry_wait_releases_http_slot) ... ok
+2026-11-06T02:51:32.0622052Z test_sigint_cancels_promptly (__main__.CLIContracts.test_sigint_cancels_promptly) ... skipped 'POSIX SIGINT test; Windows exercised by remaining CLI contracts'
+2026-11-06T02:51:32.1089159Z test_strict_overrides_best_effort (__main__.CLIContracts.test_strict_overrides_best_effort) ... ok
+2026-11-06T02:51:32.7029325Z test_success_body_limit_after_gzip_and_chunking (__main__.CLIContracts.test_success_body_limit_after_gzip_and_chunking) ... ok
+2026-11-06T02:51:37.0580218Z test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+2026-11-06T02:51:37.1673518Z test_timeout_is_prompt_successful_empty (__main__.CLIContracts.test_timeout_is_prompt_successful_empty) ... ok
+2026-11-06T02:51:37.4197173Z test_unknown_total_stays_sequential_until_empty (__main__.CLIContracts.test_unknown_total_stays_sequential_until_empty) ... ok
+2026-11-06T02:51:37.5134702Z test_user_mylist_schema_sort_and_headers (__main__.CLIContracts.test_user_mylist_schema_sort_and_headers) ... ok
+2026-11-06T02:51:37.6852775Z test_validation_and_removed_flags (__main__.CLIContracts.test_validation_and_removed_flags) ... ok
+2026-11-06T02:51:39.2082082Z test_tls_extreme_timeout_serves_normally_and_is_cancellable (__main__.TLSContracts.test_tls_extreme_timeout_serves_normally_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:51:39.4684226Z test_tls_hostname_mismatch_rejected (__main__.TLSContracts.test_tls_hostname_mismatch_rejected) ... ok
+2026-11-06T02:51:39.5465969Z test_tls_http_connect_proxy_preserves_verification (__main__.TLSContracts.test_tls_http_connect_proxy_preserves_verification) ... ok
+2026-11-06T02:51:39.6878914Z test_tls_input_error_cancels_delayed_response_promptly (__main__.TLSContracts.test_tls_input_error_cancels_delayed_response_promptly) ... ok
+2026-11-06T02:51:39.7991606Z test_tls_input_error_cancels_stalled_handshake_promptly (__main__.TLSContracts.test_tls_input_error_cancels_stalled_handshake_promptly) ... ok
+2026-11-06T02:51:43.9090460Z test_tls_trusted_ca_success (__main__.TLSContracts.test_tls_trusted_ca_success) ... ok
+2026-11-06T02:51:43.9245215Z test_tls_untrusted_ca_rejected (__main__.TLSContracts.test_tls_untrusted_ca_rejected) ... ok
+2026-11-06T02:51:43.9558985Z test_tls_untrusted_ca_still_rejected_through_connect (__main__.TLSContracts.test_tls_untrusted_ca_still_rejected_through_connect) ... ok
+2026-11-06T02:51:43.9580357Z Ran 55 tests in 25.463s
+2026-11-06T02:51:43.9582017Z OK (skipped=6)

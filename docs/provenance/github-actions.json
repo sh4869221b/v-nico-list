@@ -1,0 +1,37 @@
+{
+  "source_commit": "f69308085c09e07154458ccecc2dad5c2c635c34",
+  "run_id": 42152349163,
+  "url": "https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163",
+  "jobs": [
+    {
+      "id": 127678318632,
+      "name": "windows",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-06T02:45:39Z",
+      "completed_at": "2026-11-06T02:51:47Z"
+    },
+    {
+      "id": 127678318748,
+      "name": "linux",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-06T02:45:39Z",
+      "completed_at": "2026-11-06T02:49:38Z"
+    }
+  ],
+  "unit_test_functions": 31,
+  "unit_test_files": 4,
+  "linux": {
+    "passed": 55,
+    "skipped": 0,
+    "seconds": 20.513
+  },
+  "windows": {
+    "passed": 49,
+    "skipped": 6,
+    "seconds": 25.463,
+    "skip_reason": "POSIX SIGINT contracts"
+  },
+  "notes": "Both native jobs completed successfully. Excerpts are saved alongside this metadata; full job logs are linked."
+}

@@ -2,7 +2,7 @@
 
 A V command line tool that collects video IDs from niconico user pages and mylists. It ports [go-nico-list](https://github.com/sh4869221b/go-nico-list/tree/6638228b9acfa6256805f5e57bdd75f4ca80e084), preserving its command line options and result format.
 
-The Linux build passes 53 loopback integration contracts. Current local synthetic measurements are slower than the Go baseline; [recorded results and platform limits](docs/VALIDATION.md) describe the evidence.
+The Linux build passes 55 loopback integration contracts. Native Windows CI passes 49, with 6 POSIX signal cases skipped. Current local synthetic measurements are slower than the Go baseline; [recorded results and platform limits](docs/VALIDATION.md) describe the evidence.
 
 [日本語](docs/README.ja.md) · [Compatibility and transport boundaries](docs/COMPATIBILITY.md) · [Validation and benchmarks](docs/VALIDATION.md) · [Provenance](docs/provenance/README.md)
 
@@ -17,7 +17,7 @@ V=/path/to/v/v scripts/build.sh
 ./bin/v-nico-list --help
 ```
 
-The executable uses V's networking and TLS facilities, with a bounded HTTP/1.1 transport. It does not invoke curl or require libcurl. The Linux build selects OpenSSL. The Windows CI job builds and runs a native executable with MSVC and V's default TLS backend; Windows execution has not yet been verified in this development environment. No prebuilt releases are supplied yet.
+The executable uses V's networking and TLS facilities, with a bounded HTTP/1.1 transport. It does not invoke curl or require libcurl. The Linux build selects OpenSSL. [Native Windows CI](https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163) builds and runs the executable with MSVC and V's default Mbed TLS backend; both native CI jobs passed. No prebuilt releases are supplied yet.
 
 ## Usage
 

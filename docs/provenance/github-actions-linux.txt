@@ -1,0 +1,69 @@
+Successful native linux GitHub Actions verification.
+Source commit: f69308085c09e07154458ccecc2dad5c2c635c34
+Run: https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163
+Job: https://github.com/sh4869221b/v-nico-list/actions/runs/42152349163/job/127678318748
+Selected build/test lines from the public job log; ANSI escapes removed.
+
+2026-11-06T02:48:16.0737346Z ##[group]Run v fmt -verify src
+2026-11-06T02:48:20.6323172Z ##[group]Run v -cc gcc -d use_openssl test src
+2026-11-06T02:48:50.6026355Z Summary for all V _test.v files: 4 passed, 4 total. Elapsed time: 25325 ms, on 1 job. Comptime: 24718 ms. Runtime: 603 ms.
+2026-11-06T02:48:50.6065134Z ##[group]Run scripts/build.sh
+2026-11-06T02:49:13.9781978Z ##[group]Run python3 tests/integration.py --binary bin/v-nico-list
+2026-11-06T02:49:15.3516777Z test_adaptive_429_pauses_new_requests_globally (__main__.CLIContracts.test_adaptive_429_pauses_new_requests_globally) ... ok
+2026-11-06T02:49:16.3972564Z test_adaptive_grows_with_sustained_known_total_supply (__main__.CLIContracts.test_adaptive_grows_with_sustained_known_total_supply) ... ok
+2026-11-06T02:49:16.4146225Z test_args_file_stdin_and_no_sort_input_order (__main__.CLIContracts.test_args_file_stdin_and_no_sort_input_order) ... ok
+2026-11-06T02:49:16.5403044Z test_broken_stdout_cancels_other_targets_promptly (__main__.CLIContracts.test_broken_stdout_cancels_other_targets_promptly) ... ok
+2026-11-06T02:49:16.5551715Z test_comment_is_exclusive_and_dates_are_utc_inclusive (__main__.CLIContracts.test_comment_is_exclusive_and_dates_are_utc_inclusive) ... ok
+2026-11-06T02:49:16.6615334Z test_earlier_empty_page_supersedes_later_error (__main__.CLIContracts.test_earlier_empty_page_supersedes_later_error) ... ok
+2026-11-06T02:49:16.6757007Z test_empty_arrays_and_404 (__main__.CLIContracts.test_empty_arrays_and_404) ... ok
+2026-11-06T02:49:16.6902989Z test_empty_positional_argument_counts_as_invalid (__main__.CLIContracts.test_empty_positional_argument_counts_as_invalid) ... ok
+2026-11-06T02:49:16.8795112Z test_exact_body_limit_is_accepted (__main__.CLIContracts.test_exact_body_limit_is_accepted) ... ok
+2026-11-06T02:49:17.6130633Z test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) ... ok
+2026-11-06T02:49:21.3056407Z test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) ... ok
+2026-11-06T02:49:21.6867508Z test_extreme_timeout_serves_normally_and_is_cancellable (__main__.CLIContracts.test_extreme_timeout_serves_normally_and_is_cancellable) ... ok
+2026-11-06T02:49:22.4200665Z test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) ... ok
+2026-11-06T02:49:23.1866291Z test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) ... ok
+2026-11-06T02:49:23.2011319Z test_gzip_decoding (__main__.CLIContracts.test_gzip_decoding) ... ok
+2026-11-06T02:49:23.2216785Z test_help_and_version_without_inputs (__main__.CLIContracts.test_help_and_version_without_inputs) ... ok
+2026-11-06T02:49:23.2422111Z test_http_proxy_absolute_form_and_basic_auth (__main__.CLIContracts.test_http_proxy_absolute_form_and_basic_auth) ... ok
+2026-11-06T02:49:23.2609319Z test_http_redirect_loop_is_bounded (__main__.CLIContracts.test_http_redirect_loop_is_bounded) ... ok
+2026-11-06T02:49:23.3299659Z test_http_redirects_follow_relative_locations (__main__.CLIContracts.test_http_redirects_follow_relative_locations) ... ok
+2026-11-06T02:49:23.3635109Z test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly) ... ok
+2026-11-06T02:49:23.3799915Z test_input_line_limit_preserves_preceding_results (__main__.CLIContracts.test_input_line_limit_preserves_preceding_results) ... ok
+2026-11-06T02:49:23.3960120Z test_input_precedence_partial_regex_and_lengths (__main__.CLIContracts.test_input_precedence_partial_regex_and_lengths) ... ok
+2026-11-06T02:49:23.4130179Z test_integer_prefixes_and_native_width (__main__.CLIContracts.test_integer_prefixes_and_native_width) ... ok
+2026-11-06T02:49:23.4234899Z test_invalid_default_skips_and_bool_last_value_wins (__main__.CLIContracts.test_invalid_default_skips_and_bool_last_value_wins) ... ok
+2026-11-06T02:49:23.5031198Z test_invalid_json_utf8_duplicate_names_and_timestamps (__main__.CLIContracts.test_invalid_json_utf8_duplicate_names_and_timestamps) ... ok
+2026-11-06T02:49:23.5137622Z test_json_invalid_utf8_input_fails_without_partial_json (__main__.CLIContracts.test_json_invalid_utf8_input_fails_without_partial_json) ... ok
+2026-11-06T02:49:23.5286890Z test_json_target_items_remain_unsorted_and_undeduped (__main__.CLIContracts.test_json_target_items_remain_unsorted_and_undeduped) ... ok
+2026-11-06T02:49:23.5429748Z test_metrics_logfile_and_stdout_separation (__main__.CLIContracts.test_metrics_logfile_and_stdout_separation) ... ok
+2026-11-06T02:49:23.7673573Z test_mylist_total_count_fallbacks (__main__.CLIContracts.test_mylist_total_count_fallbacks) ... ok
+2026-11-06T02:49:23.7778313Z test_no_inputs_and_missing_input_file_are_errors (__main__.CLIContracts.test_no_inputs_and_missing_input_file_are_errors) ... ok
+2026-11-06T02:49:23.7966069Z test_no_proxy_cidr_and_host_port (__main__.CLIContracts.test_no_proxy_cidr_and_host_port) ... ok
+2026-11-06T02:49:24.8052073Z test_no_sort_streams_before_all_targets_finish (__main__.CLIContracts.test_no_sort_streams_before_all_targets_finish) ... ok
+2026-11-06T02:49:24.8199722Z test_numeric_sort_dedupe_urls_and_short_option_cluster (__main__.CLIContracts.test_numeric_sort_dedupe_urls_and_short_option_cluster) ... ok
+2026-11-06T02:49:24.9565074Z test_parallel_failure_keeps_only_ordered_prefix (__main__.CLIContracts.test_parallel_failure_keeps_only_ordered_prefix) ... ok
+2026-11-06T02:49:24.9716143Z test_partial_other_targets_and_best_effort (__main__.CLIContracts.test_partial_other_targets_and_best_effort) ... ok
+2026-11-06T02:49:25.0254185Z test_present_zero_negative_totals_do_not_become_unknown (__main__.CLIContracts.test_present_zero_negative_totals_do_not_become_unknown) ... ok
+2026-11-06T02:49:25.3408182Z test_retries_are_attempt_count_with_exponential_backoff (__main__.CLIContracts.test_retries_are_attempt_count_with_exponential_backoff) ... ok
+2026-11-06T02:49:28.0111430Z test_retry_after_seconds_and_http_date (__main__.CLIContracts.test_retry_after_seconds_and_http_date) ... ok
+2026-11-06T02:49:29.0260899Z test_retry_wait_releases_http_slot (__main__.CLIContracts.test_retry_wait_releases_http_slot) ... ok
+2026-11-06T02:49:29.0500061Z test_sigint_cancels_promptly (__main__.CLIContracts.test_sigint_cancels_promptly) ... ok
+2026-11-06T02:49:29.0642907Z test_strict_overrides_best_effort (__main__.CLIContracts.test_strict_overrides_best_effort) ... ok
+2026-11-06T02:49:29.3143344Z test_success_body_limit_after_gzip_and_chunking (__main__.CLIContracts.test_success_body_limit_after_gzip_and_chunking) ... ok
+2026-11-06T02:49:32.9697792Z test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+2026-11-06T02:49:33.0542038Z test_timeout_is_prompt_successful_empty (__main__.CLIContracts.test_timeout_is_prompt_successful_empty) ... ok
+2026-11-06T02:49:33.1714118Z test_unknown_total_stays_sequential_until_empty (__main__.CLIContracts.test_unknown_total_stays_sequential_until_empty) ... ok
+2026-11-06T02:49:33.1878794Z test_user_mylist_schema_sort_and_headers (__main__.CLIContracts.test_user_mylist_schema_sort_and_headers) ... ok
+2026-11-06T02:49:33.2487322Z test_validation_and_removed_flags (__main__.CLIContracts.test_validation_and_removed_flags) ... ok
+2026-11-06T02:49:34.3728989Z test_tls_extreme_timeout_serves_normally_and_is_cancellable (__main__.TLSContracts.test_tls_extreme_timeout_serves_normally_and_is_cancellable) ... ok
+2026-11-06T02:49:34.3919152Z test_tls_hostname_mismatch_rejected (__main__.TLSContracts.test_tls_hostname_mismatch_rejected) ... ok
+2026-11-06T02:49:34.4144039Z test_tls_http_connect_proxy_preserves_verification (__main__.TLSContracts.test_tls_http_connect_proxy_preserves_verification) ... ok
+2026-11-06T02:49:34.4429355Z test_tls_input_error_cancels_delayed_response_promptly (__main__.TLSContracts.test_tls_input_error_cancels_delayed_response_promptly) ... ok
+2026-11-06T02:49:34.4672280Z test_tls_input_error_cancels_stalled_handshake_promptly (__main__.TLSContracts.test_tls_input_error_cancels_stalled_handshake_promptly) ... ok
+2026-11-06T02:49:34.5106213Z test_tls_trusted_ca_success (__main__.TLSContracts.test_tls_trusted_ca_success) ... ok
+2026-11-06T02:49:34.5459964Z test_tls_untrusted_ca_rejected (__main__.TLSContracts.test_tls_untrusted_ca_rejected) ... ok
+2026-11-06T02:49:34.5831531Z test_tls_untrusted_ca_still_rejected_through_connect (__main__.TLSContracts.test_tls_untrusted_ca_still_rejected_through_connect) ... ok
+2026-11-06T02:49:34.5837189Z Ran 55 tests in 20.513s
+2026-11-06T02:49:34.5837433Z OK
+2026-11-06T02:49:34.6025230Z ##[group]Run python3 scripts/benchmark.py --binary v=bin/v-nico-list --targets 3 --pages 3 --repetitions 1 --output /tmp/benchmark-smoke.json

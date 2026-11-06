@@ -1,0 +1,3 @@
+Source commit: f69308085c09e07154458ccecc2dad5c2c635c34
+Command: scripts/build.sh
+Build environment override: V=/workspace/toolchains/v/v

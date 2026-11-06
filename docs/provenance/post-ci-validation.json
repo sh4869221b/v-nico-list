@@ -1,0 +1,333 @@
+{
+  "recorded_at_utc": "2026-11-06T02:48:22.679338+00:00",
+  "status": "passed",
+  "source_commit": "f69308085c09e07154458ccecc2dad5c2c635c34",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "versions": {
+    "v": "V 0.5.2 6701135",
+    "gcc": "14.2.0",
+    "openssl": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)",
+    "go": "go version go1.27.1 linux/amd64"
+  },
+  "pinned_revisions": {
+    "v": "67011350d000d86c3fc2a925b505c590dbfdea88",
+    "vc": "63a7de2aaa48271b71ca8b306fe06d7cc6c3a372",
+    "tcc": "60d606e37e6afe1ac5801fd88c55036a56b7caae"
+  },
+  "baseline_commit": "6638228b9acfa6256805f5e57bdd75f4ca80e084",
+  "reference_checkout_clean_before": true,
+  "source_sha256": {
+    "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+    "src/config.v": "0a4afdded8e4d5e7336012830b55f8b2aa12fe6c3841aec3814c36706614766c",
+    "src/config_test.v": "5982f31f883339ddb5529d597098b4f7a5194a8da2134334857a8a5d5e95e828",
+    "src/control.v": "94962d6f0b914028a2df472360793877bacca0528c7e3bc1f3831579f45e8fa9",
+    "src/domain.v": "36954a1bdbfa429326a57156736e96e397904a9bfa8a6b66f9a0be95543a6846",
+    "src/domain_test.v": "a3ab3f85cfd25011a7be3ab601e9fe5ad4ce5b5860987f7ef4a3be28e2b4ce13",
+    "src/main.v": "557b5fa6ea903df911a98390b5512f0a2b03608fabb0b6dd433745c788fd57f8",
+    "src/native.h": "6f4326825f7eeacf5a526bc4586585c9f9f5f9cd56c969f066a2c8e994c06220",
+    "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+    "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+    "src/timing_test.v": "704b492a3c0b8e7b1d300001b58f1c23574ed1457f3c7a0a986b04650dcc8cca",
+    "src/tls.v": "cc03f9a30b491a5ff233b2baa6f07d9ed5fc6a5331b212a8f9c144bb83288410",
+    "src/transport.v": "280a1cd8f0132ebde4148de6c9012a8ced6c8619b7a95aa6cfa4cba09352def0",
+    "src/transport_test.v": "a4d471bdad59acfaf9601bacf9e543cd416586dc55e986b2f0144ab9011c960b",
+    "v.mod": "05543acc86b209f05bdc588481f4ede25e4f80190a83b7cedfb8cefb47a388e1"
+  },
+  "harness_sha256": {
+    "tests/integration.py": "d9c6087123020e7de8ca3898e5fafcc899130816ac2a57e7fbc1eaa650553e67",
+    "tests/loopback.py": "3809569d02c149ed93ed4b0c067c0ef814fb27f1eaa0cba8d053fdfc3163cf49",
+    "scripts/benchmark.py": "58f4756d06d9aef2cebdbfbe1ba3c9fec25565f730051572fc92274da0a01fce",
+    "scripts/build.sh": "58321e0709da2b6b18a7ca6ed37d05a41decc30a10a41817070d497a1403b818",
+    "scripts/build_reference.py": "8800ac96a04be30ccc11745540f5fe405d4cf27dcce5dc095e6d49f3f7e9f3f7",
+    "scripts/setup-v.sh": "bd2c47e14e4274df1f7920968c12a410fec3c208c416586aee403123e3f4631f"
+  },
+  "builds": {
+    "openssl": {
+      "command": [
+        "scripts/build.sh"
+      ],
+      "exit_code": 0,
+      "elapsed_wall_seconds": 21.553428655999596,
+      "log": "post-ci-build-openssl.txt",
+      "environment_overrides": {
+        "V": "/workspace/toolchains/v/v"
+      }
+    },
+    "mbedtls": {
+      "command": [
+        "/workspace/toolchains/v/v",
+        "-cc",
+        "gcc",
+        "-prod",
+        "-o",
+        "bin/v-nico-list-mbedtls",
+        "src"
+      ],
+      "exit_code": 0,
+      "elapsed_wall_seconds": 69.69163478099927,
+      "log": "post-ci-build-mbedtls.txt"
+    }
+  },
+  "binary_sha256": {
+    "openssl": "4c5f20d029db658e1e877c6261e262ca658b9f50cf166264379c3e805865f562",
+    "mbedtls": "a1cff9e7727721c8078f7545a4f1a623f283b5ce0458f8f501f8eecacd86f206",
+    "go": "550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a"
+  },
+  "integration": {
+    "openssl": {
+      "command": [
+        "python3",
+        "tests/integration.py",
+        "--binary",
+        "bin/v-nico-list"
+      ],
+      "exit_code": 0,
+      "elapsed_wall_seconds": 20.72021247199973,
+      "log": "post-ci-integration-openssl.txt",
+      "tests": 55,
+      "passed": 55,
+      "skipped": 0,
+      "reported_suite_seconds": 20.537
+    },
+    "mbedtls": {
+      "command": [
+        "python3",
+        "tests/integration.py",
+        "--binary",
+        "bin/v-nico-list-mbedtls"
+      ],
+      "exit_code": 0,
+      "elapsed_wall_seconds": 20.969615791999786,
+      "log": "post-ci-integration-mbedtls.txt",
+      "tests": 55,
+      "passed": 55,
+      "skipped": 0,
+      "reported_suite_seconds": 20.78
+    },
+    "go": {
+      "command": [
+        "python3",
+        "tests/integration.py",
+        "--binary",
+        "bin/go-nico-list-reference",
+        "--profile",
+        "go-reference"
+      ],
+      "exit_code": 0,
+      "elapsed_wall_seconds": 14.289287353999498,
+      "log": "post-ci-integration-go.txt",
+      "tests": 55,
+      "passed": 47,
+      "skipped": 8,
+      "reported_suite_seconds": 14.129,
+      "note": "Repeated after one documented initial adaptive-growth failure; initial log and targeted repeats retained."
+    }
+  },
+  "benchmarks": {
+    "json-0ms": {
+      "command": [
+        "python3",
+        "scripts/benchmark.py",
+        "--binary",
+        "v=bin/v-nico-list",
+        "--binary",
+        "go=bin/go-nico-list-reference",
+        "--targets",
+        "12",
+        "--pages",
+        "5",
+        "--repetitions",
+        "5",
+        "--latency-ms",
+        "0",
+        "--format",
+        "json",
+        "--output",
+        "docs/provenance/post-ci-benchmark-json-0ms.json"
+      ],
+      "output": "post-ci-benchmark-json-0ms.json",
+      "total_elapsed_seconds": 1.5709397489999901,
+      "v_median_seconds": 0.16784975300015503,
+      "go_median_seconds": 0.05740468800013332,
+      "v_over_go_median_ratio": 2.9239729166329624,
+      "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4"
+    },
+    "json-10ms": {
+      "command": [
+        "python3",
+        "scripts/benchmark.py",
+        "--binary",
+        "v=bin/v-nico-list",
+        "--binary",
+        "go=bin/go-nico-list-reference",
+        "--targets",
+        "12",
+        "--pages",
+        "5",
+        "--repetitions",
+        "5",
+        "--latency-ms",
+        "10",
+        "--format",
+        "json",
+        "--output",
+        "docs/provenance/post-ci-benchmark-json-10ms.json"
+      ],
+      "output": "post-ci-benchmark-json-10ms.json",
+      "total_elapsed_seconds": 2.113306432999707,
+      "v_median_seconds": 0.19515280999985407,
+      "go_median_seconds": 0.11666722300014953,
+      "v_over_go_median_ratio": 1.6727303948908079,
+      "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4"
+    },
+    "lines-0ms": {
+      "command": [
+        "python3",
+        "scripts/benchmark.py",
+        "--binary",
+        "v=bin/v-nico-list",
+        "--binary",
+        "go=bin/go-nico-list-reference",
+        "--targets",
+        "12",
+        "--pages",
+        "5",
+        "--repetitions",
+        "5",
+        "--latency-ms",
+        "0",
+        "--format",
+        "lines",
+        "--output",
+        "docs/provenance/post-ci-benchmark-lines-0ms.json"
+      ],
+      "output": "post-ci-benchmark-lines-0ms.json",
+      "total_elapsed_seconds": 1.5385039760003565,
+      "v_median_seconds": 0.16369629699966026,
+      "go_median_seconds": 0.050894297000013466,
+      "v_over_go_median_ratio": 3.216397644703039,
+      "result_sha256": "88eaadbb56068830425401d0646a51915c328fc4589432b975822ef84f10896b"
+    },
+    "lines-10ms": {
+      "command": [
+        "python3",
+        "scripts/benchmark.py",
+        "--binary",
+        "v=bin/v-nico-list",
+        "--binary",
+        "go=bin/go-nico-list-reference",
+        "--targets",
+        "12",
+        "--pages",
+        "5",
+        "--repetitions",
+        "5",
+        "--latency-ms",
+        "10",
+        "--format",
+        "lines",
+        "--output",
+        "docs/provenance/post-ci-benchmark-lines-10ms.json"
+      ],
+      "output": "post-ci-benchmark-lines-10ms.json",
+      "total_elapsed_seconds": 2.2027375709994885,
+      "v_median_seconds": 0.19808862399986538,
+      "go_median_seconds": 0.12079526300021826,
+      "v_over_go_median_ratio": 1.6398707952604687,
+      "result_sha256": "88eaadbb56068830425401d0646a51915c328fc4589432b975822ef84f10896b"
+    }
+  },
+  "validation_order": "Both production builds, then OpenSSL/MbedTLS/Go full suites, then four benchmarks; all sequential.",
+  "unit_tests": {
+    "files": 4,
+    "functions": 31,
+    "implementation_checks": {
+      "openssl": "passed",
+      "mbedtls": "passed"
+    },
+    "note": "Completed implementation unit runs were reported in tool output; no redundant rerun in this production validation.",
+    "rawlog_available": false
+  },
+  "live_api_calls": 0,
+  "windows_execution": "Native Windows CI is monitored separately; this file records Linux only.",
+  "binary_paths": {
+    "openssl": "/workspace/v-nico-list/bin/v-nico-list",
+    "mbedtls": "/workspace/v-nico-list/bin/v-nico-list-mbedtls",
+    "go": "/workspace/v-nico-list/bin/go-nico-list-reference"
+  },
+  "go_initial_failure": {
+    "log": "post-ci-integration-go-first-run.txt",
+    "tests": 55,
+    "passed": 46,
+    "failures": 1,
+    "skipped": 8,
+    "test": "test_adaptive_grows_with_sustained_known_total_supply",
+    "reason": "Unchanged reference reacted to latency (8 -> 4), then grew to 5; contract requires a recorded budget greater than initial 8.",
+    "new_tls_programmatic_cancellation_cases": "both passed",
+    "interpretation": "Timing sensitivity is an inference from the unchanged Go binary: all three focused adaptive repeats and one full-suite repeat passed. No assertions, thresholds, source, or harness files were changed."
+  },
+  "go_adaptive_repeats": [
+    {
+      "command": [
+        "python3",
+        "tests/integration.py",
+        "--binary",
+        "bin/go-nico-list-reference",
+        "--profile",
+        "go-reference",
+        "--only",
+        "adaptive_grows"
+      ],
+      "log": "post-ci-go-adaptive-repeat-1.txt",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "tests/integration.py",
+        "--binary",
+        "bin/go-nico-list-reference",
+        "--profile",
+        "go-reference",
+        "--only",
+        "adaptive_grows"
+      ],
+      "log": "post-ci-go-adaptive-repeat-2.txt",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "tests/integration.py",
+        "--binary",
+        "bin/go-nico-list-reference",
+        "--profile",
+        "go-reference",
+        "--only",
+        "adaptive_grows"
+      ],
+      "log": "post-ci-go-adaptive-repeat-3.txt",
+      "exit_code": 0
+    }
+  ],
+  "benchmark_correctness": {
+    "measured_samples_per_scenario_per_binary": 5,
+    "requests_per_sample": 60,
+    "output_count_per_sample": 6000,
+    "complete_result_equality_within_each_scenario": true,
+    "common_items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+    "all_v_medians_slower_than_go": true
+  },
+  "source_and_harness_unchanged": true,
+  "binaries_unchanged_during_validation": true,
+  "reference_checkout_clean_after": true,
+  "completed_at_utc": "2026-11-06T02:52:05.296447+00:00",
+  "original_go_checkout": {
+    "path": "/workspace/go-nico-list",
+    "head_after_validation": "cabc8b2ccdb3dc9c07fb452f73d1de6fd5149f99",
+    "clean_after_validation": true,
+    "writes_by_this_validation": false
+  },
+  "log_note": "Successful OpenSSL and Go integration logs retain fixture-side socket disconnect tracebacks during intentional connection closure; unittest summaries report success. Raw logs were not sanitized."
+}

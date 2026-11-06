@@ -1,0 +1,6 @@
+test_adaptive_grows_with_sustained_known_total_supply (__main__.CLIContracts.test_adaptive_grows_with_sustained_known_total_supply) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.904s
+
+OK
