@@ -22,10 +22,10 @@
   "binaries": {
     "v": {
       "path": "/workspace/v-nico-list/bin/v-nico-list",
-      "sha256": "7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24",
+      "sha256": "260525d3fdcaf882d87cc503a4f2404f14e0dc7757b8b9f83892865717261fda",
       "samples": [
         {
-          "wall_seconds": 0.19524887199986551,
+          "wall_seconds": 0.29165220100003353,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -34,7 +34,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.18307346799997504,
+          "wall_seconds": 0.22019127299972752,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -43,7 +43,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.19773369200015622,
+          "wall_seconds": 0.20694650299992645,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -52,7 +52,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.18716667600006076,
+          "wall_seconds": 0.21184179500005484,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -61,7 +61,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.19109334399990985,
+          "wall_seconds": 0.19616989699989063,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -70,16 +70,16 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         }
       ],
-      "wall_median_seconds": 0.19109334399990985,
-      "wall_min_seconds": 0.18307346799997504,
-      "wall_max_seconds": 0.19773369200015622
+      "wall_median_seconds": 0.21184179500005484,
+      "wall_min_seconds": 0.19616989699989063,
+      "wall_max_seconds": 0.29165220100003353
     },
     "go": {
       "path": "/workspace/v-nico-list/bin/go-nico-list-reference",
       "sha256": "550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a",
       "samples": [
         {
-          "wall_seconds": 0.13022068500004025,
+          "wall_seconds": 0.12242617199990491,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -88,7 +88,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.15777481300006002,
+          "wall_seconds": 0.117883953999808,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -97,7 +97,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.11856224899997869,
+          "wall_seconds": 0.12537357400015026,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -106,7 +106,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.11975525499997275,
+          "wall_seconds": 0.12363843999992241,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -115,7 +115,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.11902593500008152,
+          "wall_seconds": 0.11720215900004405,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 135669,
@@ -124,9 +124,9 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         }
       ],
-      "wall_median_seconds": 0.11975525499997275,
-      "wall_min_seconds": 0.11856224899997869,
-      "wall_max_seconds": 0.15777481300006002
+      "wall_median_seconds": 0.12242617199990491,
+      "wall_min_seconds": 0.11720215900004405,
+      "wall_max_seconds": 0.12537357400015026
     }
   }
 }

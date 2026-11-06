@@ -1,0 +1,154 @@
+EXPECTED FAILING REGRESSION RUN
+Old production binary SHA-256: 7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24
+Command: python3 tests/integration.py --binary /tmp/nico-before-overflow-fix --only extreme_
+Only the binary copy was stored in /tmp; the source history and Go baseline were unchanged.
+
+test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) ...
+  test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) (adaptive=False) ... FAIL
+  test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) (adaptive=True) ... FAIL
+test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) ...
+  test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9223372036854775807', adaptive=False) ... FAIL
+  test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9223372036854775807', adaptive=True) ... FAIL
+  test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9999999999999999999999999999999999999', adaptive=False) ... FAIL
+  test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9999999999999999999999999999999999999', adaptive=True) ... FAIL
+  test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='Fri, 31 Dec 9999 23:59:59 GMT', adaptive=False) ... FAIL
+  test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='Fri, 31 Dec 9999 23:59:59 GMT', adaptive=True) ... FAIL
+test_extreme_timeout_serves_normally_and_is_cancellable (__main__.CLIContracts.test_extreme_timeout_serves_normally_and_is_cancellable) ... FAIL
+test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) ...
+  test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) (rate='1e-300') ... FAIL
+  test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) (rate='1e-10') ... FAIL
+
+======================================================================
+FAIL: test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) (adaptive=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 460, in test_extreme_representable_interval_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, "--min-interval", "9223372036854000000ns", *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) (adaptive=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 460, in test_extreme_representable_interval_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, "--min-interval", "9223372036854000000ns", *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9223372036854775807', adaptive=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 470, in test_extreme_retry_after_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9223372036854775807', adaptive=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 470, in test_extreme_retry_after_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9999999999999999999999999999999999999', adaptive=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 470, in test_extreme_retry_after_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='9999999999999999999999999999999999999', adaptive=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 470, in test_extreme_retry_after_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='Fri, 31 Dec 9999 23:59:59 GMT', adaptive=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 470, in test_extreme_retry_after_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) (value='Fri, 31 Dec 9999 23:59:59 GMT', adaptive=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 470, in test_extreme_retry_after_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_timeout_serves_normally_and_is_cancellable (__main__.CLIContracts.test_extreme_timeout_serves_normally_and_is_cancellable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 480, in test_extreme_timeout_serves_normally_and_is_cancellable
+    self.assertEqual(result.stdout, "sm1\n", "a near-maximum positive timeout must not wrap into an immediate deadline")
+AssertionError: '' != 'sm1\n'
++ sm1
+ : a near-maximum positive timeout must not wrap into an immediate deadline
+
+======================================================================
+FAIL: test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) (rate='1e-300')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 452, in test_extreme_tiny_positive_rate_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, "--rate-limit", rate)
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+======================================================================
+FAIL: test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) (rate='1e-10')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 452, in test_extreme_tiny_positive_rate_waits_and_is_cancellable
+    self.assert_pending_request_is_cancellable(fixture, "--rate-limit", rate)
+  File "/workspace/v-nico-list/tests/integration.py", line 432, in assert_pending_request_is_cancellable
+    self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+AssertionError: 2 != 1 : an overflowing delay must not admit an immediate second request
+
+----------------------------------------------------------------------
+Ran 4 tests in 4.450s
+
+FAILED (failures=11)
+
+ADDITIONAL HTTPS REGRESSION (ADDED AFTER THE FOUR-CASE RUN)
+Command: python3 tests/integration.py --binary /tmp/nico-before-overflow-fix --only tls_extreme
+
+test_tls_extreme_timeout_serves_normally_and_is_cancellable (__main__.TLSContracts.test_tls_extreme_timeout_serves_normally_and_is_cancellable) ... FAIL
+
+======================================================================
+FAIL: test_tls_extreme_timeout_serves_normally_and_is_cancellable (__main__.TLSContracts.test_tls_extreme_timeout_serves_normally_and_is_cancellable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 679, in test_tls_extreme_timeout_serves_normally_and_is_cancellable
+    self.assertEqual(result.stdout, "sm1\n")
+AssertionError: '' != 'sm1\n'
++ sm1
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.329s
+
+FAILED (failures=1)

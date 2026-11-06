@@ -24,6 +24,8 @@ Each request creates and closes its connection. There is no connection pool, kee
 
 Resource/numeric limits are not identical to Go's. The port caps JSON nesting at 512 levels (Go accepts up to 10,000). CLI integer options use the native signed integer range and accept Go-style hexadecimal/octal prefixes. The port rejects nonfinite `--rate-limit` values, while the baseline only explicitly checks for negative values. Error text and acceptance at these resource/nonfinite boundaries can differ.
 
+Extreme positive rate intervals, monotonic wait deadlines and 429 Retry-After delays saturate at the largest representable duration/deadline. They remain cancellable instead of wrapping into an immediate second request or silently disabling pacing. Near-maximum request timeouts use bounded wall-clock arithmetic. These are intentional overflow fixes beyond the pinned Go baseline; its comparison profile excludes the five corresponding V regression tests. An enormous positive rate interval still permits the initial request, then waits until cancellation.
+
 Network I/O and gzip decoding check cancellation/deadlines. V's synchronous name resolution and initial TCP dial do not accept the request cancellation token; cancellation or `--timeout` can be delayed until that phase returns. The loopback stalled-response tests exercise post-connect cancellation and timeout. They do not establish bounded DNS/connect latency on every operating system.
 
 ## Diagnostics and platform scope

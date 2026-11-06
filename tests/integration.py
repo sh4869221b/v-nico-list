@@ -25,7 +25,7 @@ from loopback import Fixture, Reply, TunnelProxy, payload, single_page, video
 PARSER = argparse.ArgumentParser(description=__doc__)
 PARSER.add_argument("--binary", default="bin/v-nico-list")
 PARSER.add_argument("--only", help="Run test names containing this substring")
-PARSER.add_argument("--profile", choices=("v", "go-reference"), default="v", help="Go excludes force-proxy loopback cases: its standard transport always bypasses loopback")
+PARSER.add_argument("--profile", choices=("v", "go-reference"), default="v", help="Go excludes force-proxy loopback cases and V-specific extreme-duration overflow regressions")
 OPTIONS = None
 
 
@@ -418,6 +418,72 @@ class CLIContracts(unittest.TestCase):
                 for left, right in zip(times, times[1:]):
                     self.assertGreaterEqual(right - left, 0.045, "command-wide dispatch pacing")
 
+    def assert_pending_request_is_cancellable(self, fixture, *flags, env=None):
+        environment = os.environ.copy()
+        environment.update(NICO_BASE_URL=fixture.url, NO_PROXY="localhost,127.0.0.1", no_proxy="localhost,127.0.0.1")
+        if env:
+            environment.update(env)
+        process = subprocess.Popen([self.binary, "--no-progress", "--retries=2", "nicovideo.jp/user/1", *flags],
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=environment)
+        try:
+            deadline = time.monotonic() + 3
+            while not fixture.records and process.poll() is None and time.monotonic() < deadline:
+                time.sleep(0.01)
+            self.assertTrue(fixture.records, "first request must dispatch before the extreme delay is tested")
+            time.sleep(0.35)
+            self.assertEqual(len(fixture.records), 1, "an overflowing delay must not admit an immediate second request")
+            self.assertIsNone(process.poll(), "the process must remain waiting, rather than silently disable the delay")
+            started = time.monotonic()
+            process.send_signal(signal.SIGINT)
+            stdout, stderr = process.communicate(timeout=1)
+            self.assertLess(time.monotonic() - started, 1)
+            self.assertEqual(process.returncode, 0, stderr)
+            self.assertEqual(stdout, "", "cancellation preserves the successful-empty target convention")
+            self.assertFalse(fixture.errors, fixture.errors)
+        finally:
+            if process.poll() is None:
+                process.kill()
+                process.communicate()
+
+    @unittest.skipIf(os.name == "nt", "POSIX SIGINT edge-duration cancellation contract")
+    def test_extreme_tiny_positive_rate_waits_and_is_cancellable(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific overflow regression; current Go baseline can disable an overflowing rate interval")
+        for rate in ("1e-300", "1e-10"):
+            with self.subTest(rate=rate), Fixture(single_page) as fixture:
+                self.assert_pending_request_is_cancellable(fixture, "--rate-limit", rate)
+
+    @unittest.skipIf(os.name == "nt", "POSIX SIGINT edge-duration cancellation contract")
+    def test_extreme_representable_interval_waits_and_is_cancellable(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific saturating monotonic-deadline regression; outside Go parity profile")
+        for adaptive in (False, True):
+            with self.subTest(adaptive=adaptive), Fixture(single_page) as fixture:
+                self.assert_pending_request_is_cancellable(fixture, "--min-interval", "9223372036854000000ns", *(["-A"] if adaptive else []))
+
+    @unittest.skipIf(os.name == "nt", "POSIX SIGINT edge-duration cancellation contract")
+    def test_extreme_retry_after_waits_and_is_cancellable(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific Retry-After overflow regression; current Go baseline can overflow or discard these delays")
+        values = ("9223372035", "9223372036854775807", "+9223372036854775807", "9999999999999999999999999999999999999", "Fri, 31 Dec 9999 23:59:59 GMT")
+        for value in values:
+            for adaptive in (False, True):
+                with self.subTest(value=value, adaptive=adaptive), Fixture(lambda r: Reply(status=429, headers={"Retry-After": value})) as fixture:
+                    self.assert_pending_request_is_cancellable(fixture, *(["-A"] if adaptive else []))
+
+    @unittest.skipIf(os.name == "nt", "POSIX SIGINT edge-duration cancellation contract")
+    def test_extreme_timeout_serves_normally_and_is_cancellable(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific near-maximum wall-deadline arithmetic regression")
+        maximum = "9223372036854000000ns"
+        with Fixture(single_page) as fixture:
+            result = self.run_cli(fixture, "nicovideo.jp/user/1", "--timeout", maximum)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "sm1\n", "a near-maximum positive timeout must not wrap into an immediate deadline")
+            self.assertEqual(len(fixture.records), 2)
+        with Fixture(lambda r: Reply(payload(r.kind), delay=3)) as fixture:
+            self.assert_pending_request_is_cancellable(fixture, "--timeout", maximum)
+
     def test_target_page_http_caps_and_mixed_last_override(self):
         def respond(r):
             return Reply(payload(r.kind, [video("sm" + str(int(r.identifier) * 100 + r.page))] if r.page <= 5 else [], 500), delay=0.04)
@@ -588,10 +654,10 @@ class TLSContracts(CLIContracts):
         if hasattr(cls, "temp"):
             cls.temp.cleanup()
 
-    def tls_fixture(self, name="valid"):
+    def tls_fixture(self, name="valid", respond=single_page):
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         context.load_cert_chain(self.root / (name + ".pem"), self.root / (name + ".key"))
-        return Fixture(single_page, context)
+        return Fixture(respond, context)
 
     def test_tls_trusted_ca_success(self):
         for hostname in ("127.0.0.1", "localhost"):
@@ -600,6 +666,20 @@ class TLSContracts(CLIContracts):
                 result = self.run_cli(fixture, "nicovideo.jp/user/1", env={"SSL_CERT_FILE": str(self.ca)})
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(result.stdout, "sm1\n")
+
+    @unittest.skipIf(os.name == "nt", "POSIX SIGINT edge-duration cancellation contract")
+    def test_tls_extreme_timeout_serves_normally_and_is_cancellable(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific near-maximum TLS-backend deadline arithmetic regression")
+        maximum = "9223372036854000000ns"
+        trust = {"SSL_CERT_FILE": str(self.ca)}
+        with self.tls_fixture() as fixture:
+            result = self.run_cli(fixture, "nicovideo.jp/user/1", "--timeout", maximum, env=trust)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "sm1\n")
+            self.assertEqual(len(fixture.records), 2)
+        with self.tls_fixture(respond=lambda r: Reply(payload(r.kind), delay=3)) as fixture:
+            self.assert_pending_request_is_cancellable(fixture, "--timeout", maximum, env=trust)
 
     def test_tls_untrusted_ca_rejected(self):
         with self.tls_fixture() as fixture:

@@ -1,5 +1,5 @@
 {
-  "recorded_at_utc": "2026-11-06T01:38:10.049710+00:00",
+  "recorded_at_utc": "2026-11-06T01:53:01.302937+00:00",
   "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
   "python": "3.12.14",
   "versions": {
@@ -17,31 +17,45 @@
   "integration": {
     "v": {
       "command": "python3 tests/integration.py --binary bin/v-nico-list",
-      "tests": 48,
-      "passed": 48,
+      "tests": 53,
+      "passed": 53,
       "skipped": 0,
       "log": "linux-integration-v.txt"
     },
     "go": {
       "command": "python3 tests/integration.py --binary bin/go-nico-list-reference --profile go-reference",
-      "tests": 48,
+      "tests": 53,
       "passed": 45,
-      "skipped": 3,
-      "skip_reason": "Force-proxy loopback cases: Go standard transport always bypasses loopback",
+      "skipped": 8,
+      "skip_reason": "Three force-proxy loopback cases and five V-specific extreme-duration overflow regressions",
       "log": "linux-integration-go.txt"
     }
   },
   "binary_sha256": {
-    "v": "7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24",
+    "v": "260525d3fdcaf882d87cc503a4f2404f14e0dc7757b8b9f83892865717261fda",
     "go": "550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a"
   },
   "harness_sha256": {
     "tests/loopback.py": "3809569d02c149ed93ed4b0c067c0ef814fb27f1eaa0cba8d053fdfc3163cf49",
-    "tests/integration.py": "35ad91fb2fd3703f21634c4a6dccf9a7d5ec7b50d0a53fed5e5b96ef60ee57da",
+    "tests/integration.py": "6de595170936383a76ff7b56a4e68a2b5922035e134a1c5ea178bd3637c41675",
     "scripts/benchmark.py": "58f4756d06d9aef2cebdbfbe1ba3c9fec25565f730051572fc92274da0a01fce",
     "scripts/build_reference.py": "8800ac96a04be30ccc11745540f5fe405d4cf27dcce5dc095e6d49f3f7e9f3f7"
   },
   "reference_checkout_clean": true,
   "windows_execution": "not run; native CI configured",
-  "live_api_calls": 0
+  "live_api_calls": 0,
+  "unit_tests": {
+    "command": "/workspace/toolchains/v/v -cc gcc -d use_openssl test src",
+    "files": 4,
+    "functions": 29,
+    "log": "linux-unit-tests.txt",
+    "result": "passed"
+  },
+  "overflow_regression_evidence": {
+    "before_fix_binary_sha256": "7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24",
+    "log": "overflow-before-fix.txt",
+    "primary_run": "Four methods: 11 failing subcases; near-maximum min-interval cases already passed",
+    "additional_tls_run": "One additional method: near-maximum TLS timeout failed",
+    "fixed_run": "All five regression methods passed within the final 53-contract suite"
+  }
 }

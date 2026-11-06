@@ -69,10 +69,18 @@ fn (s &WireStream) check() ! {
 	wire_check(s.deadline)!
 }
 
+fn wire_remaining_timeout(deadline time.Time) time.Duration {
+	remaining := wall_remaining(deadline, time.now())
+	// The TLS backends call Time.add internally. For their extreme-duration
+	// overflow range let the request watchdog enforce the actual deadline.
+	if remaining > max_wait_ns - 2 * time.second { return net.infinite_timeout }
+	return time.Duration(ns_max(1, remaining))
+}
+
 fn (mut s WireStream) write(text string) ! {
 	s.check()!
 	if s.secure {
-		s.tls.set_read_timeout(s.deadline - time.now())
+		s.tls.set_read_timeout(wire_remaining_timeout(s.deadline))
 		s.tls.write_string(text) or {
 			s.check()!
 			return err
@@ -89,7 +97,7 @@ fn (mut s WireStream) write(text string) ! {
 fn (mut s WireStream) fill() !bool {
 	s.check()!
 	n := if s.secure {
-		s.tls.set_read_timeout(s.deadline - time.now())
+		s.tls.set_read_timeout(wire_remaining_timeout(s.deadline))
 		s.tls.read(mut s.buffer) or {
 			s.check()!
 			if err is io.Eof { return false }
@@ -426,7 +434,7 @@ fn wire_url(raw string) !urllib.URL {
 fn transport_get(raw_url string, timeout time.Duration) !WireResponse {
 	if cancelled() { return error_with_code('context canceled', 20003) }
 	if timeout <= 0 { return error('HTTP timeout must be positive') }
-	deadline := time.now().add(timeout)
+	deadline := wall_deadline_after(time.now(), timeout)
 	mut current := raw_url
 	for redirects in 0 .. 10 {
 		response := transport_once(current, deadline)!
@@ -508,7 +516,7 @@ fn transport_once(raw_url string, deadline time.Time) !WireResponse {
 			verify:         os.getenv('SSL_CERT_FILE')
 			alpn_protocols: ['http/1.1']
 		)!
-		tcp.set_read_timeout(deadline - time.now())
+		tcp.set_read_timeout(wire_remaining_timeout(deadline))
 		stream.tls.connect(mut tcp, u.hostname()) or {
 			stream.check()!
 			return err

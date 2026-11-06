@@ -2,7 +2,7 @@
 
 A V command line tool that collects video IDs from niconico user pages and mylists. It ports [go-nico-list](https://github.com/sh4869221b/go-nico-list/tree/6638228b9acfa6256805f5e57bdd75f4ca80e084), preserving its command line options and result format.
 
-The Linux build passes 48 loopback integration contracts. Current local synthetic measurements are slower than the Go baseline; [recorded results and platform limits](docs/VALIDATION.md) describe the evidence.
+The Linux build passes 53 loopback integration contracts. Current local synthetic measurements are slower than the Go baseline; [recorded results and platform limits](docs/VALIDATION.md) describe the evidence.
 
 [日本語](docs/README.ja.md) · [Compatibility and transport boundaries](docs/COMPATIBILITY.md) · [Validation and benchmarks](docs/VALIDATION.md) · [Provenance](docs/provenance/README.md)
 

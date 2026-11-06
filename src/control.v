@@ -94,7 +94,7 @@ fn cancelled() bool { return C.nico_cancelled() != 0 }
 fn check_cancelled() ! { if cancelled() { return error('context canceled') } }
 
 fn sleep_cancel(d i64) ! {
-	until := now_ns() + d
+	until := deadline_after(now_ns(), d)
 	for {
 		check_cancelled()!
 		left := until - now_ns()
@@ -148,8 +148,8 @@ fn (mut c Control) acquire_http(attempt int) !Permit {
 		// never carries an old grant across an adaptive cooldown.
 		if (limit == 0 || c.active < limit) && ready && n >= c.next_start {
 			mut interval := i64(c.cfg.interval)
-			if c.cfg.rate > 0 { interval = ns_max(interval, i64(f64(time.second) / c.cfg.rate)) }
-			c.next_start = n + interval
+			if c.cfg.rate > 0 { interval = ns_max(interval, rate_interval(c.cfg.rate)) }
+			c.next_start = deadline_after(n, interval)
 			c.active++
 			c.pending--
 			c.counters['attempts']++
@@ -158,7 +158,7 @@ fn (mut c Control) acquire_http(attempt int) !Permit {
 			if c.cfg.adaptive && c.recovery_starts > 0 {
 				c.recovery_starts--
 				pace := ns_min(250 * time.millisecond, ns_max(25 * time.millisecond, c.baseline / c.budget))
-				c.recovery_at = n + pace
+				c.recovery_at = deadline_after(n, pace)
 			}
 			wait := n - wait_started
 			c.durations['admission_wait_ns'] += wait
@@ -214,7 +214,7 @@ fn (mut c Control) decrease(reason string, n i64) {
 
 fn (mut c Control) throttle(p Permit, delay i64, n i64) {
 	c.counters['adaptive_http_429']++
-	c.cooldown = ns_max(c.cooldown, n + ns_max(delay, 100 * time.millisecond))
+	c.cooldown = ns_max(c.cooldown, deadline_after(n, ns_max(delay, 100 * time.millisecond)))
 	c.healthy = 0
 	c.slow = 0
 	c.floor = 0
@@ -322,7 +322,8 @@ fn (mut c Control) finish_http(p Permit, status int, transport_error bool, bytes
 		if p.generation != c.generation {
 			c.counters['adaptive_stale_completions']++
 		} else {
-			fresh := ns_max(time.second, ns_max(2 * ns_max(c.baseline, ns_max(c.previous_service, c.window_max)), 40 * ns_max(c.baseline, ns_max(c.previous_service, c.window_max)) / c.budget))
+			scale := ns_max(c.baseline, ns_max(c.previous_service, c.window_max))
+			fresh := ns_max(time.second, ns_max(positive_product(scale, 2), positive_product(scale, 40) / c.budget))
 			if n - c.window_started > fresh {
 				c.record(c.budget, 'insufficient_samples', n)
 				c.reset_window(n)
@@ -353,16 +354,23 @@ fn (mut c Control) finish_http(p Permit, status int, transport_error bool, bytes
 }
 
 fn retry_after(headers map[string]string, status int) i64 {
+	return retry_after_at(headers, status, time.utc())
+}
+
+fn retry_after_at(headers map[string]string, status int, current time.Time) i64 {
 	if status != 429 { return 0 }
 	s := (headers['retry-after'] or { '' }).trim_space()
-	if all_digits(s) {
-		sec := s.i64()
-		if sec > 0 && sec < 9223372036 { return sec * time.second }
-		return 0
+	numeric := if s.starts_with('+') { s[1..] } else { s }
+	if all_digits(numeric) {
+		normalized := numeric.trim_left('0')
+		if normalized == '' { return 0 }
+		if normalized.len > 10 || (normalized.len == 10 && normalized > '9223372036') {
+			return max_wait_ns
+		}
+		return positive_product(normalized.i64(), time.second)
 	}
 	if t := time.parse_rfc2616(s) {
-		delta := t - time.utc()
-		if delta > 0 { return i64(delta) }
+		return wall_remaining(t, current)
 	}
 	return 0
 }

@@ -43,6 +43,11 @@ fn test_transport_reads_all_http_framing_modes() {
 	}
 }
 
+fn test_transport_near_max_timeout_does_not_become_immediate_deadline() {
+	result := wire_test_response('HTTP/1.1 200 OK\r\nContent-Length: 5\r\n\r\nhello', time.Duration(max_wait_ns - 1000000), 10 * time.millisecond) or { panic(err) }
+	assert result.body.bytestr() == 'hello'
+}
+
 fn test_transport_rejects_ambiguous_or_truncated_framing() {
 	for raw in [
 		'HTTP/1.1 200 OK\r\nContent-Length: 2\r\nContent-Length: 3\r\n\r\nabc',

@@ -21,10 +21,10 @@
   "binaries": {
     "v": {
       "path": "/workspace/v-nico-list/bin/v-nico-list",
-      "sha256": "7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24",
+      "sha256": "260525d3fdcaf882d87cc503a4f2404f14e0dc7757b8b9f83892865717261fda",
       "samples": [
         {
-          "wall_seconds": 0.19428236100020513,
+          "wall_seconds": 0.21006404599984307,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -33,7 +33,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.20183404599993082,
+          "wall_seconds": 0.19604627299986532,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -42,7 +42,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.19386258999998063,
+          "wall_seconds": 0.19424184999979843,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -51,7 +51,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.19065648400010105,
+          "wall_seconds": 0.19546495499980665,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -60,7 +60,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.20177060300011362,
+          "wall_seconds": 0.20363152900017667,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -69,16 +69,16 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         }
       ],
-      "wall_median_seconds": 0.19428236100020513,
-      "wall_min_seconds": 0.19065648400010105,
-      "wall_max_seconds": 0.20183404599993082
+      "wall_median_seconds": 0.19604627299986532,
+      "wall_min_seconds": 0.19424184999979843,
+      "wall_max_seconds": 0.21006404599984307
     },
     "go": {
       "path": "/workspace/v-nico-list/bin/go-nico-list-reference",
       "sha256": "550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a",
       "samples": [
         {
-          "wall_seconds": 0.12994719900007112,
+          "wall_seconds": 0.1155308470001728,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -87,7 +87,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.11451267699999335,
+          "wall_seconds": 0.1156661080003687,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -96,7 +96,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.1199528710001232,
+          "wall_seconds": 0.11746462700011762,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -105,7 +105,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.1315900459999284,
+          "wall_seconds": 0.12274789999992208,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -114,7 +114,7 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         },
         {
-          "wall_seconds": 0.11710036499994203,
+          "wall_seconds": 0.13049714799990397,
           "requests": 60,
           "http_peak": 8,
           "stdout_bytes": 55500,
@@ -123,9 +123,9 @@
           "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b"
         }
       ],
-      "wall_median_seconds": 0.1199528710001232,
-      "wall_min_seconds": 0.11451267699999335,
-      "wall_max_seconds": 0.1315900459999284
+      "wall_median_seconds": 0.11746462700011762,
+      "wall_min_seconds": 0.1155308470001728,
+      "wall_max_seconds": 0.13049714799990397
     }
   }
 }

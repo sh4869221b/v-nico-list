@@ -25,7 +25,9 @@ python3 tests/integration.py --binary bin/go-nico-list-reference --profile go-re
 
 The builder checks the baseline commit, generates only a temporary launcher, and uses the exported command constructor's `BaseURL` injection point. It does not edit the reference checkout. `--go /path/to/go` chooses a compiler; `GOCACHE`, `GOMODCACHE` and `GOPATH` default to external temporary cache directories if unset. Module integrity verification stays enabled. Toolchain selection defaults to local, so a too-old compiler fails explicitly.
 
-The Go profile excludes the three tests that force loopback traffic through a proxy: Go's standard `ProxyFromEnvironment` intentionally bypasses loopback even with empty `NO_PROXY`. These V-specific tests check its documented proxy behavior; exclusion does not imply Go proxy support is missing. Other behavioral tests use identical fixtures and assertions.
+The Go profile excludes the three tests that force loopback traffic through a proxy: Go's standard `ProxyFromEnvironment` intentionally bypasses loopback even with empty `NO_PROXY`. These V-specific tests check its documented proxy behavior; exclusion does not imply Go proxy support is missing. It also excludes five V-specific overflow regressions covering tiny positive rates, near-maximum intervals, HTTP/HTTPS timeouts and enormous Retry-After seconds/dates. The pinned Go baseline's overflow bugs are not compatibility requirements. Other behavioral tests use identical fixtures and assertions.
+
+The overflow tests prove the first request actually dispatched, observe a bounded interval with no second dispatch, then interrupt the process and require prompt successful-empty cancellation. The near-maximum timeout test also requires a normal response to succeed. They do not wait for the enormous duration to expire. These POSIX SIGINT boundary cases are skipped on Windows.
 
 ## Process benchmark
 
@@ -49,18 +51,20 @@ The fixture listen backlog is 128 and accepted sockets use TCP_NODELAY. This avo
 
 On 2026-11-06, Linux x86-64 (kernel 6.18.57), Python 3.12.14, V `0.5.2 6701135`, GCC 14.2.0 and OpenSSL 3.5.7 were used. The Go launcher used Go 1.27.1 with `GOTOOLCHAIN=local` (the reference requires at least 1.27.0 and requests toolchain 1.27.3). Full machine/compiler metadata, commands, harness hashes and binary hashes are in [linux-validation.json](provenance/linux-validation.json).
 
-The frozen V production binary passed **48/48 integration contracts** in 14.690 s: [V log](provenance/linux-integration-v.txt). The unchanged Go reference passed **45 contracts, with 3 documented proxy-loopback exclusions**, in 14.321 s: [Go log](provenance/linux-integration-go.txt). The reference checkout remained clean. Python syntax compilation and CI YAML parsing also passed. Native unit/format checks are recorded separately in [linux-unit-tests.txt](provenance/linux-unit-tests.txt).
+The frozen V production binary passed **53/53 integration contracts** in 20.673 s: [V log](provenance/linux-integration-v.txt). The unchanged Go reference passed **45 contracts, with 8 documented exclusions** (3 proxy-loopback and 5 V-specific overflow regressions), in 14.060 s: [Go log](provenance/linux-integration-go.txt). The reference checkout remained clean. Python syntax compilation and CI YAML parsing also passed. Native unit/format checks are recorded separately in [linux-unit-tests.txt](provenance/linux-unit-tests.txt).
 
-Final V binary SHA-256: `7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24`. The benchmark reports all use this binary and Go reference binary `550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a`.
+The overflow regressions were first run against the old `7796bd44…` binary. The initial four-method run failed 11 subcases; the additional HTTPS timeout case also failed. Near-maximum minimum-interval checks already passed. [Expected failing output](provenance/overflow-before-fix.txt) retains the exact old binary hash and commands. All five regression methods pass on the corrected build. The final unit suite contains **29 functions across 4 files**, with format and Python/shell/CI syntax checks also passing.
+
+Final V binary SHA-256: `260525d3fdcaf882d87cc503a4f2404f14e0dc7757b8b9f83892865717261fda`. The benchmark reports all use this binary and Go reference binary `550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a`.
 
 All four benchmark scenarios used 12 targets × 5 pages × 100 items, fixed `-T4 -P4 -H8`, one warmup and five measured repetitions per binary. Builds/tests were not running during measurement. Every sample made 60 requests and returned the expected 6,000 IDs. Complete JSON payloads matched between binaries; the common ID-sequence SHA-256 across all formats/scenarios was `ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b`.
 
 | Output / server delay | V median | Go median | V / Go | Raw samples |
 | --- | ---: | ---: | ---: | --- |
-| JSON / 0 ms | 164.085 ms | 55.243 ms | 2.970× | [JSON](provenance/benchmark-json-0ms.json) |
-| JSON / 10 ms | 191.093 ms | 119.755 ms | 1.596× | [JSON](provenance/benchmark-json-10ms.json) |
-| Lines / 0 ms | 165.834 ms | 51.002 ms | 3.252× | [JSON](provenance/benchmark-lines-0ms.json) |
-| Lines / 10 ms | 194.282 ms | 119.953 ms | 1.620× | [JSON](provenance/benchmark-lines-10ms.json) |
+| JSON / 0 ms | 180.416 ms | 62.926 ms | 2.867× | [JSON](provenance/benchmark-json-0ms.json) |
+| JSON / 10 ms | 211.842 ms | 122.426 ms | 1.730× | [JSON](provenance/benchmark-json-10ms.json) |
+| Lines / 0 ms | 170.428 ms | 54.636 ms | 3.119× | [JSON](provenance/benchmark-lines-0ms.json) |
+| Lines / 10 ms | 196.046 ms | 117.465 ms | 1.669× | [JSON](provenance/benchmark-lines-10ms.json) |
 
 **V was slower in every measured scenario. A performance improvement over the Go baseline has not been demonstrated.** These are local synthetic process measurements, not live niconico throughput, CPU/RSS comparisons or Windows results. They do not isolate the cost of the transport, scheduler, parsing or output code.
 

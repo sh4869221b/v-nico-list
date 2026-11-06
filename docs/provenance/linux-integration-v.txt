@@ -7,6 +7,10 @@ test_earlier_empty_page_supersedes_later_error (__main__.CLIContracts.test_earli
 test_empty_arrays_and_404 (__main__.CLIContracts.test_empty_arrays_and_404) ... ok
 test_empty_positional_argument_counts_as_invalid (__main__.CLIContracts.test_empty_positional_argument_counts_as_invalid) ... ok
 test_exact_body_limit_is_accepted (__main__.CLIContracts.test_exact_body_limit_is_accepted) ... ok
+test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) ... ok
+test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) ... ok
+test_extreme_timeout_serves_normally_and_is_cancellable (__main__.CLIContracts.test_extreme_timeout_serves_normally_and_is_cancellable) ... ok
+test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) ... ok
 test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) ... ok
 test_gzip_decoding (__main__.CLIContracts.test_gzip_decoding) ... ok
 test_help_and_version_without_inputs (__main__.CLIContracts.test_help_and_version_without_inputs) ... ok
@@ -41,8 +45,9 @@ test_timeout_is_prompt_successful_empty (__main__.CLIContracts.test_timeout_is_p
 test_unknown_total_stays_sequential_until_empty (__main__.CLIContracts.test_unknown_total_stays_sequential_until_empty) ... ok
 test_user_mylist_schema_sort_and_headers (__main__.CLIContracts.test_user_mylist_schema_sort_and_headers) ... ok
 test_validation_and_removed_flags (__main__.CLIContracts.test_validation_and_removed_flags) ... ok
+test_tls_extreme_timeout_serves_normally_and_is_cancellable (__main__.TLSContracts.test_tls_extreme_timeout_serves_normally_and_is_cancellable) ... ok
 test_tls_hostname_mismatch_rejected (__main__.TLSContracts.test_tls_hostname_mismatch_rejected) ... ----------------------------------------
-Exception occurred during processing of request from ('127.0.0.1', 57406)
+Exception occurred during processing of request from ('127.0.0.1', 44740)
 Traceback (most recent call last):
   File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py", line 697, in process_request_thread
     self.finish_request(request, client_address)
@@ -73,6 +78,6 @@ test_tls_untrusted_ca_rejected (__main__.TLSContracts.test_tls_untrusted_ca_reje
 test_tls_untrusted_ca_still_rejected_through_connect (__main__.TLSContracts.test_tls_untrusted_ca_still_rejected_through_connect) ... ok
 
 ----------------------------------------------------------------------
-Ran 48 tests in 14.690s
+Ran 53 tests in 20.673s
 
 OK

@@ -1,6 +1,7 @@
 ---- Testing... ----------------------------------------------------------------
-OK    [1/3] C: 28581.156 ms, R:   248.932 ms /workspace/v-nico-list/src/config_test.v
-OK    [2/3] C: 31114.268 ms, R:     9.045 ms /workspace/v-nico-list/src/domain_test.v
-OK    [3/3] C: 29276.708 ms, R:   245.027 ms /workspace/v-nico-list/src/transport_test.v
+OK    [1/4] C: 9673.027 ms, R:     8.898 ms /workspace/v-nico-list/src/config_test.v
+OK    [2/4] C: 9927.962 ms, R:     9.105 ms /workspace/v-nico-list/src/domain_test.v
+OK    [3/4] C: 8241.051 ms, R:    90.445 ms /workspace/v-nico-list/src/timing_test.v
+OK    [4/4] C: 8091.158 ms, R:   259.258 ms /workspace/v-nico-list/src/transport_test.v
 --------------------------------------------------------------------------------
-Summary for all V _test.v files: 3 passed, 3 total. Elapsed time: 58357 ms, on 2 parallel jobs. Comptime: 88972 ms. Runtime: 503 ms.
+Summary for all V _test.v files: 4 passed, 4 total. Elapsed time: 18291 ms, on 2 parallel jobs. Comptime: 35933 ms. Runtime: 367 ms.

@@ -2,7 +2,7 @@
 
 niconico のユーザーページ・マイリストから動画 ID を取得する V 製 CLI です。[go-nico-list](https://github.com/sh4869221b/go-nico-list/tree/6638228b9acfa6256805f5e57bdd75f4ca80e084) の現行オプションと出力形式を移植しています。
 
-Linux ではループバック統合テスト 48 件に合格しました。現在の合成ベンチマークでは Go 参照実装より遅い結果です。実測値と検証範囲は [VALIDATION.md](VALIDATION.md) を参照してください。
+Linux ではループバック統合テスト 53 件に合格しました。現在の合成ベンチマークでは Go 参照実装より遅い結果です。実測値と検証範囲は [VALIDATION.md](VALIDATION.md) を参照してください。
 
 [English](../README.md) · [互換性・通信の制限](COMPATIBILITY.md) · [検証・ベンチマーク](VALIDATION.md)
 
