@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-11-06T01:38:10.049710+00:00",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "versions": {
+    "v": "V 0.5.2 6701135",
+    "gcc": "14.2.0",
+    "openssl": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)",
+    "go": "go version go1.27.1 linux/amd64"
+  },
+  "baseline_commit": "6638228b9acfa6256805f5e57bdd75f4ca80e084",
+  "build_commands": {
+    "v": "V=/workspace/toolchains/v/v scripts/build.sh",
+    "go": "python3 scripts/build_reference.py --source /workspace/go-nico-list-reference --go /workspace/toolchains/go/bin/go"
+  },
+  "go_toolchain_selection": "GOTOOLCHAIN=local; reference go.mod requests go1.27.3, minimum go1.27.0; actual compiler go1.27.1",
+  "integration": {
+    "v": {
+      "command": "python3 tests/integration.py --binary bin/v-nico-list",
+      "tests": 48,
+      "passed": 48,
+      "skipped": 0,
+      "log": "linux-integration-v.txt"
+    },
+    "go": {
+      "command": "python3 tests/integration.py --binary bin/go-nico-list-reference --profile go-reference",
+      "tests": 48,
+      "passed": 45,
+      "skipped": 3,
+      "skip_reason": "Force-proxy loopback cases: Go standard transport always bypasses loopback",
+      "log": "linux-integration-go.txt"
+    }
+  },
+  "binary_sha256": {
+    "v": "7796bd447fb1b1e2b4b39075e11e102f556f27ede8cb3cbe4812e1236558bc24",
+    "go": "550beae026272f5df6f8ea89540d0ee7340773cbadd12df9b8eda00de29e805a"
+  },
+  "harness_sha256": {
+    "tests/loopback.py": "3809569d02c149ed93ed4b0c067c0ef814fb27f1eaa0cba8d053fdfc3163cf49",
+    "tests/integration.py": "35ad91fb2fd3703f21634c4a6dccf9a7d5ec7b50d0a53fed5e5b96ef60ee57da",
+    "scripts/benchmark.py": "58f4756d06d9aef2cebdbfbe1ba3c9fec25565f730051572fc92274da0a01fce",
+    "scripts/build_reference.py": "8800ac96a04be30ccc11745540f5fe405d4cf27dcce5dc095e6d49f3f7e9f3f7"
+  },
+  "reference_checkout_clean": true,
+  "windows_execution": "not run; native CI configured",
+  "live_api_calls": 0
+}

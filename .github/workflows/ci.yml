@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install native dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc make libssl-dev libgc-dev openssl
+      - name: Bootstrap pinned official V compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/setup-v.sh "$RUNNER_TEMP/v"
+          echo "$RUNNER_TEMP/v" >> "$GITHUB_PATH"
+      - name: Format check
+        run: v fmt -verify src
+      - name: Unit tests
+        run: v -cc gcc -d use_openssl test src
+      - name: Build
+        run: scripts/build.sh
+      - name: Loopback integration contracts
+        run: python3 tests/integration.py --binary bin/v-nico-list
+      - name: Benchmark smoke (no performance threshold)
+        run: python3 scripts/benchmark.py --binary v=bin/v-nico-list --targets 3 --pages 3 --repetitions 1 --output /tmp/benchmark-smoke.json
+
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Bootstrap pinned official V with native MSVC
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $toolchain = Join-Path $env:RUNNER_TEMP 'v'
+          git clone --filter=blob:none https://github.com/vlang/v.git $toolchain
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git -C $toolchain checkout --detach (Get-Content scripts/v-revision).Trim()
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git clone --filter=blob:none https://github.com/vlang/vc.git (Join-Path $toolchain 'vc')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git -C (Join-Path $toolchain 'vc') checkout --detach (Get-Content scripts/vc-revision).Trim()
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Push-Location $toolchain
+          cmd /c 'makev.bat -msvc --local'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Pop-Location
+          Add-Content $env:GITHUB_PATH $toolchain
+          # Git for Windows includes OpenSSL for ephemeral TLS test certificates.
+          Add-Content $env:GITHUB_PATH 'C:\Program Files\Git\usr\bin'
+      - name: Format check
+        run: v fmt -verify src
+      - name: Unit tests with native Windows TLS backend
+        run: v -cc msvc test src
+      - name: Build native Windows executable
+        run: |
+          New-Item -ItemType Directory -Force bin | Out-Null
+          v -cc msvc -prod -o bin/v-nico-list.exe src
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run contracts on Windows
+        run: python tests/integration.py --binary bin/v-nico-list.exe

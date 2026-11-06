@@ -1,0 +1,7 @@
+/bin/
+/.toolchains/
+*.exe
+*.tmp.c
+*.o
+__pycache__/
+*.pyc
