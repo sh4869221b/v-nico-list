@@ -24,6 +24,9 @@ struct Permit {
 struct Control {
 mut:
 	mu               sync.Mutex
+	dispatch_mu      sync.Mutex
+	dispatching      bool
+	next_dispatch    i64
 	cfg              Config
 	started          i64
 	budget           int = 8
@@ -73,6 +76,7 @@ fn new_control(cfg Config) !&Control {
 	n := now_ns()
 	mut c := &Control{ cfg: cfg, started: n, window_started: n, last_change: n }
 	c.mu.init()
+	c.dispatch_mu.init()
 	if cfg.adaptive && cfg.explicit_http && cfg.http > 0 {
 		c.maximum = cfg.http
 		c.budget = int_min(8, c.maximum)

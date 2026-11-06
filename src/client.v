@@ -30,7 +30,7 @@ fn fetch_page(cfg Config, t Target, page int, mut c Control) !Page {
 	for attempt := 1; attempt <= cfg.retries; attempt++ {
 		if delay > 0 { sleep_cancel(delay)! }
 		permit := c.acquire_http(attempt)!
-		response := transport_get(request_url(cfg, t, page), cfg.timeout) or {
+		response := transport_get(request_url(cfg, t, page), cfg.timeout, c) or {
 			if err.code() == 20001 {
 				c.finish_http(permit, 200, false, 0, 0)
 				c.add_counter('body_errors', 1)

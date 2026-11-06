@@ -104,7 +104,7 @@ fn (mut s WireStream) fill() !bool {
 			return err
 		}
 	} else {
-		s.tcp.read(mut s.buffer) or {
+		wire_tcp_read(mut s.tcp, s.deadline, s.buffer.data, s.buffer.len) or {
 			s.check()!
 			if err is io.Eof { return false }
 			return err
@@ -431,13 +431,50 @@ fn wire_url(raw string) !urllib.URL {
 	return u
 }
 
-fn transport_get(raw_url string, timeout time.Duration) !WireResponse {
+// Admission precedes connection setup. Pace the final write as well so slow
+// DNS, dialing or TLS cannot turn separately admitted requests into a burst.
+fn (mut c Control) write_http(mut stream WireStream, request string) ! {
+	mut interval := i64(c.cfg.interval)
+	if c.cfg.rate > 0 { interval = ns_max(interval, rate_interval(c.cfg.rate)) }
+	if interval == 0 {
+		stream.write(request)!
+		return
+	}
+	for {
+		stream.check()!
+		if c.stopped() { return error_with_code('context canceled', 20003) }
+		n := now_ns()
+		c.mu.lock()
+		ready := !c.cfg.adaptive || n >= c.cooldown
+		c.mu.unlock()
+		c.dispatch_mu.lock()
+		if ready && !c.dispatching && n >= c.next_dispatch {
+			c.dispatching = true
+			c.dispatch_mu.unlock()
+			break
+		}
+		c.dispatch_mu.unlock()
+		time.sleep(time.millisecond)
+	}
+	// The ownership flag serializes writes without holding either mutex across
+	// network I/O. Other requests can still observe cancellation/deadlines.
+	defer {
+		c.dispatch_mu.lock()
+		c.next_dispatch = deadline_after(now_ns(), interval)
+		c.dispatching = false
+		c.dispatch_mu.unlock()
+	}
+	stream.write(request)!
+}
+
+fn transport_get(raw_url string, timeout time.Duration, controllers ...&Control) !WireResponse {
 	if cancelled() { return error_with_code('context canceled', 20003) }
 	if timeout <= 0 { return error('HTTP timeout must be positive') }
+	control := if controllers.len > 0 { controllers[0] } else { unsafe { nil } }
 	deadline := wall_deadline_after(time.now(), timeout)
 	mut current := raw_url
 	for redirects in 0 .. 10 {
-		response := transport_once(current, deadline)!
+		response := transport_once(current, deadline, control)!
 		if response.status !in [301, 302, 303, 307, 308] || response.headers['location'] == '' {
 			return response
 		}
@@ -449,7 +486,7 @@ fn transport_get(raw_url string, timeout time.Duration) !WireResponse {
 	return error('stopped after 10 redirects')
 }
 
-fn transport_once(raw_url string, deadline time.Time) !WireResponse {
+fn transport_once(raw_url string, deadline time.Time, control &Control) !WireResponse {
 	wire_check(deadline)!
 	u := wire_url(raw_url)!
 	port := if u.port() != '' {
@@ -517,7 +554,7 @@ fn transport_once(raw_url string, deadline time.Time) !WireResponse {
 			alpn_protocols: ['http/1.1']
 		)!
 		tcp.set_read_timeout(wire_remaining_timeout(deadline))
-		stream.tls.connect(mut tcp, u.hostname()) or {
+		stream.connect_tls(u.hostname()) or {
 			stream.check()!
 			return err
 		}
@@ -528,7 +565,13 @@ fn transport_once(raw_url string, deadline time.Time) !WireResponse {
 	if proxy != '' && u.scheme == 'http' { target = '${u.scheme}://${u.host}${target}' }
 	for c in target { if c <= 32 || c == 127 { return error('invalid HTTP request target') } }
 	auth := if proxy != '' && u.scheme == 'http' { proxy_auth } else { '' }
-	stream.write('GET ${target} HTTP/1.1\r\nHost: ${u.host}\r\nUser-Agent: v-nico-list\r\nAccept: */*\r\nAccept-Encoding: gzip\r\nX-Frontend-Id: 6\r\nConnection: close\r\n${auth}\r\n')!
+	request := 'GET ${target} HTTP/1.1\r\nHost: ${u.host}\r\nUser-Agent: v-nico-list\r\nAccept: */*\r\nAccept-Encoding: gzip\r\nX-Frontend-Id: 6\r\nConnection: close\r\n${auth}\r\n'
+	if control != unsafe { nil } {
+		mut c := unsafe { control }
+		c.write_http(mut stream, request)!
+	} else {
+		stream.write(request)!
+	}
 	response := stream.headers()!
 	// Retry and terminal error status bodies are irrelevant to API decoding.
 	if response.status != 200 { return response }

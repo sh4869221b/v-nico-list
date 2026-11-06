@@ -12,6 +12,7 @@ from pathlib import Path
 import queue
 import shutil
 import signal
+import socket
 import ssl
 import subprocess
 import sys
@@ -186,35 +187,40 @@ class CLIContracts(unittest.TestCase):
 
     def test_input_error_cancels_inflight_fetch_promptly(self):
         with Fixture(lambda r: Reply(payload(r.kind), delay=3)) as fixture:
-            environment = os.environ.copy()
-            environment.update(NICO_BASE_URL=fixture.url, NO_PROXY="localhost,127.0.0.1", no_proxy="localhost,127.0.0.1")
-            process = subprocess.Popen([self.binary, "--stdin", "--json", "--no-progress", "--best-effort", "--retries=1", "nicovideo.jp/user/1"],
-                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=environment)
-            try:
-                deadline = time.monotonic() + 3
-                while not fixture.records and process.poll() is None and time.monotonic() < deadline:
-                    time.sleep(0.01)
-                self.assertTrue(fixture.records, "valid target must start before the input error is introduced")
-                writer = process.stdin
-                process.stdin = None  # The writer thread owns the input pipe.
-                def send_bad_line():
-                    try:
-                        writer.write("x" * (1024 * 1024 + 1) + "\n")
-                        writer.close()
-                    except (BrokenPipeError, OSError):
-                        pass
-                thread = threading.Thread(target=send_bad_line, daemon=True)
-                started = time.monotonic()
-                thread.start()
-                stdout, stderr = process.communicate(timeout=1.5)
-                self.assertLess(time.monotonic() - started, 1.5)
-                self.assertNotEqual(process.returncode, 0, stderr)
-                self.assertIn("input", stderr.lower())
-                thread.join(timeout=1)
-            finally:
-                if process.poll() is None:
-                    process.kill()
-                    process.communicate()
+            self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records)
+
+    def assert_input_error_cancels_fetch(self, url, request_started, env=None):
+        environment = os.environ.copy()
+        environment.update(NICO_BASE_URL=url, NO_PROXY="localhost,127.0.0.1", no_proxy="localhost,127.0.0.1")
+        if env:
+            environment.update(env)
+        process = subprocess.Popen([self.binary, "--stdin", "--json", "--no-progress", "--best-effort", "--retries=1", "nicovideo.jp/user/1"],
+                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=environment)
+        try:
+            deadline = time.monotonic() + 3
+            while not request_started() and process.poll() is None and time.monotonic() < deadline:
+                time.sleep(0.01)
+            self.assertTrue(request_started(), "valid target must start before the input error is introduced")
+            writer = process.stdin
+            process.stdin = None  # The writer thread owns the input pipe.
+            def send_bad_line():
+                try:
+                    writer.write("x" * (1024 * 1024 + 1) + "\n")
+                    writer.close()
+                except (BrokenPipeError, OSError):
+                    pass
+            thread = threading.Thread(target=send_bad_line, daemon=True)
+            started = time.monotonic()
+            thread.start()
+            stdout, stderr = process.communicate(timeout=1.5)
+            self.assertLess(time.monotonic() - started, 1.5)
+            self.assertNotEqual(process.returncode, 0, stderr)
+            self.assertIn("input", stderr.lower())
+            thread.join(timeout=1)
+        finally:
+            if process.poll() is None:
+                process.kill()
+                process.communicate()
 
     def test_broken_stdout_cancels_other_targets_promptly(self):
         def respond(r):
@@ -666,6 +672,36 @@ class TLSContracts(CLIContracts):
                 result = self.run_cli(fixture, "nicovideo.jp/user/1", env={"SSL_CERT_FILE": str(self.ca)})
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(result.stdout, "sm1\n")
+
+    def test_tls_input_error_cancels_delayed_response_promptly(self):
+        with self.tls_fixture(respond=lambda r: Reply(payload(r.kind), delay=3)) as fixture:
+            self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records,
+                                                  env={"SSL_CERT_FILE": str(self.ca)})
+
+    def test_tls_input_error_cancels_stalled_handshake_promptly(self):
+        with socket.socket() as listener:
+            listener.bind(("127.0.0.1", 0))
+            listener.listen()
+            listener.settimeout(3)
+            started = threading.Event()
+            release = threading.Event()
+            def stall_handshake():
+                try:
+                    with listener.accept()[0] as connection:
+                        connection.settimeout(3)
+                        if connection.recv(4096):
+                            started.set()  # Observe ClientHello before introducing input failure.
+                            release.wait(timeout=3)
+                except OSError:
+                    pass
+            server = threading.Thread(target=stall_handshake, daemon=True)
+            server.start()
+            try:
+                self.assert_input_error_cancels_fetch(f"https://127.0.0.1:{listener.getsockname()[1]}/v3",
+                                                      started.is_set, env={"SSL_CERT_FILE": str(self.ca)})
+            finally:
+                release.set()
+                server.join(timeout=4)
 
     @unittest.skipIf(os.name == "nt", "POSIX SIGINT edge-duration cancellation contract")
     def test_tls_extreme_timeout_serves_normally_and_is_cancellable(self):

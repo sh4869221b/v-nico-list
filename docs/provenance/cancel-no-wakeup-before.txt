@@ -1,0 +1,74 @@
+Cancellation no-wakeup experiment: before
+Base repository revision: 3e75f755fb7523cfb2990c95fbeba7a440ba047c
+Source: baseline, with watchdog socket shutdown disabled in an isolated copy only.
+Tested source SHA-256: 2ab268506c9b298e8fa598ca9c828f5ffab6eb3820891ac7c1155e6187b6597e
+Source digest input: sorted v.mod and src/* regular files, relative UTF-8 path + NUL + bytes + NUL.
+Tested binary SHA-256: e4f6577f389e81c89b1b5d0b098e874bb0a94fe0c4b583dc7bb1c5f30dc0dd38
+Simulation: remove only net.shutdown(handle) from wire_watch, modeling a local shutdown that cannot wake a blocked read.
+Build: /workspace/toolchains/v/v -cc gcc -o /tmp/v-nico-cancel-no-wakeup-53u5l680/before/v-nico-list /tmp/v-nico-cancel-no-wakeup-53u5l680/before/src
+Run: python3 tests/integration.py --binary /tmp/v-nico-cancel-no-wakeup-53u5l680/before/v-nico-list --only input_error
+TLS backend: default mbedTLS; loopback fixtures only.
+Expected outcome: three cancellation timeouts.
+
+test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly) ... ERROR
+test_tls_input_error_cancels_delayed_response_promptly (__main__.TLSContracts.test_tls_input_error_cancels_delayed_response_promptly) ... ERROR
+test_tls_input_error_cancels_stalled_handshake_promptly (__main__.TLSContracts.test_tls_input_error_cancels_stalled_handshake_promptly) ... ERROR
+
+======================================================================
+ERROR: test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 190, in test_input_error_cancels_inflight_fetch_promptly
+    self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records)
+  File "/workspace/v-nico-list/tests/integration.py", line 215, in assert_input_error_cancels_fetch
+    stdout, stderr = process.communicate(timeout=1.5)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/tmp/v-nico-cancel-no-wakeup-53u5l680/before/v-nico-list', '--stdin', '--json', '--no-progress', '--best-effort', '--retries=1', 'nicovideo.jp/user/1']' timed out after 1.5 seconds
+
+======================================================================
+ERROR: test_tls_input_error_cancels_delayed_response_promptly (__main__.TLSContracts.test_tls_input_error_cancels_delayed_response_promptly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 678, in test_tls_input_error_cancels_delayed_response_promptly
+    self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records,
+  File "/workspace/v-nico-list/tests/integration.py", line 215, in assert_input_error_cancels_fetch
+    stdout, stderr = process.communicate(timeout=1.5)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/tmp/v-nico-cancel-no-wakeup-53u5l680/before/v-nico-list', '--stdin', '--json', '--no-progress', '--best-effort', '--retries=1', 'nicovideo.jp/user/1']' timed out after 1.5 seconds
+
+======================================================================
+ERROR: test_tls_input_error_cancels_stalled_handshake_promptly (__main__.TLSContracts.test_tls_input_error_cancels_stalled_handshake_promptly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/v-nico-list/tests/integration.py", line 700, in test_tls_input_error_cancels_stalled_handshake_promptly
+    self.assert_input_error_cancels_fetch(f"https://127.0.0.1:{listener.getsockname()[1]}/v3",
+  File "/workspace/v-nico-list/tests/integration.py", line 215, in assert_input_error_cancels_fetch
+    stdout, stderr = process.communicate(timeout=1.5)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/tmp/v-nico-cancel-no-wakeup-53u5l680/before/v-nico-list', '--stdin', '--json', '--no-progress', '--best-effort', '--retries=1', 'nicovideo.jp/user/1']' timed out after 1.5 seconds
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.787s
+
+FAILED (errors=3)

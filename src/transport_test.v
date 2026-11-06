@@ -129,11 +129,12 @@ fn test_transport_chunk_extension_syntax() {
 	}
 }
 
-fn wire_test_redirect_server(mut listener net.TcpListener, requests chan string) {
+fn wire_test_redirect_server(mut listener net.TcpListener, requests chan string, arrivals chan i64) {
 	for i in 0 .. 2 {
 		mut conn := listener.accept() or { return }
 		mut data := []u8{len: 8192}
 		n := conn.read(mut data) or { return }
+		arrivals <- now_ns()
 		requests <- data[..n].bytestr()
 		conn.write_string(if i == 0 {
 			'HTTP/1.1 302 Found\r\nLocation: ../final?ok=1\r\nContent-Length: 999999999\r\n\r\n'
@@ -158,13 +159,87 @@ fn test_transport_follows_relative_redirect_without_reading_its_body() {
 	listener.set_accept_timeout(time.second)
 	port := listener.addr()!.port()!
 	requests := chan string{cap: 2}
-	server := spawn wire_test_redirect_server(mut listener, requests)
+	arrivals := chan i64{cap: 2}
+	server := spawn wire_test_redirect_server(mut listener, requests, arrivals)
 	defer {
 		server.wait()
 		listener.close() or {}
 	}
-	result := transport_get('http://127.0.0.1:${port}/old/start', time.second)!
+	cfg := parse_config(['--min-interval=80ms'])!
+	mut c := new_control(cfg)!
+	result := transport_get('http://127.0.0.1:${port}/old/start', time.second, c)!
 	assert result.body.bytestr() == 'hello'
 	assert (<-requests).starts_with('GET /old/start HTTP/1.1\r\n')
 	assert (<-requests).starts_with('GET /final?ok=1 HTTP/1.1\r\n')
+	first := <-arrivals
+	assert (<-arrivals) - first >= 40 * time.millisecond
+}
+
+fn wire_test_pacing_server(mut listener net.TcpListener, arrivals chan i64) {
+	for _ in 0 .. 2 {
+		mut conn := listener.accept() or { return }
+		mut data := []u8{len: 8192}
+		conn.read(mut data) or { return }
+		arrivals <- now_ns()
+		conn.close() or {}
+	}
+}
+
+fn test_transport_dispatch_pacing_survives_delayed_connection_setup() ! {
+	cfg := parse_config(['--min-interval=80ms'])!
+	mut c := new_control(cfg)!
+	mut listener := net.listen_tcp(.ip, '127.0.0.1:0')!
+	listener.set_accept_timeout(time.second)
+	port := listener.addr()!.port()!
+	arrivals := chan i64{cap: 2}
+	server := spawn wire_test_pacing_server(mut listener, arrivals)
+	defer {
+		server.wait()
+		listener.close() or {}
+	}
+	mut first := net.dial_tcp('127.0.0.1:${port}')!
+	mut second := net.dial_tcp('127.0.0.1:${port}')!
+	defer {
+		first.close() or {}
+		second.close() or {}
+	}
+	// Delay the first dispatch until both permits have been granted. This models
+	// a first request's connection setup taking longer than the pacing gap.
+	first_permit := c.acquire_http(1)!
+	second_permit := c.acquire_http(1)!
+	assert second_permit.started - first_permit.started >= 80 * time.millisecond
+	deadline := wall_deadline_after(time.now(), time.second)
+	mut first_stream := WireStream{ tcp: first, deadline: deadline }
+	mut second_stream := WireStream{ tcp: second, deadline: deadline }
+	request := 'GET /fixture HTTP/1.1\r\nHost: localhost\r\n\r\n'
+	c.write_http(mut first_stream, request)!
+	first_arrival := <-arrivals
+	c.write_http(mut second_stream, request)!
+	assert (<-arrivals) - first_arrival >= 40 * time.millisecond
+	c.finish_http(first_permit, 200, false, 0, 0)
+	c.finish_http(second_permit, 200, false, 0, 0)
+	assert c.active == 0
+}
+
+fn test_transport_dispatch_wait_checks_deadline_and_cancellation() ! {
+	cfg := parse_config(['--min-interval=80ms'])!
+	mut c := new_control(cfg)!
+	c.next_dispatch = max_wait_ns
+	mut stream := WireStream{ deadline: wall_deadline_after(time.now(), 30 * time.millisecond) }
+	mut expired := false
+	c.write_http(mut stream, '') or {
+		assert err.code() == 20002
+		expired = true
+	}
+	assert expired
+	assert !c.dispatching
+	c.stop = true
+	stream.deadline = wall_deadline_after(time.now(), time.second)
+	mut stopped := false
+	c.write_http(mut stream, '') or {
+		assert err.code() == 20003
+		stopped = true
+	}
+	assert stopped
+	assert !c.dispatching
 }

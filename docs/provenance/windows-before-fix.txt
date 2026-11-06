@@ -1,0 +1,124 @@
+Native Windows integration failures before transport corrections.
+Commit: 04bb7095d0a60306e13d2a0285c45efb2e2abb0e
+Job: https://github.com/sh4869221b/v-nico-list/actions/runs/42150393812/job/127671952308
+Excerpt from the public GitHub Actions job log; ANSI escapes removed.
+
+##[group]Run python tests/integration.py --binary bin/v-nico-list.exe
+2026-11-06T02:32:21.8246573Z python tests/integration.py --binary bin/v-nico-list.exe
+2026-11-06T02:32:21.8284522Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-06T02:32:21.8284949Z ##[endgroup]
+2026-11-06T02:32:26.2568167Z test_adaptive_429_pauses_new_requests_globally (__main__.CLIContracts.test_adaptive_429_pauses_new_requests_globally) ... ok
+2026-11-06T02:32:29.4351765Z test_adaptive_grows_with_sustained_known_total_supply (__main__.CLIContracts.test_adaptive_grows_with_sustained_known_total_supply) ... ok
+2026-11-06T02:32:29.5292792Z test_args_file_stdin_and_no_sort_input_order (__main__.CLIContracts.test_args_file_stdin_and_no_sort_input_order) ... ok
+2026-11-06T02:32:31.0903960Z test_broken_stdout_cancels_other_targets_promptly (__main__.CLIContracts.test_broken_stdout_cancels_other_targets_promptly) ... ERROR
+2026-11-06T02:32:31.1402327Z test_comment_is_exclusive_and_dates_are_utc_inclusive (__main__.CLIContracts.test_comment_is_exclusive_and_dates_are_utc_inclusive) ... ok
+2026-11-06T02:32:31.3594534Z test_earlier_empty_page_supersedes_later_error (__main__.CLIContracts.test_earlier_empty_page_supersedes_later_error) ... ok
+2026-11-06T02:32:31.3750046Z test_empty_arrays_and_404 (__main__.CLIContracts.test_empty_arrays_and_404) ... ok
+2026-11-06T02:32:31.4219676Z test_empty_positional_argument_counts_as_invalid (__main__.CLIContracts.test_empty_positional_argument_counts_as_invalid) ... ok
+2026-11-06T02:32:31.7502537Z test_exact_body_limit_is_accepted (__main__.CLIContracts.test_exact_body_limit_is_accepted) ... ok
+2026-11-06T02:32:31.7503965Z test_extreme_representable_interval_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_representable_interval_waits_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:32:31.7505407Z test_extreme_retry_after_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_retry_after_waits_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:32:31.7506736Z test_extreme_timeout_serves_normally_and_is_cancellable (__main__.CLIContracts.test_extreme_timeout_serves_normally_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:32:31.7508124Z test_extreme_tiny_positive_rate_waits_and_is_cancellable (__main__.CLIContracts.test_extreme_tiny_positive_rate_waits_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:32:32.0318131Z test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) ...
+2026-11-06T02:32:32.0320525Z   test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) (flags=('--min-interval', '60ms')) ... FAIL
+2026-11-06T02:32:32.3129153Z   test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) (flags=('--rate-limit', '16.6666666667')) ... FAIL
+2026-11-06T02:32:32.5946322Z   test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) (flags=('--rate-limit', '100', '--min-interval', '60ms')) ... FAIL
+2026-11-06T02:32:32.6414198Z test_gzip_decoding (__main__.CLIContracts.test_gzip_decoding) ... ok
+2026-11-06T02:32:32.6725899Z test_help_and_version_without_inputs (__main__.CLIContracts.test_help_and_version_without_inputs) ... ok
+2026-11-06T02:32:32.7511207Z test_http_proxy_absolute_form_and_basic_auth (__main__.CLIContracts.test_http_proxy_absolute_form_and_basic_auth) ... ok
+2026-11-06T02:32:32.8291993Z test_http_redirect_loop_is_bounded (__main__.CLIContracts.test_http_redirect_loop_is_bounded) ... ok
+2026-11-06T02:32:33.0639032Z test_http_redirects_follow_relative_locations (__main__.CLIContracts.test_http_redirects_follow_relative_locations) ... ok
+2026-11-06T02:32:34.6116703Z test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly) ... ERROR
+2026-11-06T02:32:34.7213715Z test_input_line_limit_preserves_preceding_results (__main__.CLIContracts.test_input_line_limit_preserves_preceding_results) ... ok
+2026-11-06T02:32:34.8144676Z test_input_precedence_partial_regex_and_lengths (__main__.CLIContracts.test_input_precedence_partial_regex_and_lengths) ... ok
+2026-11-06T02:32:34.8456410Z test_integer_prefixes_and_native_width (__main__.CLIContracts.test_integer_prefixes_and_native_width) ... ok
+2026-11-06T02:32:34.8612228Z test_invalid_default_skips_and_bool_last_value_wins (__main__.CLIContracts.test_invalid_default_skips_and_bool_last_value_wins) ... ok
+2026-11-06T02:32:34.9550159Z test_invalid_json_utf8_duplicate_names_and_timestamps (__main__.CLIContracts.test_invalid_json_utf8_duplicate_names_and_timestamps) ... ok
+2026-11-06T02:32:34.9710174Z test_json_invalid_utf8_input_fails_without_partial_json (__main__.CLIContracts.test_json_invalid_utf8_input_fails_without_partial_json) ... ok
+2026-11-06T02:32:35.0644422Z test_json_target_items_remain_unsorted_and_undeduped (__main__.CLIContracts.test_json_target_items_remain_unsorted_and_undeduped) ... ok
+2026-11-06T02:32:35.1272822Z test_metrics_logfile_and_stdout_separation (__main__.CLIContracts.test_metrics_logfile_and_stdout_separation) ... ok
+2026-11-06T02:32:35.4736647Z test_mylist_total_count_fallbacks (__main__.CLIContracts.test_mylist_total_count_fallbacks) ... ok
+2026-11-06T02:32:35.5049178Z test_no_inputs_and_missing_input_file_are_errors (__main__.CLIContracts.test_no_inputs_and_missing_input_file_are_errors) ... ok
+2026-11-06T02:32:35.6456289Z test_no_proxy_cidr_and_host_port (__main__.CLIContracts.test_no_proxy_cidr_and_host_port) ... ok
+2026-11-06T02:32:36.6647196Z test_no_sort_streams_before_all_targets_finish (__main__.CLIContracts.test_no_sort_streams_before_all_targets_finish) ... ok
+2026-11-06T02:32:36.7113393Z test_numeric_sort_dedupe_urls_and_short_option_cluster (__main__.CLIContracts.test_numeric_sort_dedupe_urls_and_short_option_cluster) ... ok
+2026-11-06T02:32:36.9628687Z test_parallel_failure_keeps_only_ordered_prefix (__main__.CLIContracts.test_parallel_failure_keeps_only_ordered_prefix) ... ok
+2026-11-06T02:32:37.0097017Z test_partial_other_targets_and_best_effort (__main__.CLIContracts.test_partial_other_targets_and_best_effort) ... ok
+2026-11-06T02:32:37.0722058Z test_present_zero_negative_totals_do_not_become_unknown (__main__.CLIContracts.test_present_zero_negative_totals_do_not_become_unknown) ... ok
+2026-11-06T02:32:37.4316753Z test_retries_are_attempt_count_with_exponential_backoff (__main__.CLIContracts.test_retries_are_attempt_count_with_exponential_backoff) ... ok
+2026-11-06T02:32:40.0263271Z test_retry_after_seconds_and_http_date (__main__.CLIContracts.test_retry_after_seconds_and_http_date) ... ok
+2026-11-06T02:32:41.0581769Z test_retry_wait_releases_http_slot (__main__.CLIContracts.test_retry_wait_releases_http_slot) ... ok
+2026-11-06T02:32:41.0582819Z test_sigint_cancels_promptly (__main__.CLIContracts.test_sigint_cancels_promptly) ... skipped 'POSIX SIGINT test; Windows exercised by remaining CLI contracts'
+2026-11-06T02:32:41.1050053Z test_strict_overrides_best_effort (__main__.CLIContracts.test_strict_overrides_best_effort) ... ok
+2026-11-06T02:32:41.6831760Z test_success_body_limit_after_gzip_and_chunking (__main__.CLIContracts.test_success_body_limit_after_gzip_and_chunking) ... ok
+2026-11-06T02:32:46.0228245Z test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+2026-11-06T02:32:46.1322464Z test_timeout_is_prompt_successful_empty (__main__.CLIContracts.test_timeout_is_prompt_successful_empty) ... ok
+2026-11-06T02:32:46.2749712Z test_unknown_total_stays_sequential_until_empty (__main__.CLIContracts.test_unknown_total_stays_sequential_until_empty) ... ok
+2026-11-06T02:32:46.3720507Z test_user_mylist_schema_sort_and_headers (__main__.CLIContracts.test_user_mylist_schema_sort_and_headers) ... ok
+2026-11-06T02:32:46.5406906Z test_validation_and_removed_flags (__main__.CLIContracts.test_validation_and_removed_flags) ... ok
+2026-11-06T02:32:48.0629103Z test_tls_extreme_timeout_serves_normally_and_is_cancellable (__main__.TLSContracts.test_tls_extreme_timeout_serves_normally_and_is_cancellable) ... skipped 'POSIX SIGINT edge-duration cancellation contract'
+2026-11-06T02:32:48.4043693Z test_tls_hostname_mismatch_rejected (__main__.TLSContracts.test_tls_hostname_mismatch_rejected) ... ok
+2026-11-06T02:32:48.4825566Z test_tls_http_connect_proxy_preserves_verification (__main__.TLSContracts.test_tls_http_connect_proxy_preserves_verification) ... ok
+2026-11-06T02:32:52.6108731Z test_tls_trusted_ca_success (__main__.TLSContracts.test_tls_trusted_ca_success) ... ok
+2026-11-06T02:32:52.6264354Z test_tls_untrusted_ca_rejected (__main__.TLSContracts.test_tls_untrusted_ca_rejected) ... ok
+2026-11-06T02:32:52.6577791Z test_tls_untrusted_ca_still_rejected_through_connect (__main__.TLSContracts.test_tls_untrusted_ca_still_rejected_through_connect) ... ok
+2026-11-06T02:32:52.6594707Z
+2026-11-06T02:32:52.6595491Z ======================================================================
+2026-11-06T02:32:52.6596755Z ERROR: test_broken_stdout_cancels_other_targets_promptly (__main__.CLIContracts.test_broken_stdout_cancels_other_targets_promptly)
+2026-11-06T02:32:52.6598099Z ----------------------------------------------------------------------
+2026-11-06T02:32:52.6598966Z Traceback (most recent call last):
+2026-11-06T02:32:52.6599887Z   File "D:\a\v-nico-list\v-nico-list\tests\integration.py", line 236, in test_broken_stdout_cancels_other_targets_promptly
+2026-11-06T02:32:52.6601886Z     _, stderr = process.communicate(timeout=1.5)
+2026-11-06T02:32:52.6602435Z                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-06T02:32:52.6603281Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1209, in communicate
+2026-11-06T02:32:52.6604239Z     stdout, stderr = self._communicate(input, endtime, timeout)
+2026-11-06T02:32:52.6604867Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-06T02:32:52.6605616Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1634, in _communicate
+2026-11-06T02:32:52.6606364Z     raise TimeoutExpired(self.args, orig_timeout)
+2026-11-06T02:32:52.6607808Z subprocess.TimeoutExpired: Command '['D:\\a\\v-nico-list\\v-nico-list\\bin\\v-nico-list.exe', '--no-sort', '--no-progress', '--retries=1', '-T2', 'nicovideo.jp/user/1', 'nicovideo.jp/user/2']' timed out after 1.5 seconds
+2026-11-06T02:32:52.6608948Z
+2026-11-06T02:32:52.6609157Z ======================================================================
+2026-11-06T02:32:52.6610140Z ERROR: test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly)
+2026-11-06T02:32:52.6611157Z ----------------------------------------------------------------------
+2026-11-06T02:32:52.6611657Z Traceback (most recent call last):
+2026-11-06T02:32:52.6612481Z   File "D:\a\v-nico-list\v-nico-list\tests\integration.py", line 209, in test_input_error_cancels_inflight_fetch_promptly
+2026-11-06T02:32:52.6613342Z     stdout, stderr = process.communicate(timeout=1.5)
+2026-11-06T02:32:52.6613793Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-06T02:32:52.6614501Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1209, in communicate
+2026-11-06T02:32:52.6615305Z     stdout, stderr = self._communicate(input, endtime, timeout)
+2026-11-06T02:32:52.6615837Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-06T02:32:52.6616538Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1630, in _communicate
+2026-11-06T02:32:52.6617266Z     raise TimeoutExpired(self.args, orig_timeout)
+2026-11-06T02:32:52.6618871Z subprocess.TimeoutExpired: Command '['D:\\a\\v-nico-list\\v-nico-list\\bin\\v-nico-list.exe', '--stdin', '--json', '--no-progress', '--best-effort', '--retries=1', 'nicovideo.jp/user/1']' timed out after 1.5 seconds
+2026-11-06T02:32:52.6619946Z
+2026-11-06T02:32:52.6620135Z ======================================================================
+2026-11-06T02:32:52.6621317Z FAIL: test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) (flags=('--min-interval', '60ms'))
+2026-11-06T02:32:52.6622521Z ----------------------------------------------------------------------
+2026-11-06T02:32:52.6622993Z Traceback (most recent call last):
+2026-11-06T02:32:52.6623903Z   File "D:\a\v-nico-list\v-nico-list\tests\integration.py", line 419, in test_global_pacing_includes_targets_pages_and_retries
+2026-11-06T02:32:52.6624939Z     self.assertGreaterEqual(right - left, 0.045, "command-wide dispatch pacing")
+2026-11-06T02:32:52.6625861Z AssertionError: 0.015000000000100044 not greater than or equal to 0.045 : command-wide dispatch pacing
+2026-11-06T02:32:52.6626429Z
+2026-11-06T02:32:52.6626605Z ======================================================================
+2026-11-06T02:32:52.6627837Z FAIL: test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) (flags=('--rate-limit', '16.6666666667'))
+2026-11-06T02:32:52.6628983Z ----------------------------------------------------------------------
+2026-11-06T02:32:52.6629487Z Traceback (most recent call last):
+2026-11-06T02:32:52.6630405Z   File "D:\a\v-nico-list\v-nico-list\tests\integration.py", line 419, in test_global_pacing_includes_targets_pages_and_retries
+2026-11-06T02:32:52.6631671Z     self.assertGreaterEqual(right - left, 0.045, "command-wide dispatch pacing")
+2026-11-06T02:32:52.6632693Z AssertionError: 0.016000000000076398 not greater than or equal to 0.045 : command-wide dispatch pacing
+2026-11-06T02:32:52.6633319Z
+2026-11-06T02:32:52.6633534Z ======================================================================
+2026-11-06T02:32:52.6635001Z FAIL: test_global_pacing_includes_targets_pages_and_retries (__main__.CLIContracts.test_global_pacing_includes_targets_pages_and_retries) (flags=('--rate-limit', '100', '--min-interval', '60ms'))
+2026-11-06T02:32:52.6636453Z ----------------------------------------------------------------------
+2026-11-06T02:32:52.6637013Z Traceback (most recent call last):
+2026-11-06T02:32:52.6637950Z   File "D:\a\v-nico-list\v-nico-list\tests\integration.py", line 419, in test_global_pacing_includes_targets_pages_and_retries
+2026-11-06T02:32:52.6639070Z     self.assertGreaterEqual(right - left, 0.045, "command-wide dispatch pacing")
+2026-11-06T02:32:52.6640068Z AssertionError: 0.015999999999849024 not greater than or equal to 0.045 : command-wide dispatch pacing
+2026-11-06T02:32:52.6640693Z
+2026-11-06T02:32:52.6640952Z ----------------------------------------------------------------------
+2026-11-06T02:32:52.6641488Z Ran 53 tests in 27.961s
+2026-11-06T02:32:52.6641692Z
+2026-11-06T02:32:52.6641874Z FAILED (failures=3, errors=2, skipped=6)
+2026-11-06T02:32:52.7634797Z ##[error]Process completed with exit code 1.
+2026-11-06T02:32:52.7851868Z

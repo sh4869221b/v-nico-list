@@ -1,0 +1,20 @@
+Cancellation no-wakeup experiment: after
+Base repository revision: 3e75f755fb7523cfb2990c95fbeba7a440ba047c
+Source: final working fixes, with watchdog socket shutdown disabled in an isolated copy only.
+Tested source SHA-256: 8f19dc52b969de757aea710fca8cea69c4a0ab2183efe9c9998e0c7af47e2410
+Source digest input: sorted v.mod and src/* regular files, relative UTF-8 path + NUL + bytes + NUL.
+Tested binary SHA-256: 03100ce495119db9088503726d7fd6753b32acc0c5f641ad3934127c28e464cc
+Simulation: remove only net.shutdown(handle) from wire_watch, modeling a local shutdown that cannot wake a blocked read.
+Build: /workspace/toolchains/v/v -cc gcc -o /tmp/v-nico-cancel-no-wakeup-53u5l680/after/v-nico-list /tmp/v-nico-cancel-no-wakeup-53u5l680/after/src
+Run: python3 tests/integration.py --binary /tmp/v-nico-cancel-no-wakeup-53u5l680/after/v-nico-list --only input_error
+TLS backend: default mbedTLS; loopback fixtures only.
+Expected outcome: all three cancellation contracts pass.
+
+test_input_error_cancels_inflight_fetch_promptly (__main__.CLIContracts.test_input_error_cancels_inflight_fetch_promptly) ... ok
+test_tls_input_error_cancels_delayed_response_promptly (__main__.TLSContracts.test_tls_input_error_cancels_delayed_response_promptly) ... ok
+test_tls_input_error_cancels_stalled_handshake_promptly (__main__.TLSContracts.test_tls_input_error_cancels_stalled_handshake_promptly) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.458s
+
+OK
