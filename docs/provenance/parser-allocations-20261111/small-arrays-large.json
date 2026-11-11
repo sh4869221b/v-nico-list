@@ -1,0 +1,929 @@
+{
+  "scope": "Isolated parse_page wall time plus loop/assignment/scalar checksum; includes normal GC. Excludes file IO, startup, validation, output, HTTP, workers and sorting. No CLI/live API speed claim.",
+  "started_at_utc": "2026-11-11T08:08:13.873449+00:00",
+  "harness_sha256": "4f6e1bdc8b2753249d3224797661505ed0d57b23da97ebcd2df73e0f83d1ad97",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "python": "3.12.14",
+  "cpu": "",
+  "parameters": {
+    "source": [],
+    "binary": [
+      "prefix=../v-nico-prefix-binaries/prefix",
+      "small_arrays=../v-nico-small-array-binaries/small_arrays"
+    ],
+    "build_dir": null,
+    "v": "v",
+    "cc": "gcc",
+    "size": [
+      1000
+    ],
+    "profile": "minimal",
+    "iterations": 50,
+    "warmups": 10,
+    "repetitions": 7,
+    "output": "docs/provenance/parser-allocations-20261111/small-arrays-large.json"
+  },
+  "order": "fresh process per sample, warmups inside each process; alternating forward/reverse variants per repetition",
+  "memory": "Boehm gc_heap_usage total_bytes delta across timed batch (allocator-accounted bytes, not allocation count, RSS or peak/live memory). Heap snapshots are before/after only; GC remains enabled.",
+  "variants": {
+    "prefix": {
+      "source": "/workspace/scratch/b81277eea609/v-nico-parser-allocations",
+      "git": {
+        "head": "5f375c1607afdfbcca6141e1dccfa501691f9168",
+        "tree": "e9ee0733a9cc8b92a1d676e255def2c048aabc77",
+        "status": "M src/domain.v\n?? src/parser_prefix_test.v"
+      },
+      "source_sha256": {
+        "domain.v": "6173b72da494ab91f69f827da51463498c69b7f5d89ed0de5ae62929f54b9610",
+        "config.v": "4fbbb8b39fd3b679930b65f20b5f62c534e72d192ecb9c7193cb7ef0d26849f2"
+      },
+      "driver_sha256": "854aa3479b44fcba1a488373716fada99d8502b97ee14a44f677bb5fe30a5056",
+      "compiler": {
+        "path": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "version": "V 0.5.2 6701135",
+        "git": {
+          "head": "67011350d000d86c3fc2a925b505c590dbfdea88",
+          "tree": "e2ec6c71c4cb394f84f65ac14dcaef1a475a9f31",
+          "status": ""
+        },
+        "cc": "gcc",
+        "cc_version": "gcc (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "flags": [
+          "-prod",
+          "-gc",
+          "boehm"
+        ],
+        "vmodules": "/workspace/scratch/b81277eea609/v-nico-vmodules"
+      },
+      "build_command": [
+        "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "-cc",
+        "gcc",
+        "-prod",
+        "-gc",
+        "boehm",
+        "-o",
+        "/workspace/scratch/b81277eea609/v-nico-prefix-binaries/prefix",
+        "/tmp/nico-parse-zwjb3y_j/source-prefix"
+      ],
+      "binary_sha256": "30c1e3ec7854090bf81943d014c7f239d73ab1c91afc2e6e058d3283beb8c342",
+      "path": "/workspace/scratch/b81277eea609/v-nico-prefix-binaries/prefix",
+      "results": {
+        "user-ascii-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 210871630,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345680992,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 219412141,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345680064,
+              "heap_before": 20492288,
+              "heap_after": 28880896
+            },
+            {
+              "nanoseconds": 234574330,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345684256,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 220349110,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345684176,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 218531095,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345684592,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 218826100,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345684256,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 235248895,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345684592,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            }
+          ],
+          "ns_per_page_median": 4388242.82,
+          "ns_per_page_min": 4217432.6,
+          "ns_per_page_max": 4704977.9,
+          "allocated_bytes_per_page_median": 6913685.12
+        },
+        "user-unicode-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 222081414,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345684512,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 196835628,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345682832,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 206980107,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345682576,
+              "heap_before": 20492288,
+              "heap_after": 28880896
+            },
+            {
+              "nanoseconds": 232903473,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345683712,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 225096543,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345682672,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 233299635,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345683232,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            },
+            {
+              "nanoseconds": 212665609,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 345683088,
+              "heap_before": 20492288,
+              "heap_after": 20492288
+            }
+          ],
+          "ns_per_page_median": 4441628.28,
+          "ns_per_page_min": 3936712.56,
+          "ns_per_page_max": 4665992.7,
+          "allocated_bytes_per_page_median": 6913661.76
+        },
+        "user-escaped-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 225785863,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            },
+            {
+              "nanoseconds": 255392872,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            },
+            {
+              "nanoseconds": 239870193,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            },
+            {
+              "nanoseconds": 220629831,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            },
+            {
+              "nanoseconds": 235616658,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            },
+            {
+              "nanoseconds": 233816824,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            },
+            {
+              "nanoseconds": 253120062,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 356881408,
+              "heap_before": 20443136,
+              "heap_after": 20443136
+            }
+          ],
+          "ns_per_page_median": 4712333.16,
+          "ns_per_page_min": 4412596.62,
+          "ns_per_page_max": 5107857.44,
+          "allocated_bytes_per_page_median": 7137628.16
+        },
+        "mylist-ascii-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 146992933,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 152240851,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 158752571,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567968,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 166442283,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 161758172,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 192419131,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 157205164,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            }
+          ],
+          "ns_per_page_median": 3175051.42,
+          "ns_per_page_min": 2939858.66,
+          "ns_per_page_max": 3848382.62,
+          "allocated_bytes_per_page_median": 5491359.04
+        },
+        "mylist-unicode-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 167068699,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 150742152,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 159644512,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 167657160,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 174984521,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 166562989,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 157287120,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567952,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            }
+          ],
+          "ns_per_page_median": 3331259.78,
+          "ns_per_page_min": 3014843.04,
+          "ns_per_page_max": 3499690.42,
+          "allocated_bytes_per_page_median": 5491359.04
+        },
+        "mylist-escaped-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 175310763,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 176791962,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 170243301,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 177330641,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 169329641,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 196379852,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 181922679,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285771440,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            }
+          ],
+          "ns_per_page_median": 3535839.24,
+          "ns_per_page_min": 3386592.82,
+          "ns_per_page_max": 3927597.04,
+          "allocated_bytes_per_page_median": 5715428.8
+        }
+      }
+    },
+    "small_arrays": {
+      "source": "/workspace/scratch/b81277eea609/v-nico-parser-array-trial",
+      "git": {
+        "head": "1c14ecc12529205f42d142189b89b34d3dc7c084",
+        "tree": "723e4643a5acfcc97e6df19fea4e5550c7ca6131",
+        "status": ""
+      },
+      "source_sha256": {
+        "domain.v": "c7453aa7f584e10a7e8943e6746772ce0ca10e38849e428ae52b6d292dcb8da8",
+        "config.v": "4fbbb8b39fd3b679930b65f20b5f62c534e72d192ecb9c7193cb7ef0d26849f2"
+      },
+      "driver_sha256": "854aa3479b44fcba1a488373716fada99d8502b97ee14a44f677bb5fe30a5056",
+      "compiler": {
+        "path": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "version": "V 0.5.2 6701135",
+        "git": {
+          "head": "67011350d000d86c3fc2a925b505c590dbfdea88",
+          "tree": "e2ec6c71c4cb394f84f65ac14dcaef1a475a9f31",
+          "status": ""
+        },
+        "cc": "gcc",
+        "cc_version": "gcc (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "flags": [
+          "-prod",
+          "-gc",
+          "boehm"
+        ],
+        "vmodules": "/workspace/scratch/b81277eea609/v-nico-vmodules"
+      },
+      "build_command": [
+        "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "-cc",
+        "gcc",
+        "-prod",
+        "-gc",
+        "boehm",
+        "-o",
+        "/workspace/scratch/b81277eea609/v-nico-small-array-binaries/small_arrays",
+        "/tmp/nico-parse-a72190y8/source-small_arrays"
+      ],
+      "binary_sha256": "27ba769f04fc9b774622e3b4498fe5304e488569b8668ee0ee1a7b665ee0a7f5",
+      "path": "/workspace/scratch/b81277eea609/v-nico-small-array-binaries/small_arrays",
+      "results": {
+        "user-ascii-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 205975876,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300892448,
+              "heap_before": 28700672,
+              "heap_after": 37089280
+            },
+            {
+              "nanoseconds": 197396926,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300882384,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 202572854,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885920,
+              "heap_before": 28700672,
+              "heap_after": 37089280
+            },
+            {
+              "nanoseconds": 220424308,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885808,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 193117630,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885792,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 191819457,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300882384,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 198760619,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300882384,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            }
+          ],
+          "ns_per_page_median": 3975212.38,
+          "ns_per_page_min": 3836389.14,
+          "ns_per_page_max": 4408486.16,
+          "allocated_bytes_per_page_median": 6017715.84
+        },
+        "user-unicode-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 203104547,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885792,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 195582999,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885808,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 196493603,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885664,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 215884000,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885808,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 206950227,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885808,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 207531196,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885808,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            },
+            {
+              "nanoseconds": 191493874,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 300885808,
+              "heap_before": 28700672,
+              "heap_after": 28700672
+            }
+          ],
+          "ns_per_page_median": 4062090.94,
+          "ns_per_page_min": 3829877.48,
+          "ns_per_page_max": 4317680.0,
+          "allocated_bytes_per_page_median": 6017716.16
+        },
+        "user-escaped-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 259412437,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312079360,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            },
+            {
+              "nanoseconds": 258038350,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312076768,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            },
+            {
+              "nanoseconds": 227283882,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312082208,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            },
+            {
+              "nanoseconds": 225632979,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312076784,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            },
+            {
+              "nanoseconds": 245898779,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312076784,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            },
+            {
+              "nanoseconds": 233783971,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312076784,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            },
+            {
+              "nanoseconds": 222201844,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 312076784,
+              "heap_before": 28831744,
+              "heap_after": 28831744
+            }
+          ],
+          "ns_per_page_median": 4675679.42,
+          "ns_per_page_min": 4444036.88,
+          "ns_per_page_max": 5188248.74,
+          "allocated_bytes_per_page_median": 6241535.68
+        },
+        "mylist-ascii-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 150569196,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567824,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 178343358,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 161101454,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 157892027,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 177618624,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 166923286,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 170080221,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567824,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            }
+          ],
+          "ns_per_page_median": 3338465.72,
+          "ns_per_page_min": 3011383.92,
+          "ns_per_page_max": 3566867.16,
+          "allocated_bytes_per_page_median": 5491357.12
+        },
+        "mylist-unicode-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 149633700,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 153389044,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 146870734,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 152335308,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 172036888,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 163646266,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            },
+            {
+              "nanoseconds": 150919754,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 274567856,
+              "heap_before": 28569600,
+              "heap_after": 28569600
+            }
+          ],
+          "ns_per_page_median": 3046706.16,
+          "ns_per_page_min": 2937414.68,
+          "ns_per_page_max": 3440737.76,
+          "allocated_bytes_per_page_median": 5491357.12
+        },
+        "mylist-escaped-minimal-1000": {
+          "samples": [
+            {
+              "nanoseconds": 173975374,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 174517921,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 171112728,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 172763165,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 190560103,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 176148342,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            },
+            {
+              "nanoseconds": 169434664,
+              "iterations": 50,
+              "checksum": 120000,
+              "allocated_bytes": 285769760,
+              "heap_before": 28852224,
+              "heap_after": 28852224
+            }
+          ],
+          "ns_per_page_median": 3479507.48,
+          "ns_per_page_min": 3388693.28,
+          "ns_per_page_max": 3811202.06,
+          "allocated_bytes_per_page_median": 5715395.2
+        }
+      }
+    }
+  },
+  "fixtures": {
+    "user-ascii-minimal-1000": {
+      "sha256": "0d9a5f22c871e97dc9e7c5c7ac0c5a3c9c9ed8b350c7b0d3d29214fb5e32c6db",
+      "bytes": 97299,
+      "items": 1000,
+      "expected_page_sha256": "278376910e2e38d5a784bbd5b77b214d661555ee2c30f522b23f2ce594a488dd"
+    },
+    "user-unicode-minimal-1000": {
+      "sha256": "0d9a5f22c871e97dc9e7c5c7ac0c5a3c9c9ed8b350c7b0d3d29214fb5e32c6db",
+      "bytes": 97299,
+      "items": 1000,
+      "expected_page_sha256": "278376910e2e38d5a784bbd5b77b214d661555ee2c30f522b23f2ce594a488dd"
+    },
+    "user-escaped-minimal-1000": {
+      "sha256": "63b20253314a24971df5b0fa9e6a8b6380279d2ead534d3cc8a11573ada597b5",
+      "bytes": 102299,
+      "items": 1000,
+      "expected_page_sha256": "278376910e2e38d5a784bbd5b77b214d661555ee2c30f522b23f2ce594a488dd"
+    },
+    "mylist-ascii-minimal-1000": {
+      "sha256": "7f11b23f6ff5d7f1e28109bc699169bdd51d5a2231714b6d39ee12788c76e3ab",
+      "bytes": 93350,
+      "items": 1000,
+      "expected_page_sha256": "278376910e2e38d5a784bbd5b77b214d661555ee2c30f522b23f2ce594a488dd"
+    },
+    "mylist-unicode-minimal-1000": {
+      "sha256": "7f11b23f6ff5d7f1e28109bc699169bdd51d5a2231714b6d39ee12788c76e3ab",
+      "bytes": 93350,
+      "items": 1000,
+      "expected_page_sha256": "278376910e2e38d5a784bbd5b77b214d661555ee2c30f522b23f2ce594a488dd"
+    },
+    "mylist-escaped-minimal-1000": {
+      "sha256": "1cb688a48a7ec370a705278c88e8c918e900571469aa4067c23de1ae81b8a71f",
+      "bytes": 98350,
+      "items": 1000,
+      "expected_page_sha256": "278376910e2e38d5a784bbd5b77b214d661555ee2c30f522b23f2ce594a488dd"
+    }
+  }
+}

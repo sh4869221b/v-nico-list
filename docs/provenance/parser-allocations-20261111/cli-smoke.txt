@@ -1,0 +1,44 @@
+{
+  "scope": "Synthetic loopback CLI process wall time; includes startup, HTTP, JSON, sorting, output; no live API performance inference.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "targets": 3,
+    "pages_per_target": 3,
+    "items_per_page": 100,
+    "response_delay_ms": 10,
+    "warmups": 1,
+    "repetitions": 1,
+    "output_format": "json",
+    "payload": "minimal",
+    "execution_order": "one warmup per binary, then alternating forward/reverse per repetition",
+    "flags": [
+      "-T4",
+      "-P4",
+      "-H8",
+      "--no-progress",
+      "--retries=1",
+      "--json"
+    ]
+  },
+  "binaries": {
+    "v": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-parser-allocations/bin/v-nico-list-openssl",
+      "sha256": "5267652eee42d32c2dbb163b18b3cb720fe5b39c818a9d2ed0d2087da81f5d10",
+      "samples": [
+        {
+          "wall_seconds": 0.03430379199562594,
+          "requests": 9,
+          "http_peak": 6,
+          "stdout_bytes": 20049,
+          "output_count": 900,
+          "result_sha256": "a520e0669a52e4876359593b6ea2c184393de365fb0b80b281c9ca45fc51fa59",
+          "items_sha256": "1666833e463fb7b4b0e94e3981784c35c50121c2e7a608a17a588a30f0e9e5cd"
+        }
+      ],
+      "wall_median_seconds": 0.03430379199562594,
+      "wall_min_seconds": 0.03430379199562594,
+      "wall_max_seconds": 0.03430379199562594
+    }
+  }
+}

@@ -1,0 +1,66 @@
+Executed on 2026-11-11, local Linux workspace. No live API or GitHub write.
+CWD: /workspace/scratch/b81277eea609/v-nico-parser-allocations
+export VMODULES=/workspace/scratch/b81277eea609/v-nico-vmodules
+V=/workspace/scratch/b81277eea609/v-nico-toolchain/v
+P=docs/provenance/parser-allocations-20261111
+
+Source/control identities are embedded in every result JSON, including dirty-tree
+status and SHA-256 of both production files. Retained binary manifests are beside
+each binary, and are also embedded in result JSON. The trial patches in this
+directory allow reconstruction from prefix commit 1c6b644. Production main files
+are identical in main 1f518b8 and harness baseline 5f375c1.
+
+Build directories below were new when called. For reproduction use fresh paths,
+or reuse retained binaries through --binary (driver validates their manifests).
+Never run build/tests concurrently with timings. The first prefix-ab run did
+partly overlap initial unit compilation and is retained as reference only.
+
+python3 scripts/benchmark_parse.py --source baseline=../v-nico-parser-bench --source prefix=. --v "$V" --size 1 --size 100 --iterations 20 --warmups 10 --repetitions 7 --build-dir ../v-nico-prefix-binaries --output "$P/prefix-ab.json"
+python3 scripts/benchmark_parse.py --binary baseline=../v-nico-prefix-binaries/baseline --binary prefix=../v-nico-prefix-binaries/prefix --size 100 --iterations 20 --warmups 10 --repetitions 7 --output "$P/prefix-ab-repeat.json"
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --size 1 --size 100 --iterations 500 --warmups 30 --repetitions 9 --output "$P/prefix-long.json"
+
+# Array trial f738071; date trial fdd12fe, independent descendants of 1c6b644.
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --source arrays=../v-nico-parser-array-trial --v "$V" --size 1 --size 100 --iterations 500 --warmups 30 --repetitions 9 --build-dir ../v-nico-array-binaries --output "$P/arrays-ab.json"
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --source dates=../v-nico-parser-date-trial --v "$V" --size 1 --size 100 --iterations 500 --warmups 30 --repetitions 9 --build-dir ../v-nico-date-binaries --output "$P/dates-ab.json"
+
+# Bounded initial cap trial 05dc4b9; rejected for changed large-array growth.
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --source bounded_arrays=../v-nico-parser-array-trial --v "$V" --size 1 --size 100 --iterations 500 --warmups 30 --repetitions 9 --build-dir ../v-nico-bounded-array-binaries --output "$P/bounded-arrays-ab.json"
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --binary bounded_arrays=../v-nico-bounded-array-binaries/bounded_arrays --size 1000 --profile minimal --iterations 50 --warmups 10 --repetitions 7 --output "$P/bounded-arrays-large.json"
+
+# Final independent small-page-only reservation trial 1c14ecc.
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --source small_arrays=../v-nico-parser-array-trial --v "$V" --size 1 --size 100 --iterations 500 --warmups 30 --repetitions 7 --build-dir ../v-nico-small-array-binaries --output "$P/small-arrays-ab.json"
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --binary small_arrays=../v-nico-small-array-binaries/small_arrays --size 1000 --profile minimal --iterations 50 --warmups 10 --repetitions 7 --output "$P/small-arrays-large.json"
+
+# Final combined source: prefix + constants/small-page reservation + dates.
+# Formatting and unit checks run before the source build/timing.
+"$V" fmt -w src/parser_allocations_test.v
+"$V" fmt -verify src scripts/parse_benchmark
+python3 tests/benchmark_parse_test.py
+python3 -m py_compile scripts/benchmark_parse.py tests/benchmark_parse_test.py
+"$V" -cc gcc -d use_openssl test src
+"$V" -cc gcc test src
+python3 scripts/benchmark_parse.py --binary prefix=../v-nico-prefix-binaries/prefix --source combined=. --v "$V" --size 1 --size 100 --iterations 500 --warmups 30 --repetitions 9 --build-dir ../v-nico-allocations-combined-binaries --output "$P/combined-ab.json"
+python3 scripts/benchmark_parse.py --binary combined=../v-nico-allocations-combined-binaries/combined --size 4 --iterations 2 --warmups 1 --repetitions 1 --output "$P/final-smoke.json"
+"$V" -cc gcc -d use_openssl -prod -o bin/v-nico-list-openssl src
+python3 tests/integration.py --binary bin/v-nico-list-openssl
+"$V" -cc gcc -prod -o bin/v-nico-list-mbedtls src
+python3 tests/integration.py --binary bin/v-nico-list-mbedtls
+python3 scripts/benchmark.py --binary v=bin/v-nico-list-openssl --targets 3 --pages 3 --repetitions 1 --output "$P/cli-smoke.json"
+
+# Generated-C evidence. The compiler uses MbedTLS by default when use_openssl
+# is not defined; the standalone parser harness itself does not use transport.
+DIR=$(mktemp -d /tmp/nico-alloc-c-XXXXXX)
+cp src/domain.v src/config.v scripts/parse_benchmark/main.v "$DIR/"
+"$V" -cc gcc -prod -gc boehm -o /tmp/nico-alloc-final.c "$DIR"
+sha256sum /tmp/nico-alloc-final.c src/domain.v src/config.v bin/v-nico-list-*
+git diff --check
+
+These are historical stage commands, not a single script to run at final HEAD.
+Reconstruct independent stage checkouts at the specified commits before invoking
+--source; in particular the first prefix candidate is 1c6b644, not final HEAD.
+The final combined source build was at 575e1dd (production code fixed at dd81cbe).
+The final reservation helper extraction occurred after the independent small-array
+trial; the final combined source and its hashes are separately verified.
+
+Archived trial patches use zero context to avoid whitespace-only context lines.
+Apply on 1c6b644 with git apply --unidiff-zero <trial.patch>.

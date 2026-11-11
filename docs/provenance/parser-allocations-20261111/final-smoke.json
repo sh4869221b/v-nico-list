@@ -1,0 +1,210 @@
+{
+  "scope": "Isolated parse_page wall time plus loop/assignment/scalar checksum; includes normal GC. Excludes file IO, startup, validation, output, HTTP, workers and sorting. No CLI/live API speed claim.",
+  "started_at_utc": "2026-11-11T08:14:12.815660+00:00",
+  "harness_sha256": "4f6e1bdc8b2753249d3224797661505ed0d57b23da97ebcd2df73e0f83d1ad97",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "python": "3.12.14",
+  "cpu": "",
+  "parameters": {
+    "source": [],
+    "binary": [
+      "combined=../v-nico-allocations-combined-binaries/combined"
+    ],
+    "build_dir": null,
+    "v": "v",
+    "cc": "gcc",
+    "size": [
+      4
+    ],
+    "profile": "full",
+    "iterations": 2,
+    "warmups": 1,
+    "repetitions": 1,
+    "output": "docs/provenance/parser-allocations-20261111/final-smoke.json"
+  },
+  "order": "fresh process per sample, warmups inside each process; alternating forward/reverse variants per repetition",
+  "memory": "Boehm gc_heap_usage total_bytes delta across timed batch (allocator-accounted bytes, not allocation count, RSS or peak/live memory). Heap snapshots are before/after only; GC remains enabled.",
+  "variants": {
+    "combined": {
+      "source": "/workspace/scratch/b81277eea609/v-nico-parser-allocations",
+      "git": {
+        "head": "575e1dd841ce7888c25e4693149838e5d24b5b3a",
+        "tree": "574e7b54631804239be6869a77f1fba2e6972498",
+        "status": "?? docs/PARSER-ALLOCATIONS.md\n?? docs/provenance/parser-allocations-20261111/"
+      },
+      "source_sha256": {
+        "domain.v": "8b4364102b1583db5cc65d506e07b1cc75ddb939f50700866b03f9f066dd4049",
+        "config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688"
+      },
+      "driver_sha256": "854aa3479b44fcba1a488373716fada99d8502b97ee14a44f677bb5fe30a5056",
+      "compiler": {
+        "path": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "version": "V 0.5.2 6701135",
+        "git": {
+          "head": "67011350d000d86c3fc2a925b505c590dbfdea88",
+          "tree": "e2ec6c71c4cb394f84f65ac14dcaef1a475a9f31",
+          "status": ""
+        },
+        "cc": "gcc",
+        "cc_version": "gcc (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "flags": [
+          "-prod",
+          "-gc",
+          "boehm"
+        ],
+        "vmodules": "/workspace/scratch/b81277eea609/v-nico-vmodules"
+      },
+      "build_command": [
+        "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "-cc",
+        "gcc",
+        "-prod",
+        "-gc",
+        "boehm",
+        "-o",
+        "/workspace/scratch/b81277eea609/v-nico-allocations-combined-binaries/combined",
+        "/tmp/nico-parse-jc6qfljb/source-combined"
+      ],
+      "binary_sha256": "53d014c4eaa72083d3444b16ae33f82bc720a9c6b82cf33ee56e7bf13148c714",
+      "path": "/workspace/scratch/b81277eea609/v-nico-allocations-combined-binaries/combined",
+      "results": {
+        "user-ascii-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 254242,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 197856,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 127121.0,
+          "ns_per_page_min": 127121.0,
+          "ns_per_page_max": 127121.0,
+          "allocated_bytes_per_page_median": 98928.0
+        },
+        "user-unicode-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 245970,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 197856,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 122985.0,
+          "ns_per_page_min": 122985.0,
+          "ns_per_page_max": 122985.0,
+          "allocated_bytes_per_page_median": 98928.0
+        },
+        "user-escaped-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 692431,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 310048,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 346215.5,
+          "ns_per_page_min": 346215.5,
+          "ns_per_page_max": 346215.5,
+          "allocated_bytes_per_page_median": 155024.0
+        },
+        "mylist-ascii-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 238538,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 203568,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 119269.0,
+          "ns_per_page_min": 119269.0,
+          "ns_per_page_max": 119269.0,
+          "allocated_bytes_per_page_median": 101784.0
+        },
+        "mylist-unicode-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 233311,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 203568,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 116655.5,
+          "ns_per_page_min": 116655.5,
+          "ns_per_page_max": 116655.5,
+          "allocated_bytes_per_page_median": 101784.0
+        },
+        "mylist-escaped-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 427102,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 309568,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 213551.0,
+          "ns_per_page_min": 213551.0,
+          "ns_per_page_max": 213551.0,
+          "allocated_bytes_per_page_median": 154784.0
+        }
+      }
+    }
+  },
+  "fixtures": {
+    "user-ascii-full-4": {
+      "sha256": "5e85487c2be53bc5b9ebcf8afa9bda53d56980e9ed608b0063137bacbda9018a",
+      "bytes": 4789,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "user-unicode-full-4": {
+      "sha256": "f42d6cde1bd9a539bb154c46c5e35395e9441246880229ecea6ca5b36cefaf3a",
+      "bytes": 4789,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "user-escaped-full-4": {
+      "sha256": "fcb193a588c4706156fb0cce3971f124059b9d0c922e140cbad69468b5a8a142",
+      "bytes": 6381,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "mylist-ascii-full-4": {
+      "sha256": "820818cccecfdb4eb4e4749f9c833e42a31740b3f79179c1d240c072b63ba589",
+      "bytes": 4820,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "mylist-unicode-full-4": {
+      "sha256": "8f46f3270b764cef06f59f7fa394e04b66bedcd289ef6c2942b38013972c3b1f",
+      "bytes": 4820,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "mylist-escaped-full-4": {
+      "sha256": "94c7c1174b45f2c8e55cb58a853e44ca2fc9bcaeb78f2f676dd22eee96af5fbb",
+      "bytes": 6412,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    }
+  }
+}

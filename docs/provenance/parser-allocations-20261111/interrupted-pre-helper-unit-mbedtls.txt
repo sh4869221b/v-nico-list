@@ -1,0 +1,2 @@
+---- Testing... ----------------------------------------------------------------
+OK    [1/7] C: 23245.352 ms, R:     3.796 ms /workspace/scratch/b81277eea609/v-nico-parser-allocations/src/config_test.v

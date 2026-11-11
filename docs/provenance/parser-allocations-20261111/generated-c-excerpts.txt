@@ -1,0 +1,64 @@
+Pinned V 67011350d000d86c3fc2a925b505c590dbfdea88, -cc gcc -prod -gc boehm.
+Generated C SHA256: 42e2d27cf988e06dedc1041bb839303b5f57ac79069fb792a153f03fcc4dd52a
+Generation command is retained in commands.txt.
+Production source hashes are in final-hashes.txt.
+The literal list remains a stack array, not a heap array; no const-list optimization was necessary.
+
+Generated C lines 9886-9900:
+bool JSONCheck__has_literal(main__JSONCheck* p, string literal) {
+	if (literal.len > (p->s.len - p->i)) {
+		return false;
+	}
+	{
+		i64 j = 0;
+		for (; j < literal.len; j++) {
+			u8 c = string__at(literal, j);
+			if (string__at(p->s, p->i + j) != c) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+Generated C lines 10075-10094:
+	string __in_lhs_11[3];
+	memmove(__in_lhs_11, (string[]){_str_310, _str_65, _str_66}, sizeof(__in_lhs_11));
+	{
+		i64 __for_idx_12 = 0;
+		for (; __for_idx_12 < 3; __for_idx_12++) {
+			string literal = __in_lhs_11[v_fixed_index(__for_idx_12, 3)];
+			if (JSONCheck__has_literal(p, literal)) {
+				p->i += literal.len;
+				if (string__eq(literal, _str_310)) {
+					return (__v_result_json2__Any){.ok = true, .value = (json2__Any){.typ = 17, .json2__Null = (json2__Null){E_STRUCT}}};
+				} else if (string__eq(literal, _str_65)) {
+					return (__v_result_json2__Any){.ok = true, .value = (json2__Any){.typ = 2, ._bool = true}};
+				} else {
+					return (__v_result_json2__Any){.ok = true, .value = (json2__Any){.typ = 2, ._bool = false}};
+				}
+			}
+		}
+	}
+	i64 start = p->i;
+	if (string__at(p->s, p->i) == '-') {
+
+Generated C lines 19077-19083:
+i64 page_initial_capacity(i64 item_count) {
+	if (item_count <= 100) {
+		return item_count;
+	} else {
+		return 0;
+	}
+}
+
+Generated C lines 19429-19437:
+	if (__or_opt_19.ok) {
+		__or_val_20 = __or_opt_19.value;
+	} else {
+		return (__v_result_main__Page){.ok = false, .err = __or_opt_19.err};
+	}
+	Array raw_items = __or_val_20;
+	Array items = array_new(	sizeof(main__Video), 0, page_initial_capacity(raw_items.len));
+	{
+		i64 __for_idx_21 = 0;

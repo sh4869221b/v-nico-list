@@ -1,0 +1,4 @@
+Verified final domain.v/config.v SHA-256 matches combined-ab.json source identity.
+Verified quoted() is byte-for-byte identical to 5f375c1.
+No production files changed after final tests/benchmarks.
+Replayed all four zero-context trial patches against 1c6b644; production hashes match their recorded benchmark manifests.
