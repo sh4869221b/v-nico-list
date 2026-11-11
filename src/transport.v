@@ -69,6 +69,17 @@ fn (s &WireStream) check() ! {
 	wire_check(s.deadline)!
 }
 
+// TLS backends may round the remaining socket timeout down. Classify their
+// timeout as the request deadline even if the wall clock is a fraction early;
+// it must not become a retryable transport failure with partial CLI output.
+fn wire_io_error(deadline time.Time, cause IError) IError {
+	wire_check(deadline) or { return err }
+	if cause.code() == net.err_timed_out.code() {
+		return error_with_code('context deadline exceeded', 20002)
+	}
+	return cause
+}
+
 fn wire_remaining_timeout(deadline time.Time) time.Duration {
 	remaining := wall_remaining(deadline, time.now())
 	// The TLS backends call Time.add internally. For their extreme-duration
@@ -82,13 +93,11 @@ fn (mut s WireStream) write(text string) ! {
 	if s.secure {
 		s.tls.set_read_timeout(wire_remaining_timeout(s.deadline))
 		s.tls.write_string(text) or {
-			s.check()!
-			return err
+			return wire_io_error(s.deadline, err)
 		}
 	} else {
 		s.tcp.write_string(text) or {
-			s.check()!
-			return err
+			return wire_io_error(s.deadline, err)
 		}
 	}
 	s.check()!
@@ -101,13 +110,13 @@ fn (mut s WireStream) fill() !bool {
 		s.tls.read(mut s.buffer) or {
 			s.check()!
 			if err is io.Eof { return false }
-			return err
+			return wire_io_error(s.deadline, err)
 		}
 	} else {
 		wire_tcp_read(mut s.tcp, s.deadline, s.buffer.data, s.buffer.len) or {
 			s.check()!
 			if err is io.Eof { return false }
-			return err
+			return wire_io_error(s.deadline, err)
 		}
 	}
 	s.check()!
@@ -555,8 +564,7 @@ fn transport_once(raw_url string, deadline time.Time, control &Control) !WireRes
 		)!
 		tcp.set_read_timeout(wire_remaining_timeout(deadline))
 		stream.connect_tls(u.hostname()) or {
-			stream.check()!
-			return err
+			return wire_io_error(stream.deadline, err)
 		}
 		stream.secure = true
 		stream.check()!
@@ -582,6 +590,7 @@ fn transport_once(raw_url string, deadline time.Time, control &Control) !WireRes
 	maximum := if encoding == 'gzip' { wire_encoded_limit } else { wire_body_limit }
 	mut encoded := stream.body(response.headers, maximum) or {
 		stream.check()!
+		if err.code() in [20002, 20003] { return err }
 		return BodyError{ message: err.msg() }
 	}
 	mut body := encoded

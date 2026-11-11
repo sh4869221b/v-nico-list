@@ -243,3 +243,11 @@ fn test_transport_dispatch_wait_checks_deadline_and_cancellation() ! {
 	assert stopped
 	assert !c.dispatching
 }
+
+fn test_socket_timeout_has_request_deadline_semantics() {
+	cause := wire_io_error(wall_deadline_after(time.now(), time.second), net.err_timed_out)
+	assert cause.code() == 20002
+	assert cause.msg() == 'context deadline exceeded'
+	other := wire_io_error(wall_deadline_after(time.now(), time.second), error('other failure'))
+	assert other.msg() == 'other failure'
+}
