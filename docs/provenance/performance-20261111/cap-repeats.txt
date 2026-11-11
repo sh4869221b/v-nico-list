@@ -1,0 +1,36 @@
+test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.704s
+
+OK
+test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.696s
+
+OK
+test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.716s
+
+OK
+test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.682s
+
+OK
+test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.684s
+
+OK
+test_target_page_http_caps_and_mixed_last_override (__main__.CLIContracts.test_target_page_http_caps_and_mixed_last_override) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.687s
+
+OK
