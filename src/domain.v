@@ -320,6 +320,21 @@ fn validate_fields(o map[string]json2.Any, strings []string, integers []string, 
 	}
 }
 
+const video_string_fields = ['type', 'title', 'shortDescription', 'latestCommentSummary']
+const video_integer_fields = ['duration']
+const video_bool_fields = [
+	'isChannelVideo',
+	'isPaymentRequired',
+	'requireSensitiveMasking',
+	'9d091f87',
+	'acf68865',
+]
+const count_integer_fields = ['view', 'mylist', 'like']
+const thumbnail_string_fields = ['url', 'middleUrl', 'largeUrl', 'listingUrl', 'nHdUrl']
+const owner_string_fields = ['ownerType', 'id', 'name', 'iconUrl']
+const series_string_fields = ['title']
+const series_integer_fields = ['id', 'order']
+
 fn parse_page(body string, kind string) !Page {
 	root := object(strict_json(body)!)!
 	meta := object(field(root, 'meta'))!
@@ -340,8 +355,12 @@ fn parse_page(body string, kind string) !Page {
 	}
 	integer_value(field(data, 'totalCount'))!
 	total := if total_value is json2.Null { i64(-1) } else { integer_value(total_value)! }
-	mut items := []Video{}
-	for raw in array_value(field(items_obj, 'items'))! {
+	raw_items := array_value(field(items_obj, 'items'))!
+	// Bound the initial reservation for malformed or unusually large input.
+	// Larger valid pages still grow normally; this is not an item limit.
+	initial_cap := if raw_items.len > 100 { 100 } else { raw_items.len }
+	mut items := []Video{cap: initial_cap}
+	for raw in raw_items {
 		item := object(raw)!
 		key := if kind == 'user' { 'essential' } else { 'video' }
 		v := object(field(item, key))!
@@ -352,18 +371,11 @@ fn parse_page(body string, kind string) !Page {
 		rv := field(v, 'registeredAt')
 		if rv !is json2.Null { registered = timestamp(string_value(rv)!)! }
 		if kind == 'user' {
-			validate_fields(v, ['type', 'title', 'shortDescription', 'latestCommentSummary'], ['duration'], [
-				'isChannelVideo',
-				'isPaymentRequired',
-				'requireSensitiveMasking',
-				'9d091f87',
-				'acf68865',
-			])!
-			validate_fields(count, [], ['view', 'mylist', 'like'], [])!
-			validate_fields(object(field(v, 'thumbnail'))!, ['url', 'middleUrl', 'largeUrl',
-				'listingUrl', 'nHdUrl'], [], [])!
-			validate_fields(object(field(v, 'owner'))!, ['ownerType', 'id', 'name', 'iconUrl'], [], [])!
-			validate_fields(object(field(item, 'series'))!, ['title'], ['id', 'order'], [])!
+			validate_fields(v, video_string_fields, video_integer_fields, video_bool_fields)!
+			validate_fields(count, [], count_integer_fields, [])!
+			validate_fields(object(field(v, 'thumbnail'))!, thumbnail_string_fields, [], [])!
+			validate_fields(object(field(v, 'owner'))!, owner_string_fields, [], [])!
+			validate_fields(object(field(item, 'series'))!, series_string_fields, series_integer_fields, [])!
 		}
 		items << Video{ id: id, comment: comment, registered: registered }
 	}
