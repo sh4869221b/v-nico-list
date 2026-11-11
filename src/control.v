@@ -384,21 +384,55 @@ fn retry_delay(attempt int, header i64) i64 {
 	return ns_max(header, ns_min(30 * time.second, 100 * time.millisecond * (i64(1) << shift)))
 }
 
+// c.mu serializes complete target output and its dedupe/count state. Batches
+// are local and bounded: no writer thread or queue can retain target results.
+fn (mut c Control) emit_batch(data []u8, ends []int) bool {
+	written := int(C.nico_output_prefix(data.data, uint(data.len)))
+	for end in ends {
+		if end > written { break }
+		c.output_count++
+	}
+	if written != data.len {
+		c.output_error = 'failed to write stdout'
+		c.stop = true
+		C.nico_cancel()
+		return false
+	}
+	return true
+}
+
 fn (mut c Control) emit_items(items []string) {
 	c.mu.lock()
+	defer { c.mu.unlock() }
+	if c.output_error != '' { return }
+	mut data := []u8{cap: 32768}
+	mut ends := []int{}
 	for id in items {
 		if c.cfg.dedupe && id in c.seen { continue }
 		if c.cfg.dedupe { c.seen[id] = true }
 		line := (if c.cfg.url { 'https://www.nicovideo.jp/watch/' } else { '' }) + id + '\n'
-		if C.nico_output(line.str, uint(line.len)) == 0 {
-			c.output_error = 'failed to write stdout'
-			c.stop = true
-			C.nico_cancel()
-			break
+		if data.len + line.len > 32768 && data.len > 0 {
+			if !c.emit_batch(data, ends) { return }
+			data.clear()
+			ends.clear()
 		}
-		c.output_count++
+		// Unusually large API IDs must not grow the bounded batch. Preserve
+		// the existing single-item write/error behavior for these records.
+		if line.len > 32768 {
+			if C.nico_output(line.str, uint(line.len)) == 0 {
+				c.output_error = 'failed to write stdout'
+				c.stop = true
+				C.nico_cancel()
+				return
+			}
+			c.output_count++
+			continue
+		}
+		data << line.bytes()
+		ends << data.len
 	}
-	c.mu.unlock()
+	// Flush even a short final batch at every target completion (--no-sort).
+	if data.len > 0 { c.emit_batch(data, ends) }
 }
 
 fn (mut c Control) metrics_log() {
