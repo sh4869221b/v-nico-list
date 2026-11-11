@@ -139,6 +139,16 @@ fn (mut p JSONCheck) quoted() !string {
 	return error('JSON: unterminated string')
 }
 
+// Compare only the literal bytes; slicing the remaining input copies it in V.
+// Keep prefix semantics: value()/strict_json() validate the following delimiter.
+fn (p &JSONCheck) has_literal(literal string) bool {
+	if literal.len > p.s.len - p.i { return false }
+	for j, c in literal {
+		if p.s[p.i + j] != c { return false }
+	}
+	return true
+}
+
 fn (mut p JSONCheck) value(depth int) !json2.Any {
 	if depth > 512 { return error('JSON: nesting limit exceeded') }
 	p.ws()
@@ -183,7 +193,7 @@ fn (mut p JSONCheck) value(depth int) !json2.Any {
 		}
 	}
 	for literal in ['null', 'true', 'false'] {
-		if p.s[p.i..].starts_with(literal) {
+		if p.has_literal(literal) {
 			p.i += literal.len
 			return match literal {
 				'null' { json2.Any(json2.Null{}) }
