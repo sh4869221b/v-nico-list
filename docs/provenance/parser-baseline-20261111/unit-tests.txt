@@ -1,0 +1,8 @@
+---- Testing... ----------------------------------------------------------------
+OK    [1/5] C: 5337.205 ms, R:     5.048 ms /workspace/scratch/b81277eea609/v-nico-parser-bench/src/config_test.v
+OK    [2/5] C: 5038.49 ms, R:    49.064 ms /workspace/scratch/b81277eea609/v-nico-parser-bench/src/domain_test.v
+OK    [3/5] C: 5406.629 ms, R:    11.641 ms /workspace/scratch/b81277eea609/v-nico-parser-bench/src/pool_test.v
+OK    [4/5] C: 5620.045 ms, R:    88.120 ms /workspace/scratch/b81277eea609/v-nico-parser-bench/src/timing_test.v
+OK    [5/5] C: 5534.26 ms, R:   512.117 ms /workspace/scratch/b81277eea609/v-nico-parser-bench/src/transport_test.v
+--------------------------------------------------------------------------------
+Summary for all V _test.v files: 5 passed, 5 total. Elapsed time: 27609 ms, on 1 job. Comptime: 26936 ms. Runtime: 665 ms.

@@ -1,0 +1,30 @@
+[
+  {
+    "kind": "user",
+    "style": "unicode",
+    "payload_bytes": 119543,
+    "suffix_copies": 4606,
+    "requested_suffix_bytes": 275593653
+  },
+  {
+    "kind": "user",
+    "style": "escaped",
+    "payload_bytes": 159343,
+    "suffix_copies": 4606,
+    "requested_suffix_bytes": 367201453
+  },
+  {
+    "kind": "mylist",
+    "style": "unicode",
+    "payload_bytes": 119192,
+    "suffix_copies": 4612,
+    "requested_suffix_bytes": 275140534
+  },
+  {
+    "kind": "mylist",
+    "style": "escaped",
+    "payload_bytes": 158992,
+    "suffix_copies": 4612,
+    "requested_suffix_bytes": 366867734
+  }
+]
