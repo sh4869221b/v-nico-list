@@ -334,6 +334,12 @@ const owner_string_fields = ['ownerType', 'id', 'name', 'iconUrl']
 const series_string_fields = ['title']
 const series_integer_fields = ['id', 'order']
 
+// item_count comes from an array length. Reserve only small pages; large
+// inputs retain the original growth strategy rather than reserving up front.
+fn page_initial_capacity(item_count int) int {
+	return if item_count <= 100 { item_count } else { 0 }
+}
+
 fn parse_page(body string, kind string) !Page {
 	root := object(strict_json(body)!)!
 	meta := object(field(root, 'meta'))!
@@ -355,10 +361,7 @@ fn parse_page(body string, kind string) !Page {
 	integer_value(field(data, 'totalCount'))!
 	total := if total_value is json2.Null { i64(-1) } else { integer_value(total_value)! }
 	raw_items := array_value(field(items_obj, 'items'))!
-	// Reserve small pages only. Large or malformed inputs retain the original
-	// growth strategy, rather than paying an up-front output reservation.
-	initial_cap := if raw_items.len <= 100 { raw_items.len } else { 0 }
-	mut items := []Video{cap: initial_cap}
+	mut items := []Video{cap: page_initial_capacity(raw_items.len)}
 	for raw in raw_items {
 		item := object(raw)!
 		key := if kind == 'user' { 'essential' } else { 'video' }
