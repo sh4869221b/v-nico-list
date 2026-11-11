@@ -1,0 +1,485 @@
+{
+  "scope": "Synthetic loopback CLI process wall time; includes startup, HTTP, JSON, sorting, output; no live API performance inference.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "targets": 12,
+    "pages_per_target": 5,
+    "items_per_page": 100,
+    "response_delay_ms": 0.0,
+    "warmups": 1,
+    "repetitions": 10,
+    "output_format": "json",
+    "payload": "minimal",
+    "execution_order": "one warmup per binary, then alternating forward/reverse per repetition",
+    "flags": [
+      "-T4",
+      "-P4",
+      "-H8",
+      "--no-progress",
+      "--retries=1",
+      "--json",
+      "--http-metrics"
+    ]
+  },
+  "binaries": {
+    "baseline": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-baseline/bin/v-nico-list",
+      "sha256": "a406ae6864c5d8935fb91143dbe49d487968474302345027b018abf64951f014",
+      "samples": [
+        {
+          "wall_seconds": 0.13125445900004706,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 65998103,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 879783815,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 263334133,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.11195402100202045,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 46595353,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 782868671,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 231468167,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.10746072599795298,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 41058571,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 692496551,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 231204917,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.10872407199713052,
+          "requests": 60,
+          "http_peak": 3,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 42008982,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 745465201,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 218174047,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.11967416600236902,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 45500426,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 860661350,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 243124348,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.12012329199933447,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 40702140,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 709928599,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 270589878,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.1225179660032154,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 75824451,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 822332569,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 254629545,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.10644742200020119,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 32133600,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 685145647,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 251575475,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.11416187899885699,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 94961147,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 618858664,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 292738784,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.12052779599980568,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 33247401,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 829928949,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 235108187,
+            "statuses": {
+              "200": 60
+            }
+          }
+        }
+      ],
+      "wall_median_seconds": 0.116918022500613,
+      "wall_min_seconds": 0.10644742200020119,
+      "wall_max_seconds": 0.13125445900004706
+    },
+    "candidate": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-performance/bin/v-nico-list",
+      "sha256": "357befb53f81339850126066684d76c30a52567cda2ad42adcef09d12d1030cb",
+      "samples": [
+        {
+          "wall_seconds": 0.11704446500152699,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 58957600,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 598715494,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 278158406,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.10580008699980681,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 78142918,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 582122186,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 316125935,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.08446864199868287,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 42908716,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 535298124,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 214351050,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.1025166609979351,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 35165778,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 521542019,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 291107695,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.10362466999868047,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 35155423,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 601220722,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 321085720,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.10722408599758637,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 61957673,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 590285048,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 275463086,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.09726902599868481,
+          "requests": 60,
+          "http_peak": 5,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 49007341,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 515732988,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 249171700,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.1019540870001947,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 4783028,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 413988468,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 275862464,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.08480156899895519,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 39756679,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 450751856,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 233422823,
+            "statuses": {
+              "200": 60
+            }
+          }
+        },
+        {
+          "wall_seconds": 0.09383745800005272,
+          "requests": 60,
+          "http_peak": 4,
+          "stdout_bytes": 135669,
+          "output_count": 6000,
+          "result_sha256": "d077f3efccab53d2be18fc6dd6d5b68d3e13294a73a642818fc6592cdf1134b4",
+          "items_sha256": "ae845394ed60f78467e2ee13915c099d1d6d7d5ebcca3437895d3b3e1ca5ac8b",
+          "http_metrics": {
+            "admission_wait_ns": 65177405,
+            "attempts": 60,
+            "body_bytes": 557040,
+            "decode_ns": 640292296,
+            "max_in_flight": 8,
+            "page_success": 60,
+            "pages": 60,
+            "request_ns": 246644127,
+            "statuses": {
+              "200": 60
+            }
+          }
+        }
+      ],
+      "wall_median_seconds": 0.1022353739990649,
+      "wall_min_seconds": 0.08446864199868287,
+      "wall_max_seconds": 0.11704446500152699
+    }
+  }
+}

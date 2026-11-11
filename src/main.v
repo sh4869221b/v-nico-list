@@ -252,7 +252,7 @@ fn run(cfg Config) ! {
 				return true
 			})
 		}
-		if !cfg.no_sort { items.sort_with_compare(compare_ids) }
+		if !cfg.no_sort { sort_ids(mut items) }
 		if cfg.json {
 			results.sort_with_compare(compare_targets)
 			payload := OutputPayload{ inputs: counts, invalid: invalid, targets: results, errors: errors, output_count: items.len, items: items }

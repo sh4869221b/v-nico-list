@@ -1,0 +1,97 @@
+{
+  "scope": "Isolated numeric ID sorting, not CLI or live API throughput. Timed region includes key generation, sorting and copy-back; excludes input cloning, startup and validation.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "compiler": "V 0.5.2 6701135",
+  "cc": "gcc",
+  "flags": [
+    "-prod"
+  ],
+  "sizes": [
+    6000,
+    60000
+  ],
+  "repetitions": 9,
+  "order": "alternating forward/reverse per repetition; one warmup per process",
+  "sources": {
+    "baseline": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-baseline",
+      "source_sha256": {
+        "domain.v": "36954a1bdbfa429326a57156736e96e397904a9bfa8a6b66f9a0be95543a6846",
+        "config.v": "0a4afdded8e4d5e7336012830b55f8b2aa12fe6c3841aec3814c36706614766c"
+      },
+      "entry_point": "ids.sort_with_compare(compare_ids)",
+      "driver_sha256": "1b4016f605cd782aea4baaf32e83795a5119c0bd592e4a32a6e2c456f7227307",
+      "binary_sha256": "ce64fd3f1edc4f070c8c78294302360a4ff30c3cd00508da579776e880bc143b",
+      "results": {
+        "6000": {
+          "nanoseconds": [
+            21816874,
+            11600929,
+            11442269,
+            10993365,
+            13268417,
+            10890220,
+            12167121,
+            11107827,
+            11899950
+          ],
+          "median_nanoseconds": 11600929
+        },
+        "60000": {
+          "nanoseconds": [
+            181394252,
+            172464491,
+            175617037,
+            191756512,
+            174795436,
+            172338060,
+            184239336,
+            172750511,
+            192522243
+          ],
+          "median_nanoseconds": 175617037
+        }
+      }
+    },
+    "candidate": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-performance",
+      "source_sha256": {
+        "domain.v": "bfa3566c14fbd37a186e2e5e1152a8b7285fa854f8eee70f36cfd2c7dff04538",
+        "config.v": "0a4afdded8e4d5e7336012830b55f8b2aa12fe6c3841aec3814c36706614766c"
+      },
+      "entry_point": "sort_ids(mut ids)",
+      "driver_sha256": "f6eb0b8e70786f2772305e994f024acc80be3a801664b93615f6046ed87830c5",
+      "binary_sha256": "6807c4492da3b2a8a4beae07daf15ca95841c67616fd3132b4299c9691f44b90",
+      "results": {
+        "6000": {
+          "nanoseconds": [
+            1565415,
+            1804474,
+            4310042,
+            3675749,
+            1521368,
+            1942862,
+            1526697,
+            1635520,
+            1580517
+          ],
+          "median_nanoseconds": 1635520
+        },
+        "60000": {
+          "nanoseconds": [
+            19383465,
+            20012701,
+            20182976,
+            19792329,
+            19901153,
+            19496425,
+            19086667,
+            19805338,
+            19212728
+          ],
+          "median_nanoseconds": 19792329
+        }
+      }
+    }
+  }
+}

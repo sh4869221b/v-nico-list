@@ -2,6 +2,10 @@
 
 The test harness uses Python's standard library and synthetic loopback responses only. It never contacts the live niconico API. OpenSSL is used solely to create temporary test certificates.
 
+## Latest optimization measurements
+
+[JSON and sorting optimization results](PERFORMANCE.md) compare the current implementation against the unchanged V baseline on the same toolchain. Six synthetic workloads show median wall-time reductions of 6.6–30.2%; these are not new Go or live-API comparisons. Raw samples, ablation, isolated sorting and validation limits are retained.
+
 ## Commands
 
 ```sh
@@ -41,7 +45,7 @@ python3 scripts/benchmark.py \
 
 Repeat with `--format lines` to include normal line output and its flushing cost; use `--latency-ms 0` for a startup/processing-heavy case or retain 10 ms for a delayed-response case. Keep those scenarios in separate output files.
 
-Each binary receives one warmup plus the requested measured repetitions against freshly started identical servers. Defaults generate 12 targets, 5 pages of 100 items per target and 10 ms server delay per response. Both use fixed `-T4 -P4 -H8`, one attempt and JSON output. The script checks the exact expected ID sequence and identical complete JSON payloads across runs/binaries before recording wall time, request count, observed HTTP peak, output bytes, result/binary SHA-256 and platform/Python metadata. Line-output runs compare the exact ID sequence. It reports the full samples and median/min/max, with no pass/fail speed threshold.
+Each binary receives one warmup plus the requested measured repetitions against freshly started identical servers. The current harness alternates forward/reverse binary order each repetition; historical reports below used the previous per-binary order. Defaults generate 12 targets, 5 pages of 100 items per target and 10 ms server delay per response. Both use fixed `-T4 -P4 -H8`, one attempt and JSON output. The script checks the exact expected ID sequence and identical complete JSON payloads across runs/binaries before recording wall time, request count, observed HTTP peak, output bytes, result/binary SHA-256 and platform/Python metadata. Line-output runs compare the exact ID sequence. It reports the full samples and median/min/max, with no pass/fail speed threshold.
 
 Wall time includes process startup, transport, decoding, filtering, sorting and output capture. The Python server and local scheduler contribute noise. It does not measure peak RSS, CPU cycles, connection pooling benefit on a real network, live API limits, sustained adaptive tuning or Windows performance. A faster synthetic sample is not a production speed claim. CI runs only a small benchmark smoke case.
 

@@ -1,0 +1,41 @@
+{
+  "date_utc": "2026-11-11",
+  "baseline_commit": "491059714a9a67c2bd8c867a3eb57d6e37b9a223",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+  "openssl": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)",
+  "v_revision": "67011350d000d86c3fc2a925b505c590dbfdea88",
+  "vc_revision": "63a7de2aaa48271b71ca8b306fe06d7cc6c3a372",
+  "build_command": "VMODULES=<external-writable-cache> V=<pinned-v>/v scripts/build.sh",
+  "source_sha256": {
+    "src/domain.v": "bfa3566c14fbd37a186e2e5e1152a8b7285fa854f8eee70f36cfd2c7dff04538",
+    "src/domain_test.v": "319b9ae837efa9c84835ad382df59433cbbbf96bf29fd8fb561fcf31093ca06f",
+    "src/main.v": "578e7bf08711079e3024a73753681d85ea59da0d3c106f4c133c340157e33fe6",
+    "scripts/benchmark.py": "fda6b7f652b0c2f8306f6f3c8916c728dadcee9886a28e2606c5cef81f930f4a",
+    "scripts/benchmark_sort.py": "49fb766090290fe5d558120d011705c33afcbee28fd141c9389d4f533bd14416",
+    "tests/loopback.py": "3809569d02c149ed93ed4b0c067c0ef814fb27f1eaa0cba8d053fdfc3163cf49",
+    "tests/integration.py": "d9c6087123020e7de8ca3898e5fafcc899130816ac2a57e7fbc1eaa650553e67"
+  },
+  "production_binary_sha256": "357befb53f81339850126066684d76c30a52567cda2ad42adcef09d12d1030cb",
+  "baseline_binary_sha256": "a406ae6864c5d8935fb91143dbe49d487968474302345027b018abf64951f014",
+  "json_only_binary_sha256": "ee01a04ee477aa069cbcf14dce6548cf0047c3acf9ac82e3d93df3ab8b1b51b9",
+  "measurement_notes": [
+    "All measured runs used the same pinned V compiler and -cc gcc -d use_openssl -prod.",
+    "No builds or tests were running during the retained benchmark measurements.",
+    "The preliminary stage1 experiment overlapped unit compilation and is intentionally not included in published measurements.",
+    "Process benchmarks alternate binary order per repetition; the three-variant ablation alternates forward/reverse so the middle variant stays in the middle.",
+    "The JSON-only variant has the parser/map changes without sort_ids; the full variant adds cached sorting.",
+    "No live API, CPU/RSS process profile, real-network TLS pooling or Windows speed measurement was performed."
+  ],
+  "mbedtls_binary_sha256": "19d253401c904bddd16ef95b11ce82df956d8ee5a79c5a29cf783e3c95c874eb",
+  "validation": {
+    "format": "passed",
+    "python_syntax": "passed",
+    "units": "35 functions in 4 files passed",
+    "openssl_integration": "initial 54/55; final rerun 55/55 in 19.427 s",
+    "mbedtls_integration": "55/55 in 19.228 s",
+    "focused_cap_repeats": "3 baseline + 3 candidate runs passed; preceded by one passing focused run each",
+    "native_windows": "not run locally; see pull request CI"
+  }
+}

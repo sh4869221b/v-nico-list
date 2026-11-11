@@ -20,7 +20,7 @@ fn test_unicode_input_trimming_preserves_invalid_bytes_for_json_validation() {
 
 fn test_numeric_sort_and_overflow_fallback() {
 	mut ids := ['sm10', 'so2', 'sm0002', 'sm1', 'sm18446744073709551616']
-	ids.sort_with_compare(compare_ids)
+	sort_ids(mut ids)
 	assert ids == ['sm1', 'sm0002', 'so2', 'sm10', 'sm18446744073709551616']
 }
 
@@ -85,4 +85,93 @@ fn test_retry_delay_capped_exponential() {
 	assert retry_delay(1, 0) == 100 * time.millisecond
 	assert retry_delay(10, 0) == 30 * time.second
 	assert retry_delay(2, 3 * time.second) == 3 * time.second
+}
+
+fn test_json_string_fast_path_and_escapes() {
+	for text in ['', 'plain ASCII', '動画 😀', 'quote " slash / backslash \\', '\b\f\n\r\t'] {
+		encoded := json2.encode(text)
+		decoded := string_value(strict_json(encoded) or { panic(err) }) or { panic(err) }
+		assert decoded == text
+	}
+	assert (string_value(strict_json(r'"\u52d5\u753b \ud83d\ude00 \/"') or { panic(err) }) or { panic(err) }) == '動画 😀 /'
+	for c in 0 .. 32 {
+		body := '"before' + [u8(c)].bytestr() + 'after"'
+		if _ := strict_json(body) {
+			assert false, 'accepted raw control ${c}'
+		}
+	}
+	for body in [r'"\q"', r'"\ud800"', r'"\udfff"', r'"\ud800\u0041"', r'"\u12x4"', r'"unterminated',
+		r'"trailing\', '"' + [u8(0xc0), 0x80].bytestr() + '"'] {
+		if _ := strict_json(body) {
+			assert false, 'accepted malformed string'
+		}
+	}
+}
+
+fn test_json_duplicate_names_with_null_values_and_escaped_names() {
+	for body in [r'{"":null,"":0}', r'{"x":null,"x":false}', r'{"x":false,"x":0}', r'{"x":0,"\u0078":1}',
+		r'{"動画":[],"\u52d5\u753b":{}}', r'{"unknown":[{"nested":null,"nested":{}}]}'] {
+		if _ := strict_json(body) {
+			assert false, 'accepted duplicate ${body}'
+		}
+	}
+	// Equal names in separate objects are independent.
+	strict_json(r'{"a":{"x":null},"b":{"x":null}}') or { panic(err) }
+}
+
+fn test_mylist_total_precedence_and_shadowed_validation() {
+	for pair in [
+		[r'{"data":{"totalCount":9,"mylist":{"totalCount":2,"totalItemCount":3}}}', '2'],
+		[r'{"data":{"totalCount":9,"mylist":{"totalCount":null,"totalItemCount":3}}}', '3'],
+		[r'{"data":{"totalCount":9,"mylist":null}}', '9'],
+	] {
+		page := parse_page(pair[0], 'mylist') or { panic(err) }
+		assert page.total == pair[1].i64()
+	}
+	for body in [
+		r'{"data":{"totalCount":"9","mylist":{"totalCount":2}}}',
+		r'{"data":{"mylist":{"totalCount":2,"totalItemCount":"3"}}}',
+	] {
+		if _ := parse_page(body, 'mylist') {
+			assert false, 'accepted invalid shadowed total'
+		}
+	}
+}
+
+// The pre-optimization comparator is a differential oracle for cached keys.
+fn compare_ids_reference(a &string, b &string) int {
+	left := sort_text(a)
+	right := sort_text(b)
+	if left.len != right.len { return if left.len < right.len { -1 } else { 1 } }
+	if left != right { return if left < right { -1 } else { 1 } }
+	return if a < b {
+		-1
+	} else if a > b {
+		1
+	} else {
+		0
+	}
+}
+
+fn test_cached_sort_keys_match_reference_for_edge_cases_and_generated_ids() {
+	mut ids := ['', 's', 'sm', 'sm0', 'sm000', 'so000', 'sm01', 'so1', 'sm1', 'sm18446744073709551615',
+		'sm18446744073709551616', 'sm00018446744073709551615', 'sm00018446744073709551616', 'sm-1',
+		'sm1e2', 'sm1.0', 'smabc', 'sm動画', 'so1']
+	for i in 0 .. 2000 {
+		n := (i * 7919) % 2003
+		for prefix in ['sm', 'so', 'ab'] {
+			ids << '${prefix}${n}'
+			ids << '${prefix}000${n}'
+		}
+	}
+	mut expected := ids.clone()
+	expected.sort_with_compare(compare_ids_reference)
+	sort_ids(mut ids)
+	assert ids == expected
+	mut empty := []string{}
+	sort_ids(mut empty)
+	assert empty.len == 0
+	mut single := ['sm00']
+	sort_ids(mut single)
+	assert single == ['sm00']
 }

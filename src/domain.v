@@ -37,18 +37,31 @@ fn sort_text(id string) string {
 	return norm
 }
 
-fn compare_ids(a &string, b &string) int {
-	left := sort_text(a)
-	right := sort_text(b)
-	if left.len != right.len { return if left.len < right.len { -1 } else { 1 } }
-	if left != right { return if left < right { -1 } else { 1 } }
-	return if a < b {
+struct IDSortKey {
+	id  string
+	key string
+}
+
+fn compare_id_keys(a &IDSortKey, b &IDSortKey) int {
+	if a.key.len != b.key.len { return if a.key.len < b.key.len { -1 } else { 1 } }
+	if a.key != b.key { return if a.key < b.key { -1 } else { 1 } }
+	return if a.id < b.id {
 		-1
-	} else if a > b {
+	} else if a.id > b.id {
 		1
 	} else {
 		0
 	}
+}
+
+fn sort_ids(mut ids []string) {
+	if ids.len < 2 { return }
+	// Normalize once per ID, rather than twice per comparison. Preserve the
+	// length/key/full-ID ordering, including nonnumeric and overflow fallback.
+	mut keyed := []IDSortKey{cap: ids.len}
+	for id in ids { keyed << IDSortKey{ id: id, key: sort_text(id) } }
+	keyed.sort_with_compare(compare_id_keys)
+	for i, item in keyed { ids[i] = item.id }
 }
 
 struct Video {
@@ -81,14 +94,20 @@ fn (mut p JSONCheck) quoted() !string {
 	if p.i >= p.s.len || p.s[p.i] != `"` { return error('JSON: expected string') }
 	start := p.i
 	p.i++
+	mut escaped := false
 	for p.i < p.s.len {
 		c := p.s[p.i]
 		p.i++
 		if c == `"` {
+			// strict_json has already validated UTF-8; without escapes the
+			// scanned bytes are the decoded value. Keep the strict decoder
+			// for escape handling, including surrogate pairs.
+			if !escaped { return p.s[start + 1..p.i - 1] }
 			return json2.decode[string](p.s[start..p.i], strict: true)!
 		}
 		if c < 0x20 { return error('JSON: control character in string') }
 		if c == `\\` {
+			escaped = true
 			if p.i >= p.s.len { return error('JSON: truncated escape') }
 			e := p.s[p.i]
 			p.i++
@@ -139,7 +158,6 @@ fn (mut p JSONCheck) value(depth int) !json2.Any {
 				json2.Any([]json2.Any{})
 			}
 		}
-		mut names := map[string]bool{}
 		mut obj := map[string]json2.Any{}
 		mut arr := []json2.Any{}
 		mut key := ''
@@ -147,8 +165,7 @@ fn (mut p JSONCheck) value(depth int) !json2.Any {
 			p.ws()
 			if is_object {
 				key = p.quoted()!
-				if key in names { return error('JSON: duplicate object name ${key}') }
-				names[key] = true
+				if key in obj { return error('JSON: duplicate object name ${key}') }
 				p.ws()
 				if p.i >= p.s.len || p.s[p.i] != `:` { return error('JSON: expected colon') }
 				p.i++
@@ -298,10 +315,9 @@ fn parse_page(body string, kind string) !Page {
 	meta := object(field(root, 'meta'))!
 	status := integer_value(field(meta, 'status'))!
 	data := object(field(root, 'data'))!
-	mut items_obj := data.clone()
+	items_obj := object(if kind == 'mylist' { field(data, 'mylist') } else { field(root, 'data') })!
 	mut total_value := field(data, 'totalCount')
 	if kind == 'mylist' {
-		items_obj = object(field(data, 'mylist'))!
 		x := field(items_obj, 'totalCount')
 		y := field(items_obj, 'totalItemCount')
 		if x !is json2.Null {
