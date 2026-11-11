@@ -94,46 +94,77 @@ fn (mut p JSONCheck) quoted() !string {
 	if p.i >= p.s.len || p.s[p.i] != `"` { return error('JSON: expected string') }
 	start := p.i
 	p.i++
-	mut escaped := false
 	for p.i < p.s.len {
 		c := p.s[p.i]
 		p.i++
-		if c == `"` {
-			// strict_json has already validated UTF-8; without escapes the
-			// scanned bytes are the decoded value. Keep the strict decoder
-			// for escape handling, including surrogate pairs.
-			if !escaped { return p.s[start + 1..p.i - 1] }
-			return json2.decode[string](p.s[start..p.i], strict: true)!
-		}
+		if c == `"` { return p.s[start + 1..p.i - 1] }
 		if c < 0x20 { return error('JSON: control character in string') }
-		if c == `\\` {
-			escaped = true
-			if p.i >= p.s.len { return error('JSON: truncated escape') }
-			e := p.s[p.i]
-			p.i++
-			if e == `u` {
-				if p.i + 4 > p.s.len { return error('JSON: truncated unicode escape') }
-				hex := p.s[p.i..p.i + 4]
-				for h in hex {
-					if !h.is_hex_digit() { return error('JSON: invalid unicode escape') }
-				}
-				code := strconv.parse_uint(hex, 16, 16)!
-				p.i += 4
-				if code >= 0xd800 && code <= 0xdbff {
-					if p.i + 6 > p.s.len || p.s[p.i..p.i + 2] != '\\u' {
+		if c == `\\` { return p.quoted_escaped(start)! }
+	}
+	return error('JSON: unterminated string')
+}
+
+// Called only after the first backslash. strict_json validates raw UTF-8 before
+// parsing; this path validates and decodes escapes once, including both halves
+// of a surrogate pair. Buffer growth is bounded by the consumed input size.
+fn (mut p JSONCheck) quoted_escaped(start int) !string {
+	mut out := []u8{cap: p.i - start}
+	for j in start + 1 .. p.i - 1 { out << p.s[j] }
+	mut escape := true
+	for p.i < p.s.len {
+		c := p.s[p.i]
+		p.i++
+		if escape {
+			escape = false
+			match c {
+				`"`, `\\`, `/` { out << c }
+				`b` { out << u8(8) }
+				`f` { out << u8(12) }
+				`n` { out << u8(10) }
+				`r` { out << u8(13) }
+				`t` { out << u8(9) }
+				`u` {
+					mut code := p.hex4()!
+					if code >= 0xd800 && code <= 0xdbff {
+						if p.i + 6 > p.s.len || p.s[p.i] != `\\` || p.s[p.i + 1] != `u` {
+							return error('JSON: unpaired unicode surrogate')
+						}
+						p.i += 2
+						lo := p.hex4()!
+						if lo < 0xdc00 || lo > 0xdfff {
+							return error('JSON: unpaired unicode surrogate')
+						}
+						code = 0x10000 + ((code - 0xd800) << 10) + lo - 0xdc00
+					} else if code >= 0xdc00 && code <= 0xdfff {
 						return error('JSON: unpaired unicode surrogate')
 					}
-					lo := strconv.parse_uint(p.s[p.i + 2..p.i + 6], 16, 16)!
-					if lo < 0xdc00 || lo > 0xdfff {
-						return error('JSON: unpaired unicode surrogate')
+					// code is a Unicode scalar, with surrogates excluded above.
+					if code < 0x80 {
+						out << u8(code)
+					} else if code < 0x800 {
+						out << u8(0xc0 | (code >> 6))
+						out << u8(0x80 | (code & 0x3f))
+					} else if code < 0x10000 {
+						out << u8(0xe0 | (code >> 12))
+						out << u8(0x80 | ((code >> 6) & 0x3f))
+						out << u8(0x80 | (code & 0x3f))
+					} else {
+						out << u8(0xf0 | (code >> 18))
+						out << u8(0x80 | ((code >> 12) & 0x3f))
+						out << u8(0x80 | ((code >> 6) & 0x3f))
+						out << u8(0x80 | (code & 0x3f))
 					}
-					p.i += 6
-				} else if code >= 0xdc00 && code <= 0xdfff {
-					return error('JSON: unpaired unicode surrogate')
 				}
-			} else if e !in [u8(`"`), `\\`, `/`, `b`, `f`, `n`, `r`, `t`] {
-				return error('JSON: invalid escape')
+				else { return error('JSON: invalid escape') }
 			}
+		} else if c == `"` {
+			return out.bytestr()
+		} else if c < 0x20 {
+			return error('JSON: control character in string')
+		} else if c == `\\` {
+			escape = true
+		} else {
+			out << c
 		}
 	}
 	return error('JSON: unterminated string')
@@ -147,6 +178,26 @@ fn (p &JSONCheck) has_literal(literal string) bool {
 		if p.s[p.i + j] != c { return false }
 	}
 	return true
+}
+
+fn (mut p JSONCheck) hex4() !u32 {
+	if p.s.len - p.i < 4 { return error('JSON: truncated unicode escape') }
+	mut code := u32(0)
+	for _ in 0 .. 4 {
+		c := p.s[p.i]
+		p.i++
+		n := if c >= `0` && c <= `9` {
+			c - `0`
+		} else if c >= `a` && c <= `f` {
+			c - `a` + 10
+		} else if c >= `A` && c <= `F` {
+			c - `A` + 10
+		} else {
+			return error('JSON: invalid unicode escape')
+		}
+		code = (code << 4) | u32(n)
+	}
+	return code
 }
 
 fn (mut p JSONCheck) value(depth int) !json2.Any {
