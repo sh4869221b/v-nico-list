@@ -230,6 +230,10 @@ fn parse_date(s string) !i64 {
 	y := s[..4].int()
 	m := s[4..6].int()
 	d := s[6..].int()
+	return date_components(y, m, d)
+}
+
+fn date_components(y int, m int, d int) !i64 {
 	if y < 0 || m < 1 || m > 12 || d < 1 || d > time.days_in_month(m, y)! {
 		return error('invalid date')
 	}

@@ -1,0 +1,11 @@
+---- Testing... ----------------------------------------------------------------
+OK    [1/8] C: 22686.575 ms, R:     3.589 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/config_test.v
+OK    [2/8] C: 5704.562 ms, R:    45.677 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/domain_test.v
+OK    [3/8] C: 5659.854 ms, R:   207.755 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/escaped_json_test.v
+OK    [4/8] C: 5098.444 ms, R:    68.327 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/parser_allocations_test.v
+OK    [5/8] C: 5695.708 ms, R:     5.235 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/parser_prefix_test.v
+OK    [6/8] C: 5347.268 ms, R:     5.542 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/pool_test.v
+OK    [7/8] C: 5000.416 ms, R:    85.877 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/timing_test.v
+OK    [8/8] C: 5183.572 ms, R:   508.823 ms /workspace/scratch/b81277eea609/v-nico-parser-combined/src/transport_test.v
+--------------------------------------------------------------------------------
+Summary for all V _test.v files: 8 passed, 8 total. Elapsed time: 61312 ms, on 1 job. Comptime: 60376 ms. Runtime: 930 ms.

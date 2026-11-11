@@ -1,0 +1,17 @@
+Start: allocation branch caf41a86b560f5b4484ba457c8f56cc05151b37b.
+Cherry-picks: 6f4fe88, 9e24b07 -> 08a1b87, 2e491a6.
+One content conflict: both branches inserted a helper between quoted() and value().
+Resolved by retaining has_literal() unchanged, followed by hex4() unchanged.
+Read-only string comparisons confirmed:
+- quoted()/quoted_escaped()/hex4() exactly match escaped candidate.
+- has_literal() exactly matches allocation candidate.
+- domain.v from value() onward exactly matches allocation candidate.
+- config.v exactly matches allocation candidate.
+No additional production change.
+
+First command (after composition):
+export VMODULES=/workspace/scratch/b81277eea609/v-nico-vmodules
+python3 v-nico-parser-combined/scripts/benchmark_parse.py --source combined=$PWD/v-nico-parser-combined --binary allocation=$PWD/v-nico-allocations-combined-binaries/combined --v $PWD/v-nico-toolchain/v --size 100 --iterations 250 --warmups 20 --repetitions 9 --build-dir $PWD/v-nico-parser-final-binaries --output v-nico-parser-combined/docs/provenance/parser-combined-20261111/allocation-vs-combined.json
+
+Subsequent commands: commands.sh, executed after the first benchmark ended.
+No simultaneous builds/tests during any measurement.

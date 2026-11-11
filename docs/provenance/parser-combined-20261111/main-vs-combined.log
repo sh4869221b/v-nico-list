@@ -1,0 +1,13 @@
+Verified exact Page and full decoded JSON for 6 fixtures; saved /workspace/scratch/b81277eea609/v-nico-parser-combined/docs/provenance/parser-combined-20261111/main-vs-combined.json
+main user-ascii-full-100: 39.855 ms/page, 278037768 GC bytes/page
+main user-unicode-full-100: 38.457 ms/page, 278037788 GC bytes/page
+main user-escaped-full-100: 52.396 ms/page, 370929844 GC bytes/page
+main mylist-ascii-full-100: 38.442 ms/page, 277495032 GC bytes/page
+main mylist-unicode-full-100: 37.753 ms/page, 277495063 GC bytes/page
+main mylist-escaped-full-100: 53.502 ms/page, 370507242 GC bytes/page
+combined user-ascii-full-100: 1.780 ms/page, 2271592 GC bytes/page
+combined user-unicode-full-100: 1.755 ms/page, 2271582 GC bytes/page
+combined user-escaped-full-100: 2.411 ms/page, 2744875 GC bytes/page
+combined mylist-ascii-full-100: 1.719 ms/page, 2272786 GC bytes/page
+combined mylist-unicode-full-100: 1.678 ms/page, 2272786 GC bytes/page
+combined mylist-escaped-full-100: 2.174 ms/page, 2746637 GC bytes/page

@@ -1,0 +1,44 @@
+diff --git a/src/domain.v b/src/domain.v
+index 57286d5..a7e01a7 100644
+--- a/src/domain.v
++++ b/src/domain.v
+@@ -322,0 +323,15 @@ fn validate_fields(o map[string]json2.Any, strings []string, integers []string,
++const video_string_fields = ['type', 'title', 'shortDescription', 'latestCommentSummary']
++const video_integer_fields = ['duration']
++const video_bool_fields = [
++	'isChannelVideo',
++	'isPaymentRequired',
++	'requireSensitiveMasking',
++	'9d091f87',
++	'acf68865',
++]
++const count_integer_fields = ['view', 'mylist', 'like']
++const thumbnail_string_fields = ['url', 'middleUrl', 'largeUrl', 'listingUrl', 'nHdUrl']
++const owner_string_fields = ['ownerType', 'id', 'name', 'iconUrl']
++const series_string_fields = ['title']
++const series_integer_fields = ['id', 'order']
++
+@@ -343,2 +358,3 @@ fn parse_page(body string, kind string) !Page {
+-	mut items := []Video{}
+-	for raw in array_value(field(items_obj, 'items'))! {
++	raw_items := array_value(field(items_obj, 'items'))!
++	mut items := []Video{cap: raw_items.len}
++	for raw in raw_items {
+@@ -355,12 +371,5 @@ fn parse_page(body string, kind string) !Page {
+-			validate_fields(v, ['type', 'title', 'shortDescription', 'latestCommentSummary'], ['duration'], [
+-				'isChannelVideo',
+-				'isPaymentRequired',
+-				'requireSensitiveMasking',
+-				'9d091f87',
+-				'acf68865',
+-			])!
+-			validate_fields(count, [], ['view', 'mylist', 'like'], [])!
+-			validate_fields(object(field(v, 'thumbnail'))!, ['url', 'middleUrl', 'largeUrl',
+-				'listingUrl', 'nHdUrl'], [], [])!
+-			validate_fields(object(field(v, 'owner'))!, ['ownerType', 'id', 'name', 'iconUrl'], [], [])!
+-			validate_fields(object(field(item, 'series'))!, ['title'], ['id', 'order'], [])!
++			validate_fields(v, video_string_fields, video_integer_fields, video_bool_fields)!
++			validate_fields(count, [], count_integer_fields, [])!
++			validate_fields(object(field(v, 'thumbnail'))!, thumbnail_string_fields, [], [])!
++			validate_fields(object(field(v, 'owner'))!, owner_string_fields, [], [])!
++			validate_fields(object(field(item, 'series'))!, series_string_fields, series_integer_fields, [])!

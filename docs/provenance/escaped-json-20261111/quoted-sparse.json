@@ -1,0 +1,197 @@
+{
+  "compiler_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+  "iterations": 100000,
+  "warmups": 10000,
+  "repetitions": 9,
+  "flags": [
+    "-cc",
+    "gcc",
+    "-prod",
+    "-gc",
+    "boehm"
+  ],
+  "sources": {
+    "baseline": {
+      "domain_sha256": "bfa3566c14fbd37a186e2e5e1152a8b7285fa854f8eee70f36cfd2c7dff04538",
+      "binary_sha256": "bbb1c16197376f84416186bca1226208132a1ca19e1885a99f13041a4131302e"
+    },
+    "candidate": {
+      "domain_sha256": "82a74a6e80dcdf756e2a4df46dd072a0860896e2781b5d69b3b21cde424e2950",
+      "binary_sha256": "2fd2d4800d6c045d69fb629046aceabf70e54d78adbfd43177bf1d590ccfd3b1"
+    }
+  },
+  "cases": {
+    "late_escape": {
+      "input": "\"abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123\\n\"",
+      "expected": "abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123\n",
+      "samples": {
+        "baseline": [
+          {
+            "ns_per_string": 23919.41962,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 23344.28382,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 23158.60094,
+            "gc_bytes_per_string": 8608.0
+          },
+          {
+            "ns_per_string": 23079.28477,
+            "gc_bytes_per_string": 8608.0
+          },
+          {
+            "ns_per_string": 24274.39374,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 25299.5684,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 25217.37952,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 25059.85047,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 24454.11746,
+            "gc_bytes_per_string": 8608.0
+          }
+        ],
+        "candidate": [
+          {
+            "ns_per_string": 12194.45331,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 11733.5025,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 11815.49304,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 11833.06061,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 11795.49925,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 12639.6623,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 12277.96676,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 12500.69486,
+            "gc_bytes_per_string": 5696.0
+          },
+          {
+            "ns_per_string": 13365.53249,
+            "gc_bytes_per_string": 5696.0
+          }
+        ]
+      },
+      "median_ns": {
+        "baseline": 24274.39374,
+        "candidate": 12194.45331
+      }
+    },
+    "early_escape": {
+      "input": "\"\\nabc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123\"",
+      "expected": "\nabc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123abc xyz/123",
+      "samples": {
+        "baseline": [
+          {
+            "ns_per_string": 24659.10387,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 22356.54819,
+            "gc_bytes_per_string": 8608.0
+          },
+          {
+            "ns_per_string": 24133.30105,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 23702.22383,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 23400.40587,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 23601.33214,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 23739.96369,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 24376.98385,
+            "gc_bytes_per_string": 8608.0128
+          },
+          {
+            "ns_per_string": 24816.92322,
+            "gc_bytes_per_string": 8608.0128
+          }
+        ],
+        "candidate": [
+          {
+            "ns_per_string": 10827.30899,
+            "gc_bytes_per_string": 11855.95616
+          },
+          {
+            "ns_per_string": 9782.48084,
+            "gc_bytes_per_string": 11855.95616
+          },
+          {
+            "ns_per_string": 10289.16163,
+            "gc_bytes_per_string": 11855.95616
+          },
+          {
+            "ns_per_string": 9341.98962,
+            "gc_bytes_per_string": 11856.02528
+          },
+          {
+            "ns_per_string": 9833.51067,
+            "gc_bytes_per_string": 11856.00512
+          },
+          {
+            "ns_per_string": 9586.38379,
+            "gc_bytes_per_string": 11855.95616
+          },
+          {
+            "ns_per_string": 9582.19356,
+            "gc_bytes_per_string": 11855.95616
+          },
+          {
+            "ns_per_string": 9940.97802,
+            "gc_bytes_per_string": 11855.95616
+          },
+          {
+            "ns_per_string": 10557.46716,
+            "gc_bytes_per_string": 11855.95616
+          }
+        ]
+      },
+      "median_ns": {
+        "baseline": 23739.96369,
+        "candidate": 9833.51067
+      }
+    }
+  }
+}

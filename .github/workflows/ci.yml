@@ -26,7 +26,11 @@ jobs:
           scripts/setup-v.sh "$RUNNER_TEMP/v"
           echo "$RUNNER_TEMP/v" >> "$GITHUB_PATH"
       - name: Format check
-        run: v fmt -verify src
+        run: v fmt -verify src scripts/parse_benchmark
+      - name: Parser benchmark fixture contracts
+        run: python3 tests/benchmark_parse_test.py
+      - name: Parser benchmark smoke (no performance threshold)
+        run: python3 scripts/benchmark_parse.py --source main=. --size 4 --iterations 2 --warmups 1 --repetitions 1 --output /tmp/parser-smoke.json
       - name: Unit tests
         run: v -cc gcc -d use_openssl test src
       - name: Build

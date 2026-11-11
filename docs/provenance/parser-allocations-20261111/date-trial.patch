@@ -1,0 +1,17 @@
+diff --git a/src/config.v b/src/config.v
+index b21177c..1b88ee6 100644
+--- a/src/config.v
++++ b/src/config.v
+@@ -232,0 +233,4 @@ fn parse_date(s string) !i64 {
++	return date_components(y, m, d)
++}
++
++fn date_components(y int, m int, d int) !i64 {
+diff --git a/src/domain.v b/src/domain.v
+index 57286d5..aeb1d1d 100644
+--- a/src/domain.v
++++ b/src/domain.v
+@@ -305,2 +305 @@ fn timestamp(s string) !i64 {
+-	date := s[..4] + s[5..7] + s[8..10]
+-	base := parse_date(date)!
++	base := date_components(s[..4].int(), s[5..7].int(), s[8..10].int())!

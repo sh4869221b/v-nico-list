@@ -1,0 +1,170 @@
+{
+  "scope": "Synthetic loopback CLI process wall time; includes startup, HTTP, JSON, sorting, output; no live API performance inference.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "targets": 4,
+    "pages_per_target": 3,
+    "items_per_page": 100,
+    "response_delay_ms": 10.0,
+    "warmups": 1,
+    "repetitions": 7,
+    "output_format": "json",
+    "payload": "extended",
+    "execution_order": "one warmup per binary, then alternating forward/reverse per repetition",
+    "flags": [
+      "-T4",
+      "-P4",
+      "-H8",
+      "--no-progress",
+      "--retries=1",
+      "--json"
+    ]
+  },
+  "binaries": {
+    "main": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-final-cli-binaries/main",
+      "sha256": "eb0cfaa82739944d62bf8c4f9a2c0321694809dd854d490d2a005bcbf9b1e65f",
+      "samples": [
+        {
+          "wall_seconds": 0.1856825690047117,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.17606236900610384,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.18819296999572543,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.1862906030000886,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.1951523530005943,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.19171386100060772,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.22210039800120285,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        }
+      ],
+      "wall_median_seconds": 0.18819296999572543,
+      "wall_min_seconds": 0.17606236900610384,
+      "wall_max_seconds": 0.22210039800120285
+    },
+    "combined": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-final-cli-binaries/combined-openssl",
+      "sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43",
+      "samples": [
+        {
+          "wall_seconds": 0.05341731299995445,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.05796206800005166,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.0549944609956583,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.05477152099774685,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.06252764599776128,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.055122989004303236,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        },
+        {
+          "wall_seconds": 0.05718285699549597,
+          "requests": 12,
+          "http_peak": 8,
+          "stdout_bytes": 26696,
+          "output_count": 1200,
+          "result_sha256": "ccf651c11caa259498563a1b7771fed4ae27da8aae5a73ee07adb065fd00a51d",
+          "items_sha256": "b1401c7408a3b1354ca7e7c0c23a3b699ca182f9e13506bde8551a9edb2259df"
+        }
+      ],
+      "wall_median_seconds": 0.055122989004303236,
+      "wall_min_seconds": 0.05341731299995445,
+      "wall_max_seconds": 0.06252764599776128
+    }
+  }
+}

@@ -1,0 +1,9 @@
+---- Testing... ----------------------------------------------------------------
+OK    [1/6] C: 6258.291 ms, R:     5.631 ms /workspace/scratch/b81277eea609/v-nico-escaped-json/src/config_test.v
+OK    [2/6] C: 5538.777 ms, R:    51.119 ms /workspace/scratch/b81277eea609/v-nico-escaped-json/src/domain_test.v
+OK    [3/6] C: 5771.837 ms, R:   217.192 ms /workspace/scratch/b81277eea609/v-nico-escaped-json/src/escaped_json_test.v
+OK    [4/6] C: 5312.617 ms, R:    13.692 ms /workspace/scratch/b81277eea609/v-nico-escaped-json/src/pool_test.v
+OK    [5/6] C: 5319.83 ms, R:    88.626 ms /workspace/scratch/b81277eea609/v-nico-escaped-json/src/timing_test.v
+OK    [6/6] C: 5349.165 ms, R:   511.687 ms /workspace/scratch/b81277eea609/v-nico-escaped-json/src/transport_test.v
+--------------------------------------------------------------------------------
+Summary for all V _test.v files: 6 passed, 6 total. Elapsed time: 34444 ms, on 1 job. Comptime: 33550 ms. Runtime: 887 ms.
