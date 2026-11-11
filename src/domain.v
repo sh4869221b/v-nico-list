@@ -355,9 +355,9 @@ fn parse_page(body string, kind string) !Page {
 	integer_value(field(data, 'totalCount'))!
 	total := if total_value is json2.Null { i64(-1) } else { integer_value(total_value)! }
 	raw_items := array_value(field(items_obj, 'items'))!
-	// Bound the initial reservation for malformed or unusually large input.
-	// Larger valid pages still grow normally; this is not an item limit.
-	initial_cap := if raw_items.len > 100 { 100 } else { raw_items.len }
+	// Reserve small pages only. Large or malformed inputs retain the original
+	// growth strategy, rather than paying an up-front output reservation.
+	initial_cap := if raw_items.len <= 100 { raw_items.len } else { 0 }
 	mut items := []Video{cap: initial_cap}
 	for raw in raw_items {
 		item := object(raw)!
