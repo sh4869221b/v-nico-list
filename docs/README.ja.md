@@ -2,7 +2,7 @@
 
 niconico のユーザーページ・マイリストから動画 ID を取得する V 製 CLI です。[go-nico-list](https://github.com/sh4869221b/go-nico-list/tree/6638228b9acfa6256805f5e57bdd75f4ca80e084) の現行オプションと出力形式を移植しています。
 
-Linux ではループバック統合テスト 55 件に合格しました。Windows ネイティブ CI は 49 件に合格し、POSIX シグナル専用の 6 件を除外しています。公開済みベースラインの合成ベンチマークは Go 参照実装より遅い結果でした。最新の [JSON・ソート最適化](PERFORMANCE.md) はその V ベースラインより所要時間を短縮していますが、Go との再比較ではありません。実測値と検証範囲は [VALIDATION.md](VALIDATION.md) を参照してください。
+公開済みベースラインでは Linux のループバック統合テスト 55 件、Windows ネイティブ CI の 49 件に合格し、Windows では POSIX シグナル専用の 6 件を除外しています。今回の接続再利用の検証と未実施のプラットフォーム確認は [別途記録](CONNECTION-REUSE.md) しています。公開済みベースラインの合成ベンチマークは Go 参照実装より遅い結果でした。最新の [JSON・ソート最適化](PERFORMANCE.md) はその V ベースラインより所要時間を短縮していますが、Go との再比較ではありません。実測値と検証範囲は [VALIDATION.md](VALIDATION.md) を参照してください。
 
 [English](../README.md) · [互換性・通信の制限](COMPATIBILITY.md) · [検証・ベンチマーク](VALIDATION.md)
 
@@ -43,6 +43,7 @@ cat targets.txt | v-nico-list --stdin
 | `-P, --concurrency-pages` | `1` | 対象ごとの同時取得ページ数（1 以上） |
 | `-H, --concurrency-http` | `0` | コマンド全体の HTTP 同時実行上限（0 で追加制限なし） |
 | `-A, --concurrency-adaptive` | `false` | 未指定の同時実行レイヤーを自動調整 |
+| `--reuse-connections` | `false` | HTTP/1.1 接続の再利用を明示的に有効化（切断済み接続への試行も総試行回数に含む） |
 | `--http-metrics` | `false` | HTTP 集計メトリクスをログ出力 |
 | `--rate-limit` | `0` | 全体の毎秒リクエスト上限（0 で無効） |
 | `--min-interval` | `0s` | リクエスト間の最小時間 |
@@ -84,3 +85,5 @@ python3 scripts/benchmark.py --binary v=bin/v-nico-list --output /tmp/v-benchmar
 統合テストは合成 HTTP/HTTPS ループバックサーバーだけを使います。TLS 証明書生成に OpenSSL コマンドが必要です。CLI・日時・ページ分割・部分結果・再試行・同時実行・ペーシング・キャンセル・TLS 検証・gzip・chunked 応答・展開後 8 MiB 上限を検証します。ローカル合成測定を実サービスの性能と解釈しないでください。実行済みの検証結果は [VALIDATION.md](VALIDATION.md) を参照してください。
 
 開発用の `NICO_BASE_URL` で API 基底 URL（既定 `https://nvapi.nicovideo.jp/v3`）を変更できます。テストでは末尾が `/v3` のループバック URL を指定します。TLS 検証やプロキシ設定は引き続き適用されます。
+
+`--reuse-connections` を指定すると TCP/TLS 接続の確立回数を減らせます。未指定は従来どおり毎回接続を閉じます。再利用予定の接続がサーバー側で無通知切断されていた場合も通常の試行を 1 回消費するため、`--retries 1` ではそのページが失敗する場合があります。詳細と合成測定結果は [接続再利用の制限](CONNECTION-REUSE.md) を参照してください。

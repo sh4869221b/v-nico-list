@@ -79,6 +79,58 @@ class CLIContracts(unittest.TestCase):
                 self.assertEqual(headers.get("x-frontend-id"), "6")
                 self.assertEqual(headers.get("accept"), "*/*")
 
+    def test_connection_reuse_framed_and_gzip(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific opt-in connection pool")
+        for chunked, compressed in ((False, False), (True, False), (False, True), (True, True)):
+            def respond(r):
+                return Reply(payload(r.kind, [video("sm" + str(r.page))] if r.page < 4 else [], total=400),
+                             chunked=chunked, compressed=compressed)
+            with self.subTest(chunked=chunked, compressed=compressed), Fixture(respond) as fixture:
+                result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "-P", "1", "--http-metrics")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(len(fixture.records), 4)
+                self.assertEqual(fixture.connections, 1)
+
+    def test_connection_reuse_is_disabled_by_default(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific opt-in connection pool")
+        for flags in ((), ("--reuse-connections", "--reuse-connections=false")):
+            with self.subTest(flags=flags), Fixture(single_page) as fixture:
+                result = self.run_cli(fixture, "nicovideo.jp/user/1", *flags)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(len(fixture.records), 2)
+                self.assertEqual(fixture.connections, 2)
+                self.assertTrue(all(r.headers.get("Connection") == "close" for r in fixture.records))
+
+    def test_connection_close_is_not_reused(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific opt-in connection pool")
+        with Fixture(lambda r: Reply(payload(r.kind, [video("sm1")] if r.page < 3 else [], total=300), headers={"Connection": "close"})) as fixture:
+            result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "-P", "1")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(len(fixture.records), 3)
+            self.assertEqual(fixture.connections, 3)
+
+    def test_connection_stale_uses_only_counted_retries(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific pool/proxy/retry contract")
+        # The first response is framed but the server silently closes afterward.
+        # GET pacing ensures its close is visible before the next attempt.
+        for retries in (1, 2):
+            def respond(r):
+                return Reply(payload(r.kind, [video("sm" + str(r.page))] if r.page < 2 else [], total=200), close_after=r.page == 1)
+            with self.subTest(retries=retries), Fixture(respond) as fixture:
+                result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "-P", "1", "--min-interval", "100ms",
+                                      "--retries", str(retries), "--http-metrics")
+                metrics = [json.loads(line) for line in result.stderr.splitlines() if line.startswith("{")]
+                metrics = next(item for item in metrics if item.get("msg") == "http_metrics")["http"]
+                self.assertEqual(metrics["attempts"], 2 if retries == 1 else 3)
+                self.assertEqual(metrics.get("retries", 0), 0 if retries == 1 else 1)
+                self.assertEqual(result.returncode == 0, retries == 2, result.stderr)
+                self.assertEqual(len(fixture.records), retries)
+                self.assertEqual(fixture.connections, retries)
+
     def test_empty_arrays_and_404(self):
         with Fixture(lambda r: Reply(status=404)) as fixture:
             value = self.json_result(self.run_cli(fixture, "nicovideo.jp/user/1", "--json"))
@@ -189,12 +241,12 @@ class CLIContracts(unittest.TestCase):
         with Fixture(lambda r: Reply(payload(r.kind), delay=3)) as fixture:
             self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records)
 
-    def assert_input_error_cancels_fetch(self, url, request_started, env=None):
+    def assert_input_error_cancels_fetch(self, url, request_started, env=None, flags=()):
         environment = os.environ.copy()
         environment.update(NICO_BASE_URL=url, NO_PROXY="localhost,127.0.0.1", no_proxy="localhost,127.0.0.1")
         if env:
             environment.update(env)
-        process = subprocess.Popen([self.binary, "--stdin", "--json", "--no-progress", "--best-effort", "--retries=1", "nicovideo.jp/user/1"],
+        process = subprocess.Popen([self.binary, *flags, "--stdin", "--json", "--no-progress", "--best-effort", "--retries=1", "nicovideo.jp/user/1"],
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=environment)
         try:
             deadline = time.monotonic() + 3
@@ -762,6 +814,88 @@ class TLSContracts(CLIContracts):
             self.assertEqual(len(fixture.records), 2)
         with self.tls_fixture(respond=lambda r: Reply(payload(r.kind), delay=3)) as fixture:
             self.assert_pending_request_is_cancellable(fixture, "--timeout", maximum, env=trust)
+
+    def test_tls_stale_connection_respects_attempt_limit(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific pool/proxy/retry contract")
+        for retries in (1, 2):
+            def respond(r):
+                return Reply(payload(r.kind, [video("sm1")] if r.page == 1 else []), close_after=r.page == 1)
+            with self.subTest(retries=retries), self.tls_fixture(respond=respond) as fixture:
+                result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "--min-interval", "100ms",
+                                      "--retries", str(retries), "--http-metrics", env={"SSL_CERT_FILE": str(self.ca)})
+                metrics = next(json.loads(line)["http"] for line in result.stderr.splitlines()
+                               if line.startswith("{") and json.loads(line).get("msg") == "http_metrics")
+                self.assertEqual(metrics["attempts"], 2 if retries == 1 else 3)
+                self.assertEqual(metrics.get("retries", 0), retries - 1)
+                self.assertEqual(result.returncode == 0, retries == 2, result.stderr)
+                self.assertEqual(len(fixture.records), retries)
+                self.assertEqual(fixture.connections, retries)
+
+    def test_tls_reused_stream_cancellation_and_timeout(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific opt-in connection pool")
+        # Three individually bounded requests exceed the first absolute
+        # deadline in aggregate, so a retained handshake/attempt deadline fails.
+        with self.tls_fixture(respond=lambda r: Reply(payload(r.kind, [video("sm1")] if r.page < 3 else []), delay=0.15)) as fixture:
+            result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "--timeout", "350ms", env={"SSL_CERT_FILE": str(self.ca)})
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(len(fixture.records), 3)
+            self.assertEqual(fixture.connections, 1)
+        def respond(r):
+            return Reply(payload(r.kind, [video("sm1")] if r.page == 1 else []), delay=0 if r.page == 1 else 3)
+        with self.tls_fixture(respond=respond) as fixture:
+            self.assert_input_error_cancels_fetch(fixture.url, lambda: [r for r in fixture.records if r.page == 2],
+                                                  env={"SSL_CERT_FILE": str(self.ca)}, flags=["--reuse-connections"])
+            self.assertEqual(fixture.connections, 1)
+        for close, delayed_body in ((False, False), (True, False), (False, True), (True, True)):
+            def timeout_reply(r):
+                reply = respond(r)
+                if delayed_body and r.page == 2:
+                    reply.delay = 0
+                    reply.body_delay = 3
+                if close:
+                    reply.headers["Connection"] = "close"
+                return reply
+            with self.subTest(close=close, delayed_body=delayed_body), self.tls_fixture(respond=timeout_reply) as fixture:
+                start = time.monotonic()
+                result = self.run_cli(fixture, *([] if close else ["--reuse-connections"]), "nicovideo.jp/user/1", "--timeout", "250ms", "--http-metrics", env={"SSL_CERT_FILE": str(self.ca)})
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout, "")
+                metrics = next(json.loads(line)["http"] for line in result.stderr.splitlines()
+                               if line.startswith("{") and json.loads(line).get("msg") == "http_metrics")
+                self.assertEqual(metrics["attempts"], 2)
+                self.assertEqual(metrics["transport_errors"], 1)
+                self.assertEqual(metrics.get("page_errors", 0), 0)
+                self.assertEqual(metrics.get("body_errors", 0), 0)
+                self.assertLess(time.monotonic() - start, 2)
+                self.assertEqual(len(fixture.records), 2)
+                self.assertEqual(fixture.connections, 2 if close else 1)
+
+    def test_tls_connection_reuse_and_proxy_tunnel(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific pool/proxy/retry contract")
+        for proxied in (False, True):
+            with self.subTest(proxied=proxied), self.tls_fixture(respond=lambda r: Reply(payload(r.kind, [video("sm1")] if r.page < 5 else [], total=500), compressed=True)) as fixture:
+                env = {"SSL_CERT_FILE": str(self.ca)}
+                with TunnelProxy(fixture.server.server_port) as proxy:
+                    if proxied:
+                        env.update(HTTPS_PROXY=proxy.url, https_proxy=proxy.url, NO_PROXY="", no_proxy="")
+                    result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "-P", "1", env=env)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(len(fixture.records), 5)
+                    self.assertEqual(fixture.connections, 1)
+                    self.assertEqual(len(proxy.records), 1 if proxied else 0)
+
+    def test_tls_pool_reuse_across_page_workers(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("V-specific opt-in connection pool")
+        with self.tls_fixture(respond=lambda r: Reply(payload(r.kind, [video("sm" + str(r.page))], total=2000), delay=0.01, compressed=True)) as fixture:
+            result = self.run_cli(fixture, "--reuse-connections", "nicovideo.jp/user/1", "-P", "4", "-H", "4", env={"SSL_CERT_FILE": str(self.ca)})
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(len(fixture.records), 20)
+            self.assertLessEqual(fixture.connections, 4)
+            self.assertLessEqual(fixture.peak, 4)
 
     def test_tls_untrusted_ca_rejected(self):
         with self.tls_fixture() as fixture:

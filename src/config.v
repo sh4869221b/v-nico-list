@@ -7,38 +7,39 @@ import math
 
 struct Config {
 mut:
-	comment          int
-	after            string = '10000101'
-	before           string = '99991231'
-	after_unix       i64
-	before_unix      i64
-	url              bool
-	targets          int = 3
-	pages            int = 1
-	http             int
-	adaptive         bool
-	explicit_targets bool
-	explicit_pages   bool
-	explicit_http    bool
-	metrics          bool
-	timeout          time.Duration = 10 * time.second
-	retries          int           = 10
-	rate             f64
-	interval         time.Duration
-	input_file       string
-	stdin            bool
-	logfile          string
-	progress         bool
-	no_progress      bool
-	strict           bool
-	best_effort      bool
-	dedupe           bool
-	no_sort          bool
-	json             bool
-	help             bool
-	version          bool
-	base             string = 'https://nvapi.nicovideo.jp/v3'
-	args             []string
+	comment           int
+	after             string = '10000101'
+	before            string = '99991231'
+	after_unix        i64
+	before_unix       i64
+	url               bool
+	targets           int = 3
+	pages             int = 1
+	http              int
+	adaptive          bool
+	explicit_targets  bool
+	explicit_pages    bool
+	explicit_http     bool
+	metrics           bool
+	reuse_connections bool
+	timeout           time.Duration = 10 * time.second
+	retries           int           = 10
+	rate              f64
+	interval          time.Duration
+	input_file        string
+	stdin             bool
+	logfile           string
+	progress          bool
+	no_progress       bool
+	strict            bool
+	best_effort       bool
+	dedupe            bool
+	no_sort           bool
+	json              bool
+	help              bool
+	version           bool
+	base              string = 'https://nvapi.nicovideo.jp/v3'
+	args              []string
 }
 
 fn parse_duration(s string) !time.Duration {
@@ -111,8 +112,8 @@ fn flag_name(s string) string {
 fn parse_config(args []string) !Config {
 	mut cfg := Config{}
 	if base := os.getenv_opt('NICO_BASE_URL') { cfg.base = base.trim_right('/') }
-	bools := ['url', 'concurrency-adaptive', 'http-metrics', 'stdin', 'progress', 'no-progress',
-		'strict', 'best-effort', 'dedupe', 'no-sort', 'json', 'help', 'version']
+	bools := ['url', 'concurrency-adaptive', 'http-metrics', 'reuse-connections', 'stdin', 'progress',
+		'no-progress', 'strict', 'best-effort', 'dedupe', 'no-sort', 'json', 'help', 'version']
 	values := ['comment', 'dateafter', 'datebefore', 'concurrency-targets', 'concurrency-pages',
 		'concurrency-http', 'timeout', 'retries', 'rate-limit', 'min-interval', 'input-file', 'logfile']
 	mut i := 0
@@ -183,6 +184,7 @@ fn parse_config(args []string) !Config {
 				}
 				'concurrency-adaptive' { cfg.adaptive = parse_bool(val)! }
 				'http-metrics' { cfg.metrics = parse_bool(val)! }
+				'reuse-connections' { cfg.reuse_connections = parse_bool(val)! }
 				'timeout' { cfg.timeout = parse_duration(val)! }
 				'retries' { cfg.retries = parse_cli_int(val)! }
 				'rate-limit' { cfg.rate = strconv.atof64(val)! }
@@ -240,4 +242,4 @@ fn all_digits(s string) bool {
 	return true
 }
 
-const help_text = 'niconico user/mylist URL video list (V port)\nUsage: v-nico-list [flags] [URLs...]\n  -c, --comment number             lower comment limit (exclusive; default 0)\n  -a, --dateafter YYYYMMDD         inclusive UTC date (default 10000101)\n  -b, --datebefore YYYYMMDD        inclusive UTC date (default 99991231)\n  -u, --url                       output watch URLs\n  -T, --concurrency-targets int    target workers (default 3)\n  -P, --concurrency-pages int      page workers per target (default 1)\n  -H, --concurrency-http int       command-wide requests (default 0, unlimited)\n  -A, --concurrency-adaptive       adapt independently unspecified layers\n      --timeout duration          per-request deadline (default 10s)\n      --retries int               total request attempts (default 10)\n      --rate-limit float          requests per second (default 0)\n      --min-interval duration     minimum request interval (default 0)\n      --input-file path           newline inputs from file\n      --stdin                     newline inputs from stdin\n      --logfile path              append structured logs to file\n      --progress / --no-progress  control stderr progress\n      --strict / --best-effort    input/fetch exit behavior\n      --dedupe / --no-sort        output transforms\n      --json / --http-metrics     JSON output / aggregate diagnostic log\n  -h, --help                      show help\n  -v, --version                   show version'
+const help_text = 'niconico user/mylist URL video list (V port)\nUsage: v-nico-list [flags] [URLs...]\n  -c, --comment number             lower comment limit (exclusive; default 0)\n  -a, --dateafter YYYYMMDD         inclusive UTC date (default 10000101)\n  -b, --datebefore YYYYMMDD        inclusive UTC date (default 99991231)\n  -u, --url                       output watch URLs\n  -T, --concurrency-targets int    target workers (default 3)\n  -P, --concurrency-pages int      page workers per target (default 1)\n  -H, --concurrency-http int       command-wide requests (default 0, unlimited)\n  -A, --concurrency-adaptive       adapt independently unspecified layers\n      --reuse-connections        opt-in keep-alive (stale sockets consume attempts)\n      --timeout duration          per-request deadline (default 10s)\n      --retries int               total request attempts (default 10)\n      --rate-limit float          requests per second (default 0)\n      --min-interval duration     minimum request interval (default 0)\n      --input-file path           newline inputs from file\n      --stdin                     newline inputs from stdin\n      --logfile path              append structured logs to file\n      --progress / --no-progress  control stderr progress\n      --strict / --best-effort    input/fetch exit behavior\n      --dedupe / --no-sort        output transforms\n      --json / --http-metrics     JSON output / aggregate diagnostic log\n  -h, --help                      show help\n  -v, --version                   show version'

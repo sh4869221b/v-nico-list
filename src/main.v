@@ -135,6 +135,7 @@ fn compare_targets(a &TargetResult, b &TargetResult) int {
 fn run(cfg Config) ! {
 	mut c := new_control(cfg)!
 	defer {
+		c.close_idle()
 		if cfg.metrics { c.metrics_log() }
 		if c.has_log { c.log.close() }
 	}

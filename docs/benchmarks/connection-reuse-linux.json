@@ -1,0 +1,403 @@
+{
+  "fixture": "loopback; no artificial RTT; sequential pages; verified HTTPS; one unrecorded warmup",
+  "pages": 40,
+  "repetitions": 7,
+  "flags": [
+    "nicovideo.jp/user/1",
+    "-P",
+    "1",
+    "--retries",
+    "1",
+    "--no-progress"
+  ],
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "binaries": [
+    {
+      "name": "baseline",
+      "path": "/workspace/scratch/b81277eea609/v-nico-performance/bin/v-nico-list",
+      "sha256": "357befb53f81339850126066684d76c30a52567cda2ad42adcef09d12d1030cb"
+    },
+    {
+      "name": "reuse",
+      "path": "/tmp/nico-pool",
+      "sha256": "aa40bf53e1b47f03f0fd931763eb1f13e75ea7cf527da29295b7024fcdf1c173"
+    }
+  ],
+  "runs": [
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 0,
+      "wall_seconds": 0.03725073100213194,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 0,
+      "wall_seconds": 0.03519386200059671,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 1,
+      "wall_seconds": 0.03123119600058999,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 1,
+      "wall_seconds": 0.022491035997518338,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 2,
+      "wall_seconds": 0.022314415997243486,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 2,
+      "wall_seconds": 0.042190825995930936,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 3,
+      "wall_seconds": 0.03171746799489483,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 3,
+      "wall_seconds": 0.02310009799839463,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 4,
+      "wall_seconds": 0.022818493998784106,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 4,
+      "wall_seconds": 0.034507188996940386,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 5,
+      "wall_seconds": 0.034369736997177824,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 5,
+      "wall_seconds": 0.02820744000200648,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "repetition": 6,
+      "wall_seconds": 0.024431100995570887,
+      "connections": 1,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "repetition": 6,
+      "wall_seconds": 0.03543123899726197,
+      "connections": 41,
+      "tls_handshakes": 0,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 0,
+      "wall_seconds": 0.03284383299615001,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 0,
+      "wall_seconds": 0.10998632600239944,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 1,
+      "wall_seconds": 0.10901716999796918,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 1,
+      "wall_seconds": 0.029511309003282804,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 2,
+      "wall_seconds": 0.029056587001832668,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 2,
+      "wall_seconds": 0.11384082199947443,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 3,
+      "wall_seconds": 0.11370693799835863,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 3,
+      "wall_seconds": 0.025747974999831058,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 4,
+      "wall_seconds": 0.026257933001033962,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 4,
+      "wall_seconds": 0.10053018900362076,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 5,
+      "wall_seconds": 0.11578849700163119,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 5,
+      "wall_seconds": 0.03100137699948391,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "repetition": 6,
+      "wall_seconds": 0.03162105299998075,
+      "connections": 1,
+      "tls_handshakes": 1,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "repetition": 6,
+      "wall_seconds": 0.10498965599981602,
+      "connections": 41,
+      "tls_handshakes": 41,
+      "requests": 41,
+      "stdout_sha256": "74e834a31793defe695167821a989218b139f37002cb2cd3e9fc5896e4434a3e"
+    }
+  ],
+  "summary": [
+    {
+      "protocol": "http",
+      "binary": "baseline",
+      "median_wall_seconds": 0.034507188996940386,
+      "connections": [
+        41,
+        41,
+        41,
+        41,
+        41,
+        41,
+        41
+      ],
+      "requests": [
+        41,
+        41,
+        41,
+        41,
+        41,
+        41,
+        41
+      ]
+    },
+    {
+      "protocol": "http",
+      "binary": "reuse",
+      "median_wall_seconds": 0.02310009799839463,
+      "connections": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "requests": [
+        41,
+        41,
+        41,
+        41,
+        41,
+        41,
+        41
+      ]
+    },
+    {
+      "protocol": "https",
+      "binary": "baseline",
+      "median_wall_seconds": 0.10998632600239944,
+      "connections": [
+        41,
+        41,
+        41,
+        41,
+        41,
+        41,
+        41
+      ],
+      "requests": [
+        41,
+        41,
+        41,
+        41,
+        41,
+        41,
+        41
+      ]
+    },
+    {
+      "protocol": "https",
+      "binary": "reuse",
+      "median_wall_seconds": 0.029511309003282804,
+      "connections": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "requests": [
+        41,
+        41,
+        41,
+        41,
+        41,
+        41,
+        41
+      ]
+    }
+  ]
+}

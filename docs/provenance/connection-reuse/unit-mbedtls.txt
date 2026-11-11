@@ -1,0 +1,8 @@
+---- Testing... ----------------------------------------------------------------
+OK    [1/5] C: 22326.288 ms, R:     3.229 ms /workspace/scratch/b81277eea609/v-nico-transport/src/config_test.v
+OK    [2/5] C: 5305.568 ms, R:    47.123 ms /workspace/scratch/b81277eea609/v-nico-transport/src/domain_test.v
+OK    [3/5] C: 5113.602 ms, R:     6.199 ms /workspace/scratch/b81277eea609/v-nico-transport/src/pool_test.v
+OK    [4/5] C: 5195.338 ms, R:    85.478 ms /workspace/scratch/b81277eea609/v-nico-transport/src/timing_test.v
+OK    [5/5] C: 5255.269 ms, R:   515.538 ms /workspace/scratch/b81277eea609/v-nico-transport/src/transport_test.v
+--------------------------------------------------------------------------------
+Summary for all V _test.v files: 5 passed, 5 total. Elapsed time: 43857 ms, on 1 job. Comptime: 43196 ms. Runtime: 657 ms.

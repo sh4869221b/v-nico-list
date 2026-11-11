@@ -79,3 +79,9 @@ fn test_adaptive_page_supply_grows_without_changing_explicit_target_limit() {
 	assert c.cfg.targets == 1 && c.cfg.explicit_targets
 	assert c.counters['adaptive_increases'] == 1
 }
+
+fn test_reuse_connections_is_explicit_opt_in() {
+	assert !(parse_config([]string{}) or { panic(err) }).reuse_connections
+	assert (parse_config(['--reuse-connections']) or { panic(err) }).reuse_connections
+	assert !(parse_config(['--reuse-connections', '--reuse-connections=false']) or { panic(err) }).reuse_connections
+}
