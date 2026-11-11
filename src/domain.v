@@ -302,8 +302,7 @@ fn timestamp(s string) !i64 {
 	} else {
 		return error('invalid timestamp timezone')
 	}
-	date := s[..4] + s[5..7] + s[8..10]
-	base := parse_date(date)!
+	base := date_components(s[..4].int(), s[5..7].int(), s[8..10].int())!
 	h := s[11..13].int()
 	m := s[14..16].int()
 	sec := s[17..19].int()
