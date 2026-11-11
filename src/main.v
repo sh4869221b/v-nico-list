@@ -11,6 +11,7 @@ fn C.nico_signals()
 fn C.nico_cancelled() int
 fn C.nico_cancel()
 fn C.nico_output(s &u8, n uint) int
+fn C.nico_output_prefix(s &u8, n uint) uint
 
 struct InputEvent {
 	present bool

@@ -275,6 +275,52 @@ class CLIContracts(unittest.TestCase):
             self.assertEqual(result.stdout, "https://www.nicovideo.jp/watch/sm2\nhttps://www.nicovideo.jp/watch/sm10\n")
             self.assertIn("output_count=2", result.stderr)
 
+    def test_line_batches_preserve_bytes_dedupe_and_count(self):
+        # Cross multiple batch boundaries, including one oversized API ID.
+        ids = ["sm" + str(100000 + i) for i in range(9000)]
+        ids.insert(4500, "sm" + "7" * 40000)
+        ids.insert(1, "sm\n\0\r雪")
+        def respond(r):
+            return Reply(payload(r.kind, [video(i) for i in ids + ids[:100]] if r.page == 1 else [], len(ids) + 100))
+        with Fixture(respond) as fixture:
+            environment = os.environ.copy()
+            environment.update(NICO_BASE_URL=fixture.url, NO_PROXY="localhost,127.0.0.1", no_proxy="localhost,127.0.0.1")
+            result = subprocess.run([self.binary, "--no-progress", "--retries=1", "nicovideo.jp/user/1", "--no-sort", "--dedupe", "--url", "-P1"],
+                                    capture_output=True, env=environment, timeout=15)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "".join("https://www.nicovideo.jp/watch/" + i + "\n" for i in ids).encode())
+            self.assertIn(("output_count=" + str(len(ids))).encode(), result.stderr)
+            self.assertFalse(fixture.errors, fixture.errors)
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux file size limit")
+    def test_line_partial_write_counts_only_complete_records(self):
+        import resource
+        ids = ["sm" + str(100000 + i) for i in range(9000)]
+        ids[1] = "sm\n\0\r雪"
+        expected = "".join(i + "\n" for i in ids).encode()
+        limit = 32768 + 100  # Deliberately ends in the middle of a record.
+        end = 0
+        count = 0
+        for identifier in ids:
+            end += len((identifier + "\n").encode())
+            if end <= limit:
+                count += 1
+        def restrict_output():
+            signal.signal(signal.SIGXFSZ, signal.SIG_IGN)
+            resource.setrlimit(resource.RLIMIT_FSIZE, (limit, limit))
+        with Fixture(lambda r: Reply(payload(r.kind, [video(i) for i in ids] if r.page == 1 else [], len(ids)))) as fixture:
+            environment = os.environ.copy()
+            environment.update(NICO_BASE_URL=fixture.url, NO_PROXY="localhost,127.0.0.1", no_proxy="localhost,127.0.0.1")
+            with tempfile.TemporaryFile() as output:
+                result = subprocess.run([self.binary, "--no-progress", "--retries=1", "--no-sort", "-P1", "nicovideo.jp/user/1"],
+                                        stdout=output, stderr=subprocess.PIPE, env=environment, preexec_fn=restrict_output, timeout=10)
+                output.seek(0)
+                written = output.read()
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(written, expected[:limit])
+            self.assertIn(("output_count=" + str(count)).encode(), result.stderr)
+            self.assertIn(b"failed to write stdout", result.stderr)
+
     def test_json_target_items_remain_unsorted_and_undeduped(self):
         def respond(r):
             return Reply(payload(r.kind, [video("sm10"), video("sm2"), video("sm2")] if r.page == 1 else []))
