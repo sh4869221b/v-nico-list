@@ -1,0 +1,25 @@
+# Executed from /workspace/scratch/b81277eea609, sequentially (no network requests).
+export VMODULES=$PWD/v-nico-vmodules
+V=$PWD/v-nico-toolchain/v
+C=$PWD/v-nico-escaped-json
+B=$PWD/v-nico-parser-bench
+P=$C/docs/provenance/escaped-json-20261111
+python3 "$C/scripts/benchmark_parse.py" --binary baseline=$PWD/v-nico-parser-main-binaries/main --source candidate="$C" --v "$V" --size 100 --iterations 20 --warmups 10 --repetitions 9 --build-dir "$PWD/v-nico-escaped-json-binaries" --output "$P/full.json"
+python3 "$P/microbench.py" "$V" "$B" "$C" "$P/quoted.json"
+python3 "$C/scripts/benchmark_parse.py" --binary baseline=$PWD/v-nico-parser-main-binaries/main --binary candidate=$PWD/v-nico-escaped-json-binaries/candidate --size 1 --size 100 --iterations 20 --warmups 10 --repetitions 7 --output "$P/repeat.json"
+cd "$C"
+"$V" fmt -w src/escaped_json_test.v
+"$V" fmt -verify src scripts/parse_benchmark
+"$V" -cc gcc -d use_openssl test src
+python3 tests/benchmark_parse_test.py
+V="$V" scripts/build.sh
+python3 tests/integration.py --binary bin/v-nico-list
+"$V" -cc gcc -prod -o bin/v-nico-list-mbedtls src
+python3 tests/integration.py --binary bin/v-nico-list-mbedtls
+"$V" -cc gcc test src
+python3 scripts/benchmark_parse.py --source candidate=. --v "$V" --size 4 --iterations 2 --warmups 1 --repetitions 1 --output "$P/smoke.json"
+python3 scripts/benchmark.py --binary v=bin/v-nico-list --targets 3 --pages 3 --repetitions 1 --output "$P/cli-smoke.json"
+"$V" fmt -verify src scripts/parse_benchmark
+python3 -m py_compile docs/provenance/escaped-json-20261111/microbench.py
+git diff --check
+python3 "$P/microbench.py" "$V" "$B" "$C" "$P/quoted-sparse.json" sparse

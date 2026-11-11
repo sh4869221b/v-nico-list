@@ -1,0 +1,7 @@
+Verified exact Page and full decoded JSON for 6 fixtures; saved docs/provenance/escaped-json-20261111/smoke.json
+candidate user-ascii-full-4: 0.219 ms/page, 586600 GC bytes/page
+candidate user-unicode-full-4: 0.216 ms/page, 586600 GC bytes/page
+candidate user-escaped-full-4: 0.256 ms/page, 739016 GC bytes/page
+candidate mylist-ascii-full-4: 0.238 ms/page, 602912 GC bytes/page
+candidate mylist-unicode-full-4: 0.202 ms/page, 602912 GC bytes/page
+candidate mylist-escaped-full-4: 0.288 ms/page, 754808 GC bytes/page
