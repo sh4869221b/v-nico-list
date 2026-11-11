@@ -112,8 +112,9 @@ Defer all three from this PR:
 Recommended publication scope, if separately authorized: parser benchmark
 infrastructure, accepted literal/array/date allocation changes, strict decoder
 and contract tests, and measurement documentation. Do not add worker/output-lock
-or direct-parser rewrites. Native Windows validation remains pending; Linux
-MbedTLS is a second Linux backend check, not Windows validation.
+or direct-parser rewrites. At this local-validation stage, native Windows
+validation was pending; Linux MbedTLS is a second Linux backend check, not
+Windows validation. Subsequent native CI results are recorded below.
 
 ## Reproduction and evidence
 
@@ -123,7 +124,7 @@ and validation logs. Retained binary manifests include their absolute local
 paths; these are provenance, not portable download links. Production source
 hashes, rather than a later documentation-only HEAD, identify measured code.
 
-## Final correctness validation
+## Final local correctness validation
 
 On the unchanged combined production source:
 - V format verification for src and parser harness: passed.
@@ -135,6 +136,24 @@ On the unchanged combined production source:
 - CLI smoke: Linux MbedTLS passed; OpenSSL is covered by all eight full A/B cases.
 - `git diff --check`: passed.
 
-There were no test failures or measured regressions requiring a repeat. Native
-Windows compilation and integration have not been run for this combined branch.
-Nothing was pushed, published or merged remotely.
+There were no test failures or measured regressions requiring a repeat in this
+local stage. At that point, native Windows compilation and integration had not
+been run, and nothing had been pushed, published or merged remotely.
+
+## Subsequent publication and native CI
+
+The validated changes were published in [PR #4](https://github.com/sh4869221b/v-nico-list/pull/4).
+[CI run 42988055473](https://github.com/sh4869221b/v-nico-list/actions/runs/42988055473)
+passed on its first attempt for published HEAD
+`83b918db0eec141e7b914f2936a2f7f1fe4755a8`:
+
+- Linux: 8/8 V unit files, 65/65 integration tests, fixture contracts, format,
+  production build and parser/CLI benchmark smokes passed.
+- Native Windows/MSVC: 8/8 V unit files and 58 integration tests passed, with
+  7 POSIX/Linux-only tests skipped as designed; format and native build passed.
+- Both jobs tested synthetic merge `532b201d8cd4f2545fd27e808b9eb7abdd70f6e9`,
+  whose tree matched the locally validated
+  `d58f7b958c6656c38776b8bf259a9eaeaab5ea41` exactly.
+
+This follow-up is documentation-only; production and benchmark source hashes
+are unchanged. See the PR for later CI runs and merge status.
