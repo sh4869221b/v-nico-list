@@ -1,0 +1,91 @@
+{
+  "main": {
+    "head": "1f518b8385cbba51f1b57d6048de17b77d57fdbe",
+    "tree": "c0e13139ed4556fcfa2e7e674eae574d06edf132",
+    "source_sha256": {
+      "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+      "src/config.v": "4fbbb8b39fd3b679930b65f20b5f62c534e72d192ecb9c7193cb7ef0d26849f2",
+      "src/config_test.v": "4436ab6d7e91002ebdf28695365248295b4c1ae038c85ffecfbb64581b4649d4",
+      "src/control.v": "f8b4a2d0026b4dd900d53811c46873afc3757c1c74164e768060ce0cd3c824ca",
+      "src/domain.v": "bfa3566c14fbd37a186e2e5e1152a8b7285fa854f8eee70f36cfd2c7dff04538",
+      "src/domain_test.v": "319b9ae837efa9c84835ad382df59433cbbbf96bf29fd8fb561fcf31093ca06f",
+      "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+      "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+      "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+      "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+      "src/pool_test.v": "5ec3f5b4c411b4b5e149eaeb5717af57da5edfc3fb4c4ac04ed9542f0ac51bcd",
+      "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+      "src/timing_test.v": "704b492a3c0b8e7b1d300001b58f1c23574ed1457f3c7a0a986b04650dcc8cca",
+      "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+      "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+      "src/transport_test.v": "5351aa265b1f21a0076ae78b96e7f65a657d82831d8bc77bd8acbccdc8717ca3"
+    }
+  },
+  "combined": {
+    "head": "2e491a6af421657464b59ff9f85a58d458e2b4bb",
+    "tree": "3f12542abc9fa3cf99ab57f84db434b1987df7b3",
+    "source_sha256": {
+      "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+      "src/config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688",
+      "src/config_test.v": "4436ab6d7e91002ebdf28695365248295b4c1ae038c85ffecfbb64581b4649d4",
+      "src/control.v": "f8b4a2d0026b4dd900d53811c46873afc3757c1c74164e768060ce0cd3c824ca",
+      "src/domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+      "src/domain_test.v": "319b9ae837efa9c84835ad382df59433cbbbf96bf29fd8fb561fcf31093ca06f",
+      "src/escaped_json_test.v": "cb07b8411f2c2eab6050e730a422a6a30b96dc580611cc97167e82506e64272d",
+      "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+      "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+      "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+      "src/parser_allocations_test.v": "538661b13128e7057c7cbeae3381c90a30406d00a1e40a4a3d11c5eb3f51a441",
+      "src/parser_prefix_test.v": "a62fddf92e80350b899c9110d308431c268ba80e1ad37df35cb7ac0a1e06856f",
+      "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+      "src/pool_test.v": "5ec3f5b4c411b4b5e149eaeb5717af57da5edfc3fb4c4ac04ed9542f0ac51bcd",
+      "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+      "src/timing_test.v": "704b492a3c0b8e7b1d300001b58f1c23574ed1457f3c7a0a986b04650dcc8cca",
+      "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+      "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+      "src/transport_test.v": "5351aa265b1f21a0076ae78b96e7f65a657d82831d8bc77bd8acbccdc8717ca3"
+    }
+  },
+  "flags": {
+    "main": [
+      "-cc",
+      "gcc",
+      "-d",
+      "use_openssl",
+      "-prod"
+    ],
+    "combined-openssl": [
+      "-cc",
+      "gcc",
+      "-d",
+      "use_openssl",
+      "-prod"
+    ],
+    "combined-mbedtls": [
+      "-cc",
+      "gcc",
+      "-prod"
+    ]
+  },
+  "gc": "Production default Boehm",
+  "benchmark_driver_sha256": "fda6b7f652b0c2f8306f6f3c8916c728dadcee9886a28e2606c5cef81f930f4a",
+  "loopback_fixture_sha256": "9e855d5780635c6416fef2aaba17d0778ec997c079c783dc173a9d7ce2f884b6",
+  "compiler": {
+    "path": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+    "version": "V 0.5.2 6701135",
+    "git": {
+      "head": "67011350d000d86c3fc2a925b505c590dbfdea88",
+      "tree": "e2ec6c71c4cb394f84f65ac14dcaef1a475a9f31",
+      "status": ""
+    },
+    "cc": "gcc",
+    "cc_version": "gcc (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "flags": [
+      "-prod",
+      "-gc",
+      "boehm"
+    ],
+    "vmodules": "/workspace/scratch/b81277eea609/v-nico-vmodules"
+  }
+}

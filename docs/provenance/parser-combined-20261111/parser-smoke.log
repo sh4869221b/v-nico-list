@@ -1,0 +1,7 @@
+Verified exact Page and full decoded JSON for 6 fixtures; saved /workspace/scratch/b81277eea609/v-nico-parser-combined/docs/provenance/parser-combined-20261111/parser-smoke.json
+combined user-ascii-full-4: 0.151 ms/page, 98928 GC bytes/page
+combined user-unicode-full-4: 0.176 ms/page, 98928 GC bytes/page
+combined user-escaped-full-4: 0.231 ms/page, 116120 GC bytes/page
+combined mylist-ascii-full-4: 0.144 ms/page, 101784 GC bytes/page
+combined mylist-unicode-full-4: 0.125 ms/page, 101784 GC bytes/page
+combined mylist-escaped-full-4: 0.142 ms/page, 118888 GC bytes/page

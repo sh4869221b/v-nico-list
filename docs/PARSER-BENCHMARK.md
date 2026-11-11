@@ -158,3 +158,11 @@ escaped representation inflates these copies; attributing its entire timing gap
 to escaped-string decoding would be misleading. Escape decoding, array/date
 allocation and any literal-prefix change still require independent experiments
 and semantic contract tests, in the agreed order.
+
+## Follow-on experiments
+
+The independent stages and final combined results are documented in
+[PARSER-ALLOCATIONS.md](PARSER-ALLOCATIONS.md),
+[ESCAPED-JSON.md](ESCAPED-JSON.md), and
+[PARSER-COMBINED.md](PARSER-COMBINED.md). The last includes the first whole-CLI
+A/B for these parser changes against exact main, plus final dual-backend checks.
