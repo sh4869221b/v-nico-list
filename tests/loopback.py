@@ -43,8 +43,10 @@ class Reply:
     status: int = 200
     headers: dict = dataclasses.field(default_factory=dict)
     delay: float = 0
+    body_delay: float = 0
     chunked: bool = False
     compressed: bool = False
+    close_after: bool = False
 
 
 @dataclasses.dataclass
@@ -67,6 +69,7 @@ class Fixture:
         self.attempts = Counter()
         self.active = 0
         self.peak = 0
+        self.connections = 0
         self.active_targets = Counter()
         self.target_peaks = Counter()
         owner = self
@@ -76,9 +79,17 @@ class Fixture:
 
             def setup(self):
                 super().setup()
+                with owner.lock:
+                    owner.connections += 1
                 # Avoid Nagle/delayed-ACK penalties when headers and small JSON
                 # bodies are separate writes on reused Go HTTP connections.
                 self.connection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+
+            def handle(self):
+                try:
+                    super().handle()
+                except (BrokenPipeError, ConnectionResetError, ssl.SSLError):
+                    pass  # Expected close of an idle keep-alive connection.
 
             def log_message(self, *_):
                 pass
@@ -123,6 +134,8 @@ class Fixture:
                     else:
                         self.send_header("Content-Length", str(len(body)))
                     self.end_headers()
+                    if reply.body_delay:
+                        time.sleep(reply.body_delay)
                     if reply.chunked:
                         for offset in range(0, len(body), 16384):
                             chunk = body[offset:offset + 16384]
@@ -131,6 +144,8 @@ class Fixture:
                     else:
                         self.wfile.write(body)
                     self.wfile.flush()
+                    if reply.close_after:
+                        self.close_connection = True
                 except (BrokenPipeError, ConnectionResetError, ssl.SSLError):
                     pass  # Expected when a client enforces a body limit or cancels.
                 except Exception as exc:

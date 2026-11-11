@@ -1,0 +1,41 @@
+{
+  "date_utc": "2026-11-11T06:42:01.494454+00:00",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "base_revision": "b9e211725eb125b8ce7f80a8a8e530b94d27423d",
+  "timeout_fix_revision": "afa69ef",
+  "v_revision": "67011350d000d86c3fc2a925b505c590dbfdea88",
+  "vc_revision": "63a7de2aaa48271b71ca8b306fe06d7cc6c3a372",
+  "format_check": "v fmt -verify src: passed",
+  "binaries": {
+    "openssl": {
+      "path": "/tmp/nico-pool",
+      "sha256": "96a8ec24d621fc152c1968cdd2679bf81b3916200d5f3d82818409dd2d7edaa3"
+    },
+    "mbedtls": {
+      "path": "/tmp/nico-pool-mbed",
+      "sha256": "f9141443bca53d11544d6f456c70cdc3427345a2d6ef874a0762f5d4a6dfd31c"
+    }
+  },
+  "commands": [
+    "v -cc gcc -d use_openssl -prod -o /tmp/nico-pool src",
+    "v -cc gcc -prod -o /tmp/nico-pool-mbed src",
+    "v -cc gcc -d use_openssl test src",
+    "v -cc gcc test src",
+    "python3 tests/integration.py --binary /tmp/nico-pool",
+    "python3 tests/integration.py --binary /tmp/nico-pool-mbed"
+  ],
+  "results": {
+    "openssl_unit_files": "5/5",
+    "mbedtls_unit_files": "5/5",
+    "openssl_integrations": "63/63, 22.725s",
+    "mbedtls_integrations": "63/63, 21.690s",
+    "windows": "Not run for these changes; native CI pending"
+  },
+  "notes": [
+    "Synthetic loopback only; no live API.",
+    "Default remains close-only; connection-specific tests opt in.",
+    "Early default-on candidate additionally passed the full 62-case suite on both backends before opt-in gating.",
+    "Original baseline OpenSSL exposed nondeterministic early socket-timeout classification; this is fixed, not recorded as a baseline pass."
+  ]
+}

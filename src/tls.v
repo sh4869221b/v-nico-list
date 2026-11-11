@@ -64,3 +64,18 @@ fn (mut stream WireStream) connect_tls(hostname string) ! {
 		stream.tls.opened = true
 	}
 }
+
+$if use_openssl ? {
+	fn C.SSL_pending(ssl voidptr) int
+} $else {
+	fn C.mbedtls_ssl_get_bytes_avail(ssl voidptr) uint
+}
+
+fn (s &WireStream) buffered_tls_data() bool {
+	if !s.secure { return false }
+	$if use_openssl ? {
+		return C.SSL_pending(s.tls.ssl) > 0
+	} $else {
+		return C.mbedtls_ssl_get_bytes_avail(&s.tls.ssl) > 0
+	}
+}

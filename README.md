@@ -2,7 +2,7 @@
 
 A V command line tool that collects video IDs from niconico user pages and mylists. It ports [go-nico-list](https://github.com/sh4869221b/go-nico-list/tree/6638228b9acfa6256805f5e57bdd75f4ca80e084), preserving its command line options and result format.
 
-The Linux build passes 55 loopback integration contracts. Native Windows CI passes 49, with 6 POSIX signal cases skipped. The published baseline was slower than Go. The latest [JSON/sort optimizations](docs/PERFORMANCE.md) reduce synthetic wall time versus that V baseline; they are not a new Go comparison. [Recorded results and platform limits](docs/VALIDATION.md) describe the evidence.
+The published baseline passed 55 Linux loopback integration contracts and 49 native Windows tests, with 6 POSIX signal cases skipped. New connection-reuse validation and pending platform checks are recorded [separately](docs/CONNECTION-REUSE.md). The published baseline was slower than Go. The latest [JSON/sort optimizations](docs/PERFORMANCE.md) reduce synthetic wall time versus that V baseline; they are not a new Go comparison. [Recorded results and platform limits](docs/VALIDATION.md) describe the evidence.
 
 [日本語](docs/README.ja.md) · [Compatibility and transport boundaries](docs/COMPATIBILITY.md) · [Validation and benchmarks](docs/VALIDATION.md) · [Provenance](docs/provenance/README.md)
 
@@ -47,6 +47,7 @@ Video IDs are printed one per line, numerically sorted. `--url` adds `https://ww
 | `-P, --concurrency-pages` | `1` | Concurrent pages per target; at least 1 |
 | `-H, --concurrency-http` | `0` | Global HTTP cap; 0 disables the additional cap |
 | `-A, --concurrency-adaptive` | `false` | Adjust unspecified concurrency layers from HTTP feedback |
+| `--reuse-connections` | `false` | Opt-in bounded HTTP/1.1 keep-alive; stale sockets consume ordinary retry attempts |
 | `--http-metrics` | `false` | Emit a final aggregate HTTP metrics log event |
 | `--rate-limit` | `0` | Global requests/second; 0 disables |
 | `--min-interval` | `0s` | Minimum interval between requests |
@@ -97,3 +98,5 @@ python3 scripts/benchmark.py --binary v=bin/v-nico-list --output /tmp/v-benchmar
 The integration suite uses synthetic HTTP/HTTPS loopback servers only. It covers CLI contracts, filters, pagination, partial results, retry timing, concurrency/pacing, cancellation, TLS verification, gzip/chunking and the 8 MiB decoded response limit. TLS fixtures need the OpenSSL command line tool. See [validation instructions and recorded evidence](docs/VALIDATION.md) for the Go comparison and platform limits.
 
 `NICO_BASE_URL` is a development override for the API base (default `https://nvapi.nicovideo.jp/v3`). Fixtures set it to a loopback server ending in `/v3`; endpoint paths are appended beneath that base. It does not disable TLS verification or proxy handling.
+
+`--reuse-connections` can reduce TCP/TLS setups but remains opt-in: a silently closed idle connection consumes an ordinary attempt, so `--retries 1` may fail that page. Default behavior remains close-only. See [connection reuse limits and measurements](docs/CONNECTION-REUSE.md).

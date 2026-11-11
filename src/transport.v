@@ -16,6 +16,7 @@ const wire_encoded_limit = 16 * 1024 * 1024
 const wire_body_limit = 8 * 1024 * 1024
 
 struct WireResponse {
+	version string
 	status  int
 	headers map[string]string
 	body    []u8
@@ -31,6 +32,7 @@ fn (e BodyError) msg() string { return e.message }
 
 fn (e BodyError) code() int { return 20001 }
 
+@[heap]
 struct WireStream {
 mut:
 	tcp      &net.TcpConn = unsafe { nil }
@@ -214,7 +216,9 @@ fn (mut s WireStream) headers() !WireResponse {
 			if key in headers { headers[key] += ',' + value } else { headers[key] = value }
 		}
 		if status == 101 { return error('HTTP protocol upgrade is unsupported') }
-		if status >= 200 { return WireResponse{ status: status, headers: headers } }
+		if status >= 200 {
+			return WireResponse{ status: status, headers: headers, version: parts[0] }
+		}
 	}
 	return error('too many informational HTTP responses')
 }
@@ -497,6 +501,7 @@ fn transport_get(raw_url string, timeout time.Duration, controllers ...&Control)
 
 fn transport_once(raw_url string, deadline time.Time, control &Control) !WireResponse {
 	wire_check(deadline)!
+	pooling := control != unsafe { nil } && control.cfg.reuse_connections
 	u := wire_url(raw_url)!
 	port := if u.port() != '' {
 		u.port()
@@ -528,52 +533,72 @@ fn transport_once(raw_url string, deadline time.Time, control &Control) !WireRes
 			}
 		}
 	}
-	// V's synchronous resolver and dial cannot receive a request cancellation.
-	// The deadline is checked as soon as dial returns; all later I/O is bounded.
-	mut tcp := net.dial_tcp(endpoint) or {
-		wire_check(deadline)!
-		return err
+	key := if pooling {
+		wire_pool_key(u.scheme, authority, proxy, os.getenv('SSL_CERT_FILE') + '\x00' + os.getenv('SSL_CERT_DIR'))
+	} else {
+		''
 	}
-	mut stream := WireStream{ tcp: tcp, deadline: deadline }
+	mut stream := &WireStream(unsafe { nil })
+	if pooling {
+		mut c := unsafe { control }
+		stream = c.take_idle(key) or { unsafe { nil } }
+	}
+	reused := stream != unsafe { nil }
+	if !reused {
+		// The synchronous resolver/dial cannot be interrupted. Check immediately
+		// afterward; all subsequent I/O remains deadline/cancellation bounded.
+		tcp := net.dial_tcp(endpoint) or {
+			wire_check(deadline)!
+			return err
+		}
+		stream = &WireStream{ tcp: tcp, deadline: deadline }
+	}
+	stream.deadline = deadline
+	mut tcp := stream.tcp
 	done := chan bool{cap: 1}
 	watch := spawn wire_watch(tcp.sock.handle, deadline, done)
+	mut reusable := false
 	defer {
 		done <- true
 		watch.wait()
-		net.shutdown(tcp.sock.handle)
-		if stream.tls != unsafe { nil } {
-			stream.tls.set_read_timeout(time.millisecond)
-			stream.tls.close() or {}
+		// No watchdog may retain a descriptor after its stream enters the pool.
+		if reusable && !cancelled() && time.now() < deadline && pooling {
+			mut c := unsafe { control }
+			c.put_idle(key, mut stream)
+		} else {
+			stream.close()
 		}
-		tcp.close() or {}
 	}
 	tcp.set_read_deadline(deadline)
 	tcp.set_write_deadline(deadline)
 	stream.check()!
-	if proxy != '' && u.scheme == 'https' {
-		stream.write('CONNECT ${authority} HTTP/1.1\r\nHost: ${authority}\r\n${proxy_auth}Proxy-Connection: Keep-Alive\r\n\r\n')!
-		tunnel := stream.headers()!
-		if tunnel.status != 200 { return error('HTTP proxy CONNECT failed (${tunnel.status})') }
-		if stream.pos != stream.end { return error('unexpected data after HTTP proxy CONNECT') }
-	}
-	if u.scheme == 'https' {
-		stream.tls = ssl.new_ssl_conn(
-			validate:       true
-			verify:         os.getenv('SSL_CERT_FILE')
-			alpn_protocols: ['http/1.1']
-		)!
-		tcp.set_read_timeout(wire_remaining_timeout(deadline))
-		stream.connect_tls(u.hostname()) or {
-			return wire_io_error(stream.deadline, err)
+	if !reused {
+		if proxy != '' && u.scheme == 'https' {
+			stream.write('CONNECT ${authority} HTTP/1.1\r\nHost: ${authority}\r\n${proxy_auth}Proxy-Connection: Keep-Alive\r\n\r\n')!
+			tunnel := stream.headers()!
+			if tunnel.status != 200 { return error('HTTP proxy CONNECT failed (${tunnel.status})') }
+			if stream.pos != stream.end { return error('unexpected data after HTTP proxy CONNECT') }
 		}
-		stream.secure = true
-		stream.check()!
+		if u.scheme == 'https' {
+			stream.tls = ssl.new_ssl_conn(
+				validate:       true
+				verify:         os.getenv('SSL_CERT_FILE')
+				alpn_protocols: ['http/1.1']
+			)!
+			tcp.set_read_timeout(wire_remaining_timeout(deadline))
+			stream.connect_tls(u.hostname()) or {
+				return wire_io_error(stream.deadline, err)
+			}
+			stream.secure = true
+			stream.check()!
+		}
 	}
 	mut target := u.request_uri()
 	if proxy != '' && u.scheme == 'http' { target = '${u.scheme}://${u.host}${target}' }
 	for c in target { if c <= 32 || c == 127 { return error('invalid HTTP request target') } }
 	auth := if proxy != '' && u.scheme == 'http' { proxy_auth } else { '' }
-	request := 'GET ${target} HTTP/1.1\r\nHost: ${u.host}\r\nUser-Agent: v-nico-list\r\nAccept: */*\r\nAccept-Encoding: gzip\r\nX-Frontend-Id: 6\r\nConnection: close\r\n${auth}\r\n'
+	connection := if pooling { 'keep-alive' } else { 'close' }
+	request := 'GET ${target} HTTP/1.1\r\nHost: ${u.host}\r\nUser-Agent: v-nico-list\r\nAccept: */*\r\nAccept-Encoding: gzip\r\nX-Frontend-Id: 6\r\nConnection: ${connection}\r\n${auth}\r\n'
 	if control != unsafe { nil } {
 		mut c := unsafe { control }
 		c.write_http(mut stream, request)!
@@ -607,5 +632,6 @@ fn transport_once(raw_url string, deadline time.Time, control &Control) !WireRes
 		body = state.body
 	}
 	stream.check()!
-	return WireResponse{ status: response.status, headers: response.headers, body: body }
+	reusable = wire_reusable(response) && stream.pos == stream.end && !stream.buffered_tls_data()
+	return WireResponse{ status: response.status, headers: response.headers, body: body, version: response.version }
 }

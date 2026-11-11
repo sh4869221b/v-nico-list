@@ -4,6 +4,8 @@ The test harness uses Python's standard library and synthetic loopback responses
 
 ## Latest optimization measurements
 
+[Opt-in connection reuse](CONNECTION-REUSE.md) records separate local OpenSSL/Mbed TLS validation and HTTP/verified-HTTPS A/B evidence. The native CI and 55/49-test results below refer to their explicitly identified historical revisions, not the new pool changes.
+
 [JSON and sorting optimization results](PERFORMANCE.md) compare the current implementation against the unchanged V baseline on the same toolchain. Six synthetic workloads show median wall-time reductions of 6.6–30.2%; these are not new Go or live-API comparisons. Raw samples, ablation, isolated sorting and validation limits are retained.
 
 ## Commands
