@@ -1,0 +1,179 @@
+{
+  "scope": "Synthetic loopback end-to-end child process; no live API inference.",
+  "measurement": "Linux wait4 per-child ru_maxrss (KiB), ru_utime, ru_stime; wall excludes sink tail drain and validation. No parent/server memory. Response completion means server handler finished after body flush, not client consumption.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "binary": [
+      "baseline=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline"
+    ],
+    "targets": 2,
+    "pages": 3,
+    "repetitions": 1,
+    "warmups": 0,
+    "mode": null,
+    "target_workers": 4,
+    "page_workers": 4,
+    "http_workers": 8,
+    "latency_ms": 0,
+    "slow_bytes_per_second": 262144,
+    "slow_chunk_bytes": 4096,
+    "slow_start_ms": 250,
+    "timeout": 180,
+    "source_revision": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+    "v": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "output": "/tmp/large-results-smoke.json"
+  },
+  "binaries": {
+    "baseline": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+      "sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43"
+    }
+  },
+  "cases": {
+    "sorted-lines": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.016993719997117296,
+            "child_wall_seconds": 0.01586947,
+            "user_cpu_seconds": 0.005322,
+            "system_cpu_seconds": 0.010764,
+            "peak_rss_kib": 8396,
+            "last_response_complete_seconds": 0.013441467002849095,
+            "child_exit_after_last_response_seconds": 0.0035522529942682013,
+            "requests": 6,
+            "http_peak": 4,
+            "stdout_bytes": 6600,
+            "stdout_sha256": "73dec2909d2a2880387fe8574f6b632ec0a9b4bea0f777ce8c7c7d5f88dd0eaa",
+            "canonical_result_sha256": "73dec2909d2a2880387fe8574f6b632ec0a9b4bea0f777ce8c7c7d5f88dd0eaa",
+            "output_count": 600,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 0.016993719997117296,
+          "user_cpu_seconds": 0.005322,
+          "system_cpu_seconds": 0.010764,
+          "peak_rss_kib": 8396,
+          "last_response_complete_seconds": 0.013441467002849095
+        }
+      }
+    },
+    "json": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.016015459012123756,
+            "child_wall_seconds": 0.01478342,
+            "user_cpu_seconds": 0.010883,
+            "system_cpu_seconds": 0.005385,
+            "peak_rss_kib": 7968,
+            "last_response_complete_seconds": 0.012635614999453537,
+            "child_exit_after_last_response_seconds": 0.003379844012670219,
+            "requests": 6,
+            "http_peak": 4,
+            "stdout_bytes": 15803,
+            "stdout_sha256": "255a280ac2ca9c2aa6ca98fc5e4319b58845289344fbfe058f7d1960277a6d7e",
+            "canonical_result_sha256": "d283365235d12456a8ad00c2b6c64de8da13c80d1381c9875bd93e0c39355802",
+            "output_count": 600,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 0.016015459012123756,
+          "user_cpu_seconds": 0.010883,
+          "system_cpu_seconds": 0.005385,
+          "peak_rss_kib": 7968,
+          "last_response_complete_seconds": 0.012635614999453537
+        }
+      }
+    },
+    "no-sort-slow": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.014593564992537722,
+            "child_wall_seconds": 0.013406805,
+            "user_cpu_seconds": 0.013395,
+            "system_cpu_seconds": 0.0,
+            "peak_rss_kib": 6880,
+            "last_response_complete_seconds": 0.012809897001716308,
+            "child_exit_after_last_response_seconds": 0.0017836679908214137,
+            "requests": 6,
+            "http_peak": 3,
+            "stdout_bytes": 6600,
+            "stdout_sha256": "63e01d76849bc10c38c6bdb14c13a9391e25f51d29747772e8823d43d3944eaf",
+            "canonical_result_sha256": "63e01d76849bc10c38c6bdb14c13a9391e25f51d29747772e8823d43d3944eaf",
+            "output_count": 600,
+            "sink": {
+              "first_read_seconds": 0.25080678598897066,
+              "finished_seconds": 0.27627001599466894,
+              "bytes": 6600
+            }
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 0.014593564992537722,
+          "user_cpu_seconds": 0.013395,
+          "system_cpu_seconds": 0.0,
+          "peak_rss_kib": 6880,
+          "last_response_complete_seconds": 0.012809897001716308
+        }
+      }
+    }
+  },
+  "build_metadata": {
+    "source_revision": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+    "binary_build_flags": [
+      "-cc",
+      "gcc",
+      "-d",
+      "use_openssl",
+      "-prod"
+    ],
+    "v_version": "V 0.5.2 6701135",
+    "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+    "gcc_version": "gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "execution_order": "warmups then repetitions; forward/reverse binary order alternates per case, measured first repetition forward",
+  "supervisor_source_sha256": "72bb2cebaaaef5746af9835165973c9f33affb3fef5411515a08c2baa3db99d1"
+}

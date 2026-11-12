@@ -1,0 +1,334 @@
+{
+  "output-lock-ab-t3-p1000.json": {
+    "no-sort-fast": {
+      "peak_rss_kib": {
+        "baseline": 71388,
+        "output-lock": 73288,
+        "change_percent": 2.6615117386675546
+      },
+      "wall_seconds": {
+        "baseline": 2.0472275459906086,
+        "output-lock": 2.0354455549968407,
+        "change_percent": -0.5755095967149515
+      },
+      "last_response_complete_seconds": {
+        "baseline": 2.031152811003267,
+        "output-lock": 2.0009641790093156,
+        "change_percent": -1.4862806889965108
+      },
+      "user_cpu_seconds": {
+        "baseline": 1.858461,
+        "output-lock": 1.758604,
+        "change_percent": -5.373101722339069
+      },
+      "system_cpu_seconds": {
+        "baseline": 1.965767,
+        "output-lock": 2.055477,
+        "change_percent": 4.563613083341012
+      }
+    },
+    "no-sort-slow": {
+      "peak_rss_kib": {
+        "baseline": 73036,
+        "output-lock": 73176,
+        "change_percent": 0.19168629169177276
+      },
+      "wall_seconds": {
+        "baseline": 14.623643981991336,
+        "output-lock": 14.669282568997005,
+        "change_percent": 0.3120876510797954
+      },
+      "last_response_complete_seconds": {
+        "baseline": 10.40556898000068,
+        "output-lock": 2.170375421992503,
+        "change_percent": -79.14217448210736
+      },
+      "user_cpu_seconds": {
+        "baseline": 1.957242,
+        "output-lock": 2.056499,
+        "change_percent": 5.071268652522276
+      },
+      "system_cpu_seconds": {
+        "baseline": 2.124197,
+        "output-lock": 2.23644,
+        "change_percent": 5.284020267423406
+      }
+    }
+  },
+  "output-lock-ab-t3-p200.json": {
+    "sorted-lines": {
+      "peak_rss_kib": {
+        "baseline": 55836,
+        "output-lock": 47916,
+        "change_percent": -14.184397163120565
+      },
+      "wall_seconds": {
+        "baseline": 0.5119095690024551,
+        "output-lock": 0.47913410198816564,
+        "change_percent": -6.4025892460182305
+      },
+      "last_response_complete_seconds": {
+        "baseline": 0.49043767200782895,
+        "output-lock": 0.4544402129977243,
+        "change_percent": -7.339864179424216
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.39312,
+        "output-lock": 0.40105,
+        "change_percent": 2.0171957671957674
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.566468,
+        "output-lock": 0.634237,
+        "change_percent": 11.963429531765279
+      }
+    },
+    "json": {
+      "peak_rss_kib": {
+        "baseline": 55952,
+        "output-lock": 47768,
+        "change_percent": -14.626822991135258
+      },
+      "wall_seconds": {
+        "baseline": 0.45169699800317176,
+        "output-lock": 0.4505774040007964,
+        "change_percent": -0.24786394581429727
+      },
+      "last_response_complete_seconds": {
+        "baseline": 0.4258764389960561,
+        "output-lock": 0.42785601200012024,
+        "change_percent": 0.46482332028761064
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.344498,
+        "output-lock": 0.347096,
+        "change_percent": 0.7541408077840872
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.548233,
+        "output-lock": 0.488544,
+        "change_percent": -10.8875241001545
+      }
+    },
+    "no-sort-fast": {
+      "peak_rss_kib": {
+        "baseline": 55680,
+        "output-lock": 47892,
+        "change_percent": -13.987068965517246
+      },
+      "wall_seconds": {
+        "baseline": 0.4290648360038176,
+        "output-lock": 0.4206443860020954,
+        "change_percent": -1.962512258088489
+      },
+      "last_response_complete_seconds": {
+        "baseline": 0.41951548200449906,
+        "output-lock": 0.4094076189940097,
+        "change_percent": -2.409413584021436
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.35223,
+        "output-lock": 0.376264,
+        "change_percent": 6.823382448968007
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.517984,
+        "output-lock": 0.462633,
+        "change_percent": -10.685851300426263
+      }
+    },
+    "no-sort-slow": {
+      "peak_rss_kib": {
+        "baseline": 56012,
+        "output-lock": 47788,
+        "change_percent": -14.682568021138332
+      },
+      "wall_seconds": {
+        "baseline": 2.716143917001318,
+        "output-lock": 2.7432483269949444,
+        "change_percent": 0.9979003624944083
+      },
+      "last_response_complete_seconds": {
+        "baseline": 1.8635827859980054,
+        "output-lock": 0.46704182200483046,
+        "change_percent": -74.93849881454473
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.374087,
+        "output-lock": 0.417615,
+        "change_percent": 11.635795951209204
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.547707,
+        "output-lock": 0.511117,
+        "change_percent": -6.680579214799154
+      }
+    }
+  },
+  "output-lock-ab-t30-p100.json": {
+    "no-sort-fast": {
+      "peak_rss_kib": {
+        "baseline": 106876,
+        "output-lock": 107128,
+        "change_percent": 0.23578726748756385
+      },
+      "wall_seconds": {
+        "baseline": 2.2625322339881677,
+        "output-lock": 2.2796306609961903,
+        "change_percent": 0.7557208136603322
+      },
+      "last_response_complete_seconds": {
+        "baseline": 2.25494462599454,
+        "output-lock": 2.27072525100084,
+        "change_percent": 0.699823171903402
+      },
+      "user_cpu_seconds": {
+        "baseline": 1.95168,
+        "output-lock": 2.017686,
+        "change_percent": 3.382009345794379
+      },
+      "system_cpu_seconds": {
+        "baseline": 2.731274,
+        "output-lock": 2.91827,
+        "change_percent": 6.8464753078600005
+      }
+    },
+    "no-sort-slow": {
+      "peak_rss_kib": {
+        "baseline": 107372,
+        "output-lock": 139968,
+        "change_percent": 30.358007674254004
+      },
+      "wall_seconds": {
+        "baseline": 12.903483656991739,
+        "output-lock": 12.845998324992252,
+        "change_percent": -0.44550242033545295
+      },
+      "last_response_complete_seconds": {
+        "baseline": 12.452995786996325,
+        "output-lock": 11.253053965992876,
+        "change_percent": -9.635768304494674
+      },
+      "user_cpu_seconds": {
+        "baseline": 2.080994,
+        "output-lock": 1.764889,
+        "change_percent": -15.190096655732788
+      },
+      "system_cpu_seconds": {
+        "baseline": 2.81979,
+        "output-lock": 2.388483,
+        "change_percent": -15.295713510580578
+      }
+    }
+  },
+  "output-lock-ab-t30-p20.json": {
+    "sorted-lines": {
+      "peak_rss_kib": {
+        "baseline": 31680,
+        "output-lock": 38924,
+        "change_percent": 22.86616161616162
+      },
+      "wall_seconds": {
+        "baseline": 0.42181006699684076,
+        "output-lock": 0.417492634995142,
+        "change_percent": -1.0235488290826211
+      },
+      "last_response_complete_seconds": {
+        "baseline": 0.3965323110023746,
+        "output-lock": 0.3962896169978194,
+        "change_percent": -0.0612040930389135
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.377901,
+        "output-lock": 0.392537,
+        "change_percent": 3.8729720217729025
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.455173,
+        "output-lock": 0.414586,
+        "change_percent": -8.916829425295436
+      }
+    },
+    "json": {
+      "peak_rss_kib": {
+        "baseline": 39752,
+        "output-lock": 39860,
+        "change_percent": 0.2716844435500132
+      },
+      "wall_seconds": {
+        "baseline": 0.42690542599302717,
+        "output-lock": 0.4212649120017886,
+        "change_percent": -1.3212561021256897
+      },
+      "last_response_complete_seconds": {
+        "baseline": 0.399168110001483,
+        "output-lock": 0.39921682099520694,
+        "change_percent": 0.01220312758045683
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.332437,
+        "output-lock": 0.394985,
+        "change_percent": 18.814993517568745
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.422582,
+        "output-lock": 0.368436,
+        "change_percent": -12.813134492240563
+      }
+    },
+    "no-sort-fast": {
+      "peak_rss_kib": {
+        "baseline": 31428,
+        "output-lock": 31544,
+        "change_percent": 0.3690976199567375
+      },
+      "wall_seconds": {
+        "baseline": 0.4024027830018895,
+        "output-lock": 0.40150719600205775,
+        "change_percent": -0.22255984244212712
+      },
+      "last_response_complete_seconds": {
+        "baseline": 0.3995434880052926,
+        "output-lock": 0.3938204339938238,
+        "change_percent": -1.4323982703462246
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.367252,
+        "output-lock": 0.380987,
+        "change_percent": 3.739938788624708
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.404094,
+        "output-lock": 0.400145,
+        "change_percent": -0.9772478680703078
+      }
+    },
+    "no-sort-slow": {
+      "peak_rss_kib": {
+        "baseline": 39732,
+        "output-lock": 31072,
+        "change_percent": -21.796033423940397
+      },
+      "wall_seconds": {
+        "baseline": 2.554495204007253,
+        "output-lock": 2.548912409998593,
+        "change_percent": -0.2185478367664362
+      },
+      "last_response_complete_seconds": {
+        "baseline": 2.4745488990010926,
+        "output-lock": 2.2141224090009928,
+        "change_percent": -10.52420059693413
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.426412,
+        "output-lock": 0.333729,
+        "change_percent": -21.73555153232085
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.465197,
+        "output-lock": 0.295796,
+        "change_percent": -36.41489519493892
+      }
+    }
+  }
+}

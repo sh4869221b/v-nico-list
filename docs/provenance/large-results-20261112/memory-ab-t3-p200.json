@@ -1,0 +1,1269 @@
+{
+  "scope": "Synthetic loopback end-to-end child process; no live API inference.",
+  "measurement": "Fresh C supervisor forks and wait4-reaps CLI (excludes Python pre-exec RSS floor). Linux wait4 per-child ru_maxrss (KiB), ru_utime, ru_stime; wall excludes sink tail drain and validation. No parent/server memory. Response completion means server handler finished after body flush, not client consumption.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "binary": [
+      "baseline=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+      "memory=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory"
+    ],
+    "targets": 3,
+    "pages": 200,
+    "repetitions": 7,
+    "warmups": 1,
+    "mode": [
+      "sorted-lines",
+      "json"
+    ],
+    "target_workers": 4,
+    "page_workers": 4,
+    "http_workers": 8,
+    "latency_ms": 0,
+    "slow_bytes_per_second": 262144,
+    "slow_chunk_bytes": 4096,
+    "slow_start_ms": 250,
+    "timeout": 180,
+    "source_revision": "baseline=b0bfd057485c88d8a0caa71c6bbbffd92c4e103e; memory=b0bfd057485c88d8a0caa71c6bbbffd92c4e103e+memory-only.patch (memory-manifest.json)",
+    "v": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "output": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory-ab-t3-p200.json"
+  },
+  "binaries": {
+    "baseline": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+      "sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43"
+    },
+    "memory": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+      "sha256": "dcaef86c1b13498545b94fc3147575fb74713b4aa15b25dc714f085b4a93d4c0"
+    }
+  },
+  "cases": {
+    "sorted-lines": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4481440720119281,
+            "child_wall_seconds": 0.447021129,
+            "user_cpu_seconds": 0.372852,
+            "system_cpu_seconds": 0.528078,
+            "peak_rss_kib": 47716,
+            "last_response_complete_seconds": 0.42650578600296285,
+            "child_exit_after_last_response_seconds": 0.021638286008965224,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006914039011462592,
+                "last_response_complete_seconds": 0.4189269220078131
+              },
+              "2": {
+                "first_request_seconds": 0.00728338400949724,
+                "last_response_complete_seconds": 0.4254969780013198
+              },
+              "3": {
+                "first_request_seconds": 0.006233991007320583,
+                "last_response_complete_seconds": 0.42650578600296285
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4789589270076249,
+            "child_wall_seconds": 0.477775632,
+            "user_cpu_seconds": 0.402329,
+            "system_cpu_seconds": 0.623844,
+            "peak_rss_kib": 55920,
+            "last_response_complete_seconds": 0.4556812200025888,
+            "child_exit_after_last_response_seconds": 0.023277707005036063,
+            "requests": 600,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.0059600550011964515,
+                "last_response_complete_seconds": 0.4501262240082724
+              },
+              "2": {
+                "first_request_seconds": 0.006427918007830158,
+                "last_response_complete_seconds": 0.4491630060074385
+              },
+              "3": {
+                "first_request_seconds": 0.006866223004180938,
+                "last_response_complete_seconds": 0.4556812200025888
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.48812424299831036,
+            "child_wall_seconds": 0.486828679,
+            "user_cpu_seconds": 0.454601,
+            "system_cpu_seconds": 0.595488,
+            "peak_rss_kib": 56108,
+            "last_response_complete_seconds": 0.462490326986881,
+            "child_exit_after_last_response_seconds": 0.025633916011429392,
+            "requests": 600,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006105037988163531,
+                "last_response_complete_seconds": 0.44901190299424343
+              },
+              "2": {
+                "first_request_seconds": 0.006584603994269855,
+                "last_response_complete_seconds": 0.462490326986881
+              },
+              "3": {
+                "first_request_seconds": 0.007196528997155838,
+                "last_response_complete_seconds": 0.4621053029986797
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4867010960006155,
+            "child_wall_seconds": 0.485451295,
+            "user_cpu_seconds": 0.359683,
+            "system_cpu_seconds": 0.579671,
+            "peak_rss_kib": 63976,
+            "last_response_complete_seconds": 0.4501923589996295,
+            "child_exit_after_last_response_seconds": 0.036508737000986,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.0067864879965782166,
+                "last_response_complete_seconds": 0.45009871799265966
+              },
+              "2": {
+                "first_request_seconds": 0.006423270999221131,
+                "last_response_complete_seconds": 0.4501923589996295
+              },
+              "3": {
+                "first_request_seconds": 0.005697233995306306,
+                "last_response_complete_seconds": 0.4254599470004905
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4707287110068137,
+            "child_wall_seconds": 0.469619166,
+            "user_cpu_seconds": 0.351355,
+            "system_cpu_seconds": 0.580839,
+            "peak_rss_kib": 55892,
+            "last_response_complete_seconds": 0.4518004980054684,
+            "child_exit_after_last_response_seconds": 0.018928213001345284,
+            "requests": 600,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005885731006856076,
+                "last_response_complete_seconds": 0.44723917500232346
+              },
+              "2": {
+                "first_request_seconds": 0.006408241999452002,
+                "last_response_complete_seconds": 0.4327709430071991
+              },
+              "3": {
+                "first_request_seconds": 0.006894545003888197,
+                "last_response_complete_seconds": 0.4518004980054684
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.5310412979888497,
+            "child_wall_seconds": 0.529627881,
+            "user_cpu_seconds": 0.48109,
+            "system_cpu_seconds": 0.588203,
+            "peak_rss_kib": 56164,
+            "last_response_complete_seconds": 0.4981745909899473,
+            "child_exit_after_last_response_seconds": 0.03286670699890237,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006463576995884068,
+                "last_response_complete_seconds": 0.4981745909899473
+              },
+              "2": {
+                "first_request_seconds": 0.006960203987546265,
+                "last_response_complete_seconds": 0.483752268992248
+              },
+              "3": {
+                "first_request_seconds": 0.00749195899697952,
+                "last_response_complete_seconds": 0.49000517299282365
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.47180244700575713,
+            "child_wall_seconds": 0.470030871,
+            "user_cpu_seconds": 0.390532,
+            "system_cpu_seconds": 0.513247,
+            "peak_rss_kib": 56088,
+            "last_response_complete_seconds": 0.4473778280080296,
+            "child_exit_after_last_response_seconds": 0.02442461899772752,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.008015256011276506,
+                "last_response_complete_seconds": 0.4373666140018031
+              },
+              "2": {
+                "first_request_seconds": 0.005997650005156174,
+                "last_response_complete_seconds": 0.446626782999374
+              },
+              "3": {
+                "first_request_seconds": 0.010097975013195537,
+                "last_response_complete_seconds": 0.4473778280080296
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          }
+        ],
+        "memory": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4651893620030023,
+            "child_wall_seconds": 0.463983568,
+            "user_cpu_seconds": 0.42131,
+            "system_cpu_seconds": 0.475105,
+            "peak_rss_kib": 55748,
+            "last_response_complete_seconds": 0.4446968139964156,
+            "child_exit_after_last_response_seconds": 0.02049254800658673,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006586511997738853,
+                "last_response_complete_seconds": 0.4446968139964156
+              },
+              "2": {
+                "first_request_seconds": 0.005601255004876293,
+                "last_response_complete_seconds": 0.4353940550063271
+              },
+              "3": {
+                "first_request_seconds": 0.006098804005887359,
+                "last_response_complete_seconds": 0.43383446999359876
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.45839860699197743,
+            "child_wall_seconds": 0.457201476,
+            "user_cpu_seconds": 0.344605,
+            "system_cpu_seconds": 0.583692,
+            "peak_rss_kib": 55712,
+            "last_response_complete_seconds": 0.4387617399916053,
+            "child_exit_after_last_response_seconds": 0.01963686700037215,
+            "requests": 600,
+            "http_peak": 4,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006466816994361579,
+                "last_response_complete_seconds": 0.4239280140027404
+              },
+              "2": {
+                "first_request_seconds": 0.006095787990489043,
+                "last_response_complete_seconds": 0.4387617399916053
+              },
+              "3": {
+                "first_request_seconds": 0.006963484003790654,
+                "last_response_complete_seconds": 0.4228773729992099
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4257584709994262,
+            "child_wall_seconds": 0.42460784,
+            "user_cpu_seconds": 0.385018,
+            "system_cpu_seconds": 0.428215,
+            "peak_rss_kib": 47904,
+            "last_response_complete_seconds": 0.4006943459971808,
+            "child_exit_after_last_response_seconds": 0.02506412500224542,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005458580009872094,
+                "last_response_complete_seconds": 0.39925118400424253
+              },
+              "2": {
+                "first_request_seconds": 0.0064077170100063086,
+                "last_response_complete_seconds": 0.40062089001003187
+              },
+              "3": {
+                "first_request_seconds": 0.005942984003922902,
+                "last_response_complete_seconds": 0.4006943459971808
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.45682212499377783,
+            "child_wall_seconds": 0.45566899,
+            "user_cpu_seconds": 0.388273,
+            "system_cpu_seconds": 0.502553,
+            "peak_rss_kib": 56016,
+            "last_response_complete_seconds": 0.4373091579909669,
+            "child_exit_after_last_response_seconds": 0.01951296700281091,
+            "requests": 600,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006499730996438302,
+                "last_response_complete_seconds": 0.42280398998991586
+              },
+              "2": {
+                "first_request_seconds": 0.006021661989507265,
+                "last_response_complete_seconds": 0.4372173589945305
+              },
+              "3": {
+                "first_request_seconds": 0.005572174995904788,
+                "last_response_complete_seconds": 0.4373091579909669
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4629915469995467,
+            "child_wall_seconds": 0.461709629,
+            "user_cpu_seconds": 0.321186,
+            "system_cpu_seconds": 0.55156,
+            "peak_rss_kib": 48384,
+            "last_response_complete_seconds": 0.4413774690037826,
+            "child_exit_after_last_response_seconds": 0.02161407799576409,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006345293004414998,
+                "last_response_complete_seconds": 0.4281595189968357
+              },
+              "2": {
+                "first_request_seconds": 0.008314781996887177,
+                "last_response_complete_seconds": 0.41522387400618754
+              },
+              "3": {
+                "first_request_seconds": 0.00592730900098104,
+                "last_response_complete_seconds": 0.4413774690037826
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4359480999992229,
+            "child_wall_seconds": 0.434566696,
+            "user_cpu_seconds": 0.407926,
+            "system_cpu_seconds": 0.440419,
+            "peak_rss_kib": 47740,
+            "last_response_complete_seconds": 0.4121611509908689,
+            "child_exit_after_last_response_seconds": 0.023786949008353986,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006313350997515954,
+                "last_response_complete_seconds": 0.4003318049944937
+              },
+              "2": {
+                "first_request_seconds": 0.00676824500260409,
+                "last_response_complete_seconds": 0.4121611509908689
+              },
+              "3": {
+                "first_request_seconds": 0.005744534995756112,
+                "last_response_complete_seconds": 0.4110769739927491
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4447859430074459,
+            "child_wall_seconds": 0.443615732,
+            "user_cpu_seconds": 0.402238,
+            "system_cpu_seconds": 0.436185,
+            "peak_rss_kib": 47800,
+            "last_response_complete_seconds": 0.42274644899589475,
+            "child_exit_after_last_response_seconds": 0.022039494011551142,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.007379214002867229,
+                "last_response_complete_seconds": 0.42274644899589475
+              },
+              "2": {
+                "first_request_seconds": 0.006468167994171381,
+                "last_response_complete_seconds": 0.40716921399871353
+              },
+              "3": {
+                "first_request_seconds": 0.007016478994046338,
+                "last_response_complete_seconds": 0.4077825669955928
+              }
+            },
+            "stdout_bytes": 660000,
+            "stdout_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "canonical_result_sha256": "637fdb761a45c52cd39f34044edcc05cd0ceadc069ccaf89f519cea75a5d7a4d",
+            "output_count": 60000,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 0.4789589270076249,
+          "user_cpu_seconds": 0.390532,
+          "system_cpu_seconds": 0.580839,
+          "peak_rss_kib": 56088,
+          "last_response_complete_seconds": 0.4518004980054684
+        },
+        "memory": {
+          "wall_seconds": 0.45682212499377783,
+          "user_cpu_seconds": 0.388273,
+          "system_cpu_seconds": 0.475105,
+          "peak_rss_kib": 48384,
+          "last_response_complete_seconds": 0.4373091579909669
+        }
+      }
+    },
+    "json": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4329404970048927,
+            "child_wall_seconds": 0.431551172,
+            "user_cpu_seconds": 0.41066,
+            "system_cpu_seconds": 0.475506,
+            "peak_rss_kib": 47620,
+            "last_response_complete_seconds": 0.40609302899974864,
+            "child_exit_after_last_response_seconds": 0.026847468005144037,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.007480782005586661,
+                "last_response_complete_seconds": 0.40609302899974864
+              },
+              "2": {
+                "first_request_seconds": 0.0063911820034263656,
+                "last_response_complete_seconds": 0.4005055239977082
+              },
+              "3": {
+                "first_request_seconds": 0.007053163004457019,
+                "last_response_complete_seconds": 0.4036326430068584
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.41497353999875486,
+            "child_wall_seconds": 0.413787872,
+            "user_cpu_seconds": 0.34757,
+            "system_cpu_seconds": 0.462755,
+            "peak_rss_kib": 47636,
+            "last_response_complete_seconds": 0.3925499500037404,
+            "child_exit_after_last_response_seconds": 0.02242358999501448,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005445836010039784,
+                "last_response_complete_seconds": 0.3893808480061125
+              },
+              "2": {
+                "first_request_seconds": 0.006415855008526705,
+                "last_response_complete_seconds": 0.3905130210041534
+              },
+              "3": {
+                "first_request_seconds": 0.005934932007221505,
+                "last_response_complete_seconds": 0.3925499500037404
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.44229460999486037,
+            "child_wall_seconds": 0.440959738,
+            "user_cpu_seconds": 0.395313,
+            "system_cpu_seconds": 0.502431,
+            "peak_rss_kib": 55800,
+            "last_response_complete_seconds": 0.41831060900585726,
+            "child_exit_after_last_response_seconds": 0.023984000989003107,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.0063658449944341555,
+                "last_response_complete_seconds": 0.41327992199512664
+              },
+              "2": {
+                "first_request_seconds": 0.006881010005599819,
+                "last_response_complete_seconds": 0.41600087500410154
+              },
+              "3": {
+                "first_request_seconds": 0.007601944002090022,
+                "last_response_complete_seconds": 0.41831060900585726
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4504089380061487,
+            "child_wall_seconds": 0.449128811,
+            "user_cpu_seconds": 0.410609,
+            "system_cpu_seconds": 0.440082,
+            "peak_rss_kib": 47912,
+            "last_response_complete_seconds": 0.4274891450040741,
+            "child_exit_after_last_response_seconds": 0.022919793002074584,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005402089009294286,
+                "last_response_complete_seconds": 0.41659817199979443
+              },
+              "2": {
+                "first_request_seconds": 0.0062982170056784526,
+                "last_response_complete_seconds": 0.4274891450040741
+              },
+              "3": {
+                "first_request_seconds": 0.005924675002461299,
+                "last_response_complete_seconds": 0.4264964660105761
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.48681909100560006,
+            "child_wall_seconds": 0.485515484,
+            "user_cpu_seconds": 0.414204,
+            "system_cpu_seconds": 0.637725,
+            "peak_rss_kib": 55684,
+            "last_response_complete_seconds": 0.46170672299922444,
+            "child_exit_after_last_response_seconds": 0.02511236800637562,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.007204736000858247,
+                "last_response_complete_seconds": 0.46170672299922444
+              },
+              "2": {
+                "first_request_seconds": 0.005945778000750579,
+                "last_response_complete_seconds": 0.45942362799542025
+              },
+              "3": {
+                "first_request_seconds": 0.006423200000426732,
+                "last_response_complete_seconds": 0.4529673329961952
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4470762429991737,
+            "child_wall_seconds": 0.445928567,
+            "user_cpu_seconds": 0.386523,
+            "system_cpu_seconds": 0.515285,
+            "peak_rss_kib": 55760,
+            "last_response_complete_seconds": 0.42286442600016017,
+            "child_exit_after_last_response_seconds": 0.024211816999013536,
+            "requests": 600,
+            "http_peak": 4,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005489335002494045,
+                "last_response_complete_seconds": 0.42286442600016017
+              },
+              "2": {
+                "first_request_seconds": 0.0058384309959365055,
+                "last_response_complete_seconds": 0.40771879100066144
+              },
+              "3": {
+                "first_request_seconds": 0.006385693995980546,
+                "last_response_complete_seconds": 0.4192968379938975
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4603468029963551,
+            "child_wall_seconds": 0.459135349,
+            "user_cpu_seconds": 0.401943,
+            "system_cpu_seconds": 0.4639,
+            "peak_rss_kib": 55976,
+            "last_response_complete_seconds": 0.4359956959960982,
+            "child_exit_after_last_response_seconds": 0.02435110700025689,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.007879397002398036,
+                "last_response_complete_seconds": 0.41532149199338164
+              },
+              "2": {
+                "first_request_seconds": 0.006077875994378701,
+                "last_response_complete_seconds": 0.4263202919973992
+              },
+              "3": {
+                "first_request_seconds": 0.00563336699269712,
+                "last_response_complete_seconds": 0.4359956959960982
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          }
+        ],
+        "memory": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4415023490000749,
+            "child_wall_seconds": 0.440354742,
+            "user_cpu_seconds": 0.326465,
+            "system_cpu_seconds": 0.497724,
+            "peak_rss_kib": 47584,
+            "last_response_complete_seconds": 0.4192423009953927,
+            "child_exit_after_last_response_seconds": 0.022260048004682176,
+            "requests": 600,
+            "http_peak": 4,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006764570003724657,
+                "last_response_complete_seconds": 0.41909157900954597
+              },
+              "2": {
+                "first_request_seconds": 0.006035764003172517,
+                "last_response_complete_seconds": 0.4164839720033342
+              },
+              "3": {
+                "first_request_seconds": 0.00900490500498563,
+                "last_response_complete_seconds": 0.4192423009953927
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.46760467800777406,
+            "child_wall_seconds": 0.466414772,
+            "user_cpu_seconds": 0.383119,
+            "system_cpu_seconds": 0.466367,
+            "peak_rss_kib": 47920,
+            "last_response_complete_seconds": 0.4433267190033803,
+            "child_exit_after_last_response_seconds": 0.02427795900439378,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005882053999812342,
+                "last_response_complete_seconds": 0.4431593019980937
+              },
+              "2": {
+                "first_request_seconds": 0.005423634007456712,
+                "last_response_complete_seconds": 0.43001098500099033
+              },
+              "3": {
+                "first_request_seconds": 0.006542942006490193,
+                "last_response_complete_seconds": 0.4433267190033803
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.43839814300008584,
+            "child_wall_seconds": 0.437240202,
+            "user_cpu_seconds": 0.30798,
+            "system_cpu_seconds": 0.535823,
+            "peak_rss_kib": 55848,
+            "last_response_complete_seconds": 0.4141961459972663,
+            "child_exit_after_last_response_seconds": 0.024201997002819553,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005643734009936452,
+                "last_response_complete_seconds": 0.41069022999727167
+              },
+              "2": {
+                "first_request_seconds": 0.006176620998303406,
+                "last_response_complete_seconds": 0.404430371010676
+              },
+              "3": {
+                "first_request_seconds": 0.006776914000511169,
+                "last_response_complete_seconds": 0.4141961459972663
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.4396132529946044,
+            "child_wall_seconds": 0.437886069,
+            "user_cpu_seconds": 0.357526,
+            "system_cpu_seconds": 0.502658,
+            "peak_rss_kib": 55952,
+            "last_response_complete_seconds": 0.41341975900286343,
+            "child_exit_after_last_response_seconds": 0.02619349399174098,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.0060768989933421835,
+                "last_response_complete_seconds": 0.4080888379976386
+              },
+              "2": {
+                "first_request_seconds": 0.006526409997604787,
+                "last_response_complete_seconds": 0.41341975900286343
+              },
+              "3": {
+                "first_request_seconds": 0.0071707299939589575,
+                "last_response_complete_seconds": 0.41332874199724756
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.42819395499827806,
+            "child_wall_seconds": 0.426851426,
+            "user_cpu_seconds": 0.355514,
+            "system_cpu_seconds": 0.490388,
+            "peak_rss_kib": 47620,
+            "last_response_complete_seconds": 0.4016788729932159,
+            "child_exit_after_last_response_seconds": 0.02651508200506214,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.008361581989447586,
+                "last_response_complete_seconds": 0.40125784899282735
+              },
+              "2": {
+                "first_request_seconds": 0.009029481996549293,
+                "last_response_complete_seconds": 0.4008022639900446
+              },
+              "3": {
+                "first_request_seconds": 0.009735077997902408,
+                "last_response_complete_seconds": 0.4016788729932159
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.45534347799548414,
+            "child_wall_seconds": 0.454112671,
+            "user_cpu_seconds": 0.329466,
+            "system_cpu_seconds": 0.529392,
+            "peak_rss_kib": 56272,
+            "last_response_complete_seconds": 0.4321753559925128,
+            "child_exit_after_last_response_seconds": 0.02316812200297136,
+            "requests": 600,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.0059250100021017715,
+                "last_response_complete_seconds": 0.42251378900255077
+              },
+              "2": {
+                "first_request_seconds": 0.005465548994834535,
+                "last_response_complete_seconds": 0.42939533799653873
+              },
+              "3": {
+                "first_request_seconds": 0.006353129996568896,
+                "last_response_complete_seconds": 0.4321753559925128
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/memory",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3"
+            ],
+            "wall_seconds": 0.42394504199910443,
+            "child_wall_seconds": 0.422683148,
+            "user_cpu_seconds": 0.342376,
+            "system_cpu_seconds": 0.48662,
+            "peak_rss_kib": 47756,
+            "last_response_complete_seconds": 0.4001955749990884,
+            "child_exit_after_last_response_seconds": 0.02374946700001601,
+            "requests": 600,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006105778011260554,
+                "last_response_complete_seconds": 0.4001955749990884
+              },
+              "2": {
+                "first_request_seconds": 0.005654148000758141,
+                "last_response_complete_seconds": 0.3997038200031966
+              },
+              "3": {
+                "first_request_seconds": 0.006685560001642443,
+                "last_response_complete_seconds": 0.39031655600410886
+              }
+            },
+            "stdout_bytes": 1560251,
+            "stdout_sha256": "1f182fda3c4d92d9726433ea44eb0ad3a74c09f6b861a32ee468626ea622adfc",
+            "canonical_result_sha256": "5c70cb2fe0b97e6090d0f3d588d80312978ff91870235a245074ddc61d8f3233",
+            "output_count": 60000,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 0.4470762429991737,
+          "user_cpu_seconds": 0.401943,
+          "system_cpu_seconds": 0.475506,
+          "peak_rss_kib": 55684,
+          "last_response_complete_seconds": 0.42286442600016017
+        },
+        "memory": {
+          "wall_seconds": 0.4396132529946044,
+          "user_cpu_seconds": 0.342376,
+          "system_cpu_seconds": 0.497724,
+          "peak_rss_kib": 47920,
+          "last_response_complete_seconds": 0.4141961459972663
+        }
+      }
+    }
+  },
+  "build_metadata": {
+    "source_revision": "baseline=b0bfd057485c88d8a0caa71c6bbbffd92c4e103e; memory=b0bfd057485c88d8a0caa71c6bbbffd92c4e103e+memory-only.patch (memory-manifest.json)",
+    "binary_build_flags": [
+      "-cc",
+      "gcc",
+      "-d",
+      "use_openssl",
+      "-prod"
+    ],
+    "v_version": "V 0.5.2 6701135",
+    "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+    "gcc_version": "gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "execution_order": "warmups then repetitions; forward/reverse binary order alternates per case, measured first repetition forward",
+  "harness_sha256": "866cbeab77bb5c9fcdd78af8a9f7b2249c1b90136371b1ce85840b11f1bb417e",
+  "supervisor_source_sha256": "72bb2cebaaaef5746af9835165973c9f33affb3fef5411515a08c2baa3db99d1"
+}

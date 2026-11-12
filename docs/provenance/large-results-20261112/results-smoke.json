@@ -1,0 +1,244 @@
+{
+  "scope": "Synthetic loopback end-to-end child process; no live API inference.",
+  "measurement": "Fresh C supervisor forks and wait4-reaps CLI (excludes Python pre-exec RSS floor). Linux wait4 per-child ru_maxrss (KiB), ru_utime, ru_stime; wall excludes sink tail drain and validation. No parent/server memory. Response completion means server handler finished after body flush, not client consumption.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "binary": [
+      "candidate=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock"
+    ],
+    "binary_manifest": [
+      "candidate=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock-manifest.json"
+    ],
+    "targets": 2,
+    "pages": 2,
+    "repetitions": 1,
+    "warmups": 0,
+    "mode": [
+      "sorted-lines",
+      "json",
+      "no-sort-slow"
+    ],
+    "target_workers": 4,
+    "page_workers": 4,
+    "http_workers": 8,
+    "latency_ms": 0,
+    "slow_bytes_per_second": 1048576,
+    "slow_chunk_bytes": 4096,
+    "slow_start_ms": 0.0,
+    "timeout": 180,
+    "source_revision": "unspecified",
+    "v": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "output": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/results-smoke.json"
+  },
+  "binaries": {
+    "candidate": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+      "sha256": "6ac32576bbe1c2d971c70b5702821c652ec7541fed34c7f0f3dc77df13826aa8",
+      "reported_build_manifest": {
+        "base_commit": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+        "base_tree": "b936c55c1073c2d6d6fdaadcbe9e793f1f3a1d77",
+        "compiler_commit": "67011350d000d86c3fc2a925b505c590dbfdea88",
+        "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+        "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+        "build_command": "V=/workspace/scratch/b81277eea609/v-nico-toolchain/v scripts/build.sh",
+        "flags": [
+          "-cc",
+          "gcc",
+          "-d",
+          "use_openssl",
+          "-prod"
+        ],
+        "source_sha256": {
+          "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+          "src/config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688",
+          "src/control.v": "5df771c0a4aedf0ba78d06c3c5ec0f5bbd8be0044693fb76c54c6f5ff1de53e7",
+          "src/domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+          "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+          "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+          "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+          "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+          "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+          "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+          "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+          "v.mod": "05543acc86b209f05bdc588481f4ede25e4f80190a83b7cedfb8cefb47a388e1"
+        },
+        "binary_sha256": "6ac32576bbe1c2d971c70b5702821c652ec7541fed34c7f0f3dc77df13826aa8",
+        "variant": "output lock only; memory trial reverted"
+      },
+      "manifest_sha256": "d33fa1ade6e147bf0693e7ba0015c7f4387c17f857d642d0e45a609870553fbe"
+    }
+  },
+  "cases": {
+    "sorted-lines": {
+      "samples": {
+        "candidate": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.02244194399099797,
+            "child_wall_seconds": 0.021103576,
+            "user_cpu_seconds": 0.0,
+            "system_cpu_seconds": 0.011316,
+            "peak_rss_kib": 6992,
+            "last_response_complete_seconds": 0.014940686000045389,
+            "child_exit_after_last_response_seconds": 0.007501257990952581,
+            "requests": 4,
+            "http_peak": 2,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005967591001535766,
+                "last_response_complete_seconds": 0.0148805060016457
+              },
+              "2": {
+                "first_request_seconds": 0.006503746990347281,
+                "last_response_complete_seconds": 0.014940686000045389
+              }
+            },
+            "stdout_bytes": 4400,
+            "stdout_sha256": "c413615db05d2186208a03197d62de823346f29326360a65e6a1bf8d6d1895a8",
+            "canonical_result_sha256": "c413615db05d2186208a03197d62de823346f29326360a65e6a1bf8d6d1895a8",
+            "output_count": 400,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "candidate": {
+          "wall_seconds": 0.02244194399099797,
+          "user_cpu_seconds": 0.0,
+          "system_cpu_seconds": 0.011316,
+          "peak_rss_kib": 6992,
+          "last_response_complete_seconds": 0.014940686000045389
+        }
+      }
+    },
+    "json": {
+      "samples": {
+        "candidate": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--json",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.013429929997073486,
+            "child_wall_seconds": 0.01211345,
+            "user_cpu_seconds": 0.011312,
+            "system_cpu_seconds": 0.0,
+            "peak_rss_kib": 7120,
+            "last_response_complete_seconds": 0.010324164002668113,
+            "child_exit_after_last_response_seconds": 0.003105765994405374,
+            "requests": 4,
+            "http_peak": 2,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006528819998493418,
+                "last_response_complete_seconds": 0.010324164002668113
+              },
+              "2": {
+                "first_request_seconds": 0.006127767002908513,
+                "last_response_complete_seconds": 0.010242800999549218
+              }
+            },
+            "stdout_bytes": 10603,
+            "stdout_sha256": "e17548e7b944ac2bbf49ce74142cac449639805118b721ff79d79dc2e1b9afdb",
+            "canonical_result_sha256": "890c4cbbce4373920f11a952fbbb063f20a0cbf8c2cc69656852f665a841bac6",
+            "output_count": 400,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "candidate": {
+          "wall_seconds": 0.013429929997073486,
+          "user_cpu_seconds": 0.011312,
+          "system_cpu_seconds": 0.0,
+          "peak_rss_kib": 7120,
+          "last_response_complete_seconds": 0.010324164002668113
+        }
+      }
+    },
+    "no-sort-slow": {
+      "samples": {
+        "candidate": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.013052270995103754,
+            "child_wall_seconds": 0.01205426,
+            "user_cpu_seconds": 0.0,
+            "system_cpu_seconds": 0.010452,
+            "peak_rss_kib": 6624,
+            "last_response_complete_seconds": 0.010846888995729387,
+            "child_exit_after_last_response_seconds": 0.0022053819993743673,
+            "requests": 4,
+            "http_peak": 2,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006493109991424717,
+                "last_response_complete_seconds": 0.010846888995729387
+              },
+              "2": {
+                "first_request_seconds": 0.004872657998930663,
+                "last_response_complete_seconds": 0.010824819997651502
+              }
+            },
+            "stdout_bytes": 4400,
+            "stdout_sha256": "5b91ed624b1ef717df15e08204f0131580b9e915ef8aee39fe5ce77caa575b2d",
+            "canonical_result_sha256": "ad4f459393dd2aef556be6f6b2f0d688525e473cb35643614832ed40ca9ebc8c",
+            "output_count": 400,
+            "sink": {
+              "first_read_seconds": 0.012381277003441937,
+              "finished_seconds": 0.016865450990735553,
+              "bytes": 4400
+            }
+          }
+        ]
+      },
+      "medians": {
+        "candidate": {
+          "wall_seconds": 0.013052270995103754,
+          "user_cpu_seconds": 0.0,
+          "system_cpu_seconds": 0.010452,
+          "peak_rss_kib": 6624,
+          "last_response_complete_seconds": 0.010846888995729387
+        }
+      }
+    }
+  },
+  "reported_toolchain": {
+    "source_revision_label": "unspecified",
+    "note": "Toolchain metadata supplied by caller; not inferred from binary. Per-binary reported manifests, when supplied, are hash-checked against binaries.",
+    "v_version": "V 0.5.2 6701135",
+    "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+    "gcc_version": "gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "execution_order": "warmups then repetitions; forward/reverse binary order alternates per case, measured first repetition forward",
+  "harness_sha256": "7588eee679f6cdd82e0dd85db07780899bb9e6d5e2780c2c16b61482252dea0c",
+  "supervisor_source_sha256": "3492111deacbec2e6221e989a7e57d0cd489f5f6dcf6696937fea16aa4591295"
+}

@@ -382,6 +382,43 @@ class CLIContracts(unittest.TestCase):
             for target in value["targets"]:
                 self.assertEqual(target["items"], ["sm10", "sm2", "sm2"])
 
+    def test_sorted_lines_match_json_with_partial_and_repeated_targets(self):
+        # Completion order differs from input order; failed targets retain their
+        # completed prefix. JSON still needs its original per-target arrays.
+        def respond(r):
+            if r.page > 1:
+                return Reply(status=403) if r.identifier == "2" else Reply(payload(r.kind))
+            ids = ["sm10", "sm2", "sm2", "sm" + str(100 + int(r.identifier))]
+            return Reply(payload(r.kind, [video(i) for i in ids]),
+                         delay=0.02 if r.identifier == "1" else 0)
+        targets = ["nicovideo.jp/user/" + str(i) for i in range(1, 13)]
+        targets += ["nicovideo.jp/user/1", "bad"]
+        for dedupe in (False, True):
+            for best_effort in (False, True):
+                flags = ["-T3", "-P1", "--url"]
+                if dedupe:
+                    flags.append("--dedupe")
+                if best_effort:
+                    flags.append("--best-effort")
+                with self.subTest(dedupe=dedupe, best_effort=best_effort), Fixture(respond) as fixture:
+                    lines = self.run_cli(fixture, *targets, *flags)
+                with Fixture(respond) as fixture:
+                    json_result = self.run_cli(fixture, *targets, *flags, "--json")
+                value = self.json_result(json_result, code=0 if best_effort else 1)
+                self.assertEqual(lines.returncode, json_result.returncode)
+                expected = ["sm10", "sm2", "sm2"] * 13
+                expected += ["sm" + str(100 + i) for i in range(1, 13)] + ["sm101"]
+                if dedupe:
+                    expected = list(set(expected))
+                expected.sort(key=lambda item: int(item[2:]))
+                self.assertEqual(value["items"], expected)
+                self.assertEqual(lines.stdout, "".join("https://www.nicovideo.jp/watch/" + i + "\n" for i in expected))
+                self.assertEqual(value["inputs"], {"total": 14, "valid": 13, "invalid": 1})
+                self.assertEqual(len(value["targets"]), 13)
+                for target in value["targets"]:
+                    self.assertEqual(target["items"][:3], ["sm10", "sm2", "sm2"])
+                self.assertIn("fetch_ok=12 fetch_err=1 output_count=" + str(len(expected)), lines.stderr)
+
     def test_no_sort_streams_before_all_targets_finish(self):
         def respond(r):
             reply = single_page(r)

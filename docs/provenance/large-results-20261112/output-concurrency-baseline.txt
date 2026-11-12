@@ -1,0 +1,28 @@
+test_broken_stdout_releases_waiting_emitters (__main__.OutputConcurrency.test_broken_stdout_releases_waiting_emitters) ... FAIL
+test_concurrent_targets_remain_contiguous_and_deduplicated (__main__.OutputConcurrency.test_concurrent_targets_remain_contiguous_and_deduplicated) ... ok
+test_full_stdout_does_not_block_http_completion (__main__.OutputConcurrency.test_full_stdout_does_not_block_http_completion) ... FAIL
+
+======================================================================
+FAIL: test_broken_stdout_releases_waiting_emitters (__main__.OutputConcurrency.test_broken_stdout_releases_waiting_emitters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/b81277eea609/v-nico-large-output/tests/output_concurrency.py", line 128, in test_broken_stdout_releases_waiting_emitters
+    self.blocked_output(break_pipe=True)
+  File "/workspace/scratch/b81277eea609/v-nico-large-output/tests/output_concurrency.py", line 87, in blocked_output
+    self.assertTrue(second_terminal.wait(3),
+AssertionError: False is not true : HTTP page completion/admission stalled behind full stdout
+
+======================================================================
+FAIL: test_full_stdout_does_not_block_http_completion (__main__.OutputConcurrency.test_full_stdout_does_not_block_http_completion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/b81277eea609/v-nico-large-output/tests/output_concurrency.py", line 124, in test_full_stdout_does_not_block_http_completion
+    self.blocked_output()
+  File "/workspace/scratch/b81277eea609/v-nico-large-output/tests/output_concurrency.py", line 87, in blocked_output
+    self.assertTrue(second_terminal.wait(3),
+AssertionError: False is not true : HTTP page completion/admission stalled behind full stdout
+
+----------------------------------------------------------------------
+Ran 3 tests in 6.405s
+
+FAILED (failures=2)

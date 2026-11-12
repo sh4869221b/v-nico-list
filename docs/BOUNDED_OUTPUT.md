@@ -1,11 +1,15 @@
 # Bounded line output
 
+This report records the original batching change. The later
+[output-lock isolation](LARGE-RESULTS.md) keeps these batches but removes stdout
+writes from the HTTP-control mutex; the measurements below remain historical.
+
 Line output batches complete records into at most 32 KiB, rather than flushing
 stdio for every ID. The final batch is written at each target completion, so
 `--no-sort` still delivers completed targets without waiting for other targets.
-JSON output is unchanged. The existing control mutex still serializes target
-output, deduplication, and counts; no new lock order or unbounded queue is added.
-A slow stdout consumer can still block that mutex, as before.
+JSON output is unchanged. In this original change, the control mutex still serialized target
+output, deduplication, and counts; no new lock order or unbounded queue was added.
+A slow stdout consumer could still block that mutex at this stage.
 
 The native helper returns the accepted byte prefix after looping over short
 writes. Counts use logical record-end offsets, not newline counts: IDs may contain

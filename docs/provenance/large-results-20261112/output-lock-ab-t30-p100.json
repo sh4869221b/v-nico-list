@@ -1,0 +1,3750 @@
+{
+  "scope": "Synthetic loopback end-to-end child process; no live API inference.",
+  "measurement": "Fresh C supervisor forks and wait4-reaps CLI (excludes Python pre-exec RSS floor). Linux wait4 per-child ru_maxrss (KiB), ru_utime, ru_stime; wall excludes sink tail drain and validation. No parent/server memory. Response completion means server handler finished after body flush, not client consumption.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "binary": [
+      "baseline=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+      "output-lock=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock"
+    ],
+    "binary_manifest": [
+      "baseline=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline-manifest.json",
+      "output-lock=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock-manifest.json"
+    ],
+    "targets": 30,
+    "pages": 100,
+    "repetitions": 5,
+    "warmups": 1,
+    "mode": [
+      "no-sort-fast",
+      "no-sort-slow"
+    ],
+    "target_workers": 4,
+    "page_workers": 4,
+    "http_workers": 8,
+    "latency_ms": 0,
+    "slow_bytes_per_second": 262144,
+    "slow_chunk_bytes": 4096,
+    "slow_start_ms": 250,
+    "timeout": 180,
+    "source_revision": "unspecified",
+    "v": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "output": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock-ab-t30-p100.json"
+  },
+  "binaries": {
+    "baseline": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+      "sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43",
+      "reported_build_manifest": {
+        "base_commit": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+        "base_tree": "b936c55c1073c2d6d6fdaadcbe9e793f1f3a1d77",
+        "compiler_commit": "67011350d000d86c3fc2a925b505c590dbfdea88",
+        "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+        "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+        "build_command": "V=/workspace/scratch/b81277eea609/v-nico-toolchain/v scripts/build.sh",
+        "flags": [
+          "-cc",
+          "gcc",
+          "-d",
+          "use_openssl",
+          "-prod"
+        ],
+        "source_sha256": {
+          "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+          "src/config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688",
+          "src/control.v": "f8b4a2d0026b4dd900d53811c46873afc3757c1c74164e768060ce0cd3c824ca",
+          "src/domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+          "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+          "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+          "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+          "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+          "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+          "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+          "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+          "v.mod": "05543acc86b209f05bdc588481f4ede25e4f80190a83b7cedfb8cefb47a388e1"
+        },
+        "binary_sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43"
+      },
+      "manifest_sha256": "69e1c85b3ae9514e1803af9896a99c8a3e6994c9ed8bdf995130426dd2bbdca1"
+    },
+    "output-lock": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+      "sha256": "6ac32576bbe1c2d971c70b5702821c652ec7541fed34c7f0f3dc77df13826aa8",
+      "reported_build_manifest": {
+        "base_commit": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+        "base_tree": "b936c55c1073c2d6d6fdaadcbe9e793f1f3a1d77",
+        "compiler_commit": "67011350d000d86c3fc2a925b505c590dbfdea88",
+        "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+        "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+        "build_command": "V=/workspace/scratch/b81277eea609/v-nico-toolchain/v scripts/build.sh",
+        "flags": [
+          "-cc",
+          "gcc",
+          "-d",
+          "use_openssl",
+          "-prod"
+        ],
+        "source_sha256": {
+          "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+          "src/config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688",
+          "src/control.v": "5df771c0a4aedf0ba78d06c3c5ec0f5bbd8be0044693fb76c54c6f5ff1de53e7",
+          "src/domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+          "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+          "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+          "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+          "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+          "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+          "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+          "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+          "v.mod": "05543acc86b209f05bdc588481f4ede25e4f80190a83b7cedfb8cefb47a388e1"
+        },
+        "binary_sha256": "6ac32576bbe1c2d971c70b5702821c652ec7541fed34c7f0f3dc77df13826aa8",
+        "variant": "output lock only; memory trial reverted"
+      },
+      "manifest_sha256": "d33fa1ade6e147bf0693e7ba0015c7f4387c17f857d642d0e45a609870553fbe"
+    }
+  },
+  "cases": {
+    "no-sort-fast": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.231208870012779,
+            "child_wall_seconds": 2.229932816,
+            "user_cpu_seconds": 1.922072,
+            "system_cpu_seconds": 2.731274,
+            "peak_rss_kib": 98664,
+            "last_response_complete_seconds": 2.222337116007111,
+            "child_exit_after_last_response_seconds": 0.008871754005667754,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.007004672006587498,
+                "last_response_complete_seconds": 0.29498265200527385
+              },
+              "2": {
+                "first_request_seconds": 0.007514814002206549,
+                "last_response_complete_seconds": 0.2863490990130231
+              },
+              "3": {
+                "first_request_seconds": 0.0085882230050629,
+                "last_response_complete_seconds": 0.2928955620009219
+              },
+              "4": {
+                "first_request_seconds": 0.009204040004988201,
+                "last_response_complete_seconds": 0.27439494800637476
+              },
+              "5": {
+                "first_request_seconds": 0.28188039700035006,
+                "last_response_complete_seconds": 0.5577706000040052
+              },
+              "6": {
+                "first_request_seconds": 0.2948089900019113,
+                "last_response_complete_seconds": 0.5615963150048628
+              },
+              "7": {
+                "first_request_seconds": 0.2968743570090737,
+                "last_response_complete_seconds": 0.5681705130118644
+              },
+              "8": {
+                "first_request_seconds": 0.3000692070054356,
+                "last_response_complete_seconds": 0.6005934340064414
+              },
+              "9": {
+                "first_request_seconds": 0.566420041010133,
+                "last_response_complete_seconds": 0.8095597790088505
+              },
+              "10": {
+                "first_request_seconds": 0.569289746999857,
+                "last_response_complete_seconds": 0.8802251529996283
+              },
+              "11": {
+                "first_request_seconds": 0.5733261480054352,
+                "last_response_complete_seconds": 0.8420614980132086
+              },
+              "12": {
+                "first_request_seconds": 0.6097537120076595,
+                "last_response_complete_seconds": 0.8890090100030648
+              },
+              "13": {
+                "first_request_seconds": 0.8287391410121927,
+                "last_response_complete_seconds": 1.1169603680027649
+              },
+              "14": {
+                "first_request_seconds": 0.8553244360082317,
+                "last_response_complete_seconds": 1.1530709100043168
+              },
+              "15": {
+                "first_request_seconds": 0.8980823810125003,
+                "last_response_complete_seconds": 1.1787600340030622
+              },
+              "16": {
+                "first_request_seconds": 0.8991514700028347,
+                "last_response_complete_seconds": 1.1671810780098895
+              },
+              "17": {
+                "first_request_seconds": 1.1312058140028967,
+                "last_response_complete_seconds": 1.4340278520103311
+              },
+              "18": {
+                "first_request_seconds": 1.1612071430135984,
+                "last_response_complete_seconds": 1.4676709680061322
+              },
+              "19": {
+                "first_request_seconds": 1.1726369050011272,
+                "last_response_complete_seconds": 1.471223230008036
+              },
+              "20": {
+                "first_request_seconds": 1.1847292910097167,
+                "last_response_complete_seconds": 1.5076768590079155
+              },
+              "21": {
+                "first_request_seconds": 1.4507219400111353,
+                "last_response_complete_seconds": 1.765708289007307
+              },
+              "22": {
+                "first_request_seconds": 1.4821602960000746,
+                "last_response_complete_seconds": 1.8092466330126626
+              },
+              "23": {
+                "first_request_seconds": 1.4830684220069088,
+                "last_response_complete_seconds": 1.7829633410001406
+              },
+              "24": {
+                "first_request_seconds": 1.53625864800415,
+                "last_response_complete_seconds": 1.826102767008706
+              },
+              "25": {
+                "first_request_seconds": 1.7703140410012566,
+                "last_response_complete_seconds": 2.0393478450132534
+              },
+              "26": {
+                "first_request_seconds": 1.789041628013365,
+                "last_response_complete_seconds": 2.070247890005703
+              },
+              "27": {
+                "first_request_seconds": 1.8152269679994788,
+                "last_response_complete_seconds": 2.0809349850023864
+              },
+              "28": {
+                "first_request_seconds": 1.8327777010126738,
+                "last_response_complete_seconds": 2.1018010580010014
+              },
+              "29": {
+                "first_request_seconds": 2.0447247460106155,
+                "last_response_complete_seconds": 2.216348749003373
+              },
+              "30": {
+                "first_request_seconds": 2.0810693060047925,
+                "last_response_complete_seconds": 2.222337116007111
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "8257d36046f0038df9ae630cc21466b043eb44ab761767e39b7f74cb9cc204d8",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.3151091679901583,
+            "child_wall_seconds": 2.313649468,
+            "user_cpu_seconds": 1.988596,
+            "system_cpu_seconds": 3.006417,
+            "peak_rss_kib": 106876,
+            "last_response_complete_seconds": 2.305376238989993,
+            "child_exit_after_last_response_seconds": 0.009732929000165313,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005776583988335915,
+                "last_response_complete_seconds": 0.29576435599301476
+              },
+              "2": {
+                "first_request_seconds": 0.006319779990008101,
+                "last_response_complete_seconds": 0.2966564219968859
+              },
+              "3": {
+                "first_request_seconds": 0.006743707999703474,
+                "last_response_complete_seconds": 0.29728663599235006
+              },
+              "4": {
+                "first_request_seconds": 0.00743885399424471,
+                "last_response_complete_seconds": 0.2802524629951222
+              },
+              "5": {
+                "first_request_seconds": 0.28587934699316975,
+                "last_response_complete_seconds": 0.5808284029917559
+              },
+              "6": {
+                "first_request_seconds": 0.2996177769964561,
+                "last_response_complete_seconds": 0.5898326710012043
+              },
+              "7": {
+                "first_request_seconds": 0.3056347779929638,
+                "last_response_complete_seconds": 0.6077081089897547
+              },
+              "8": {
+                "first_request_seconds": 0.3047009279980557,
+                "last_response_complete_seconds": 0.5831333099922631
+              },
+              "9": {
+                "first_request_seconds": 0.5869343869999284,
+                "last_response_complete_seconds": 0.8903451090009185
+              },
+              "10": {
+                "first_request_seconds": 0.5899563869897975,
+                "last_response_complete_seconds": 0.8391295319888741
+              },
+              "11": {
+                "first_request_seconds": 0.5997574450011598,
+                "last_response_complete_seconds": 0.9004694780014688
+              },
+              "12": {
+                "first_request_seconds": 0.6197695619921433,
+                "last_response_complete_seconds": 0.9066797189880162
+              },
+              "13": {
+                "first_request_seconds": 0.8563055779959541,
+                "last_response_complete_seconds": 1.1710331279900856
+              },
+              "14": {
+                "first_request_seconds": 0.90559624999878,
+                "last_response_complete_seconds": 1.2119357389892684
+              },
+              "15": {
+                "first_request_seconds": 0.919119418002083,
+                "last_response_complete_seconds": 1.262926092997077
+              },
+              "16": {
+                "first_request_seconds": 0.9227012699993793,
+                "last_response_complete_seconds": 1.2428476310014958
+              },
+              "17": {
+                "first_request_seconds": 1.1988502859894652,
+                "last_response_complete_seconds": 1.4825427299947478
+              },
+              "18": {
+                "first_request_seconds": 1.22945188099402,
+                "last_response_complete_seconds": 1.5659263619891135
+              },
+              "19": {
+                "first_request_seconds": 1.2580709499889053,
+                "last_response_complete_seconds": 1.571392013996956
+              },
+              "20": {
+                "first_request_seconds": 1.2789845779916504,
+                "last_response_complete_seconds": 1.603518559000804
+              },
+              "21": {
+                "first_request_seconds": 1.487840267989668,
+                "last_response_complete_seconds": 1.8396851659927052
+              },
+              "22": {
+                "first_request_seconds": 1.5846367679914692,
+                "last_response_complete_seconds": 1.8602972329972545
+              },
+              "23": {
+                "first_request_seconds": 1.5884035939961905,
+                "last_response_complete_seconds": 1.8815992229938274
+              },
+              "24": {
+                "first_request_seconds": 1.6220493610017002,
+                "last_response_complete_seconds": 1.9395663859904744
+              },
+              "25": {
+                "first_request_seconds": 1.8461886369914282,
+                "last_response_complete_seconds": 2.112649724993389
+              },
+              "26": {
+                "first_request_seconds": 1.8670987730001798,
+                "last_response_complete_seconds": 2.113933354994515
+              },
+              "27": {
+                "first_request_seconds": 1.8885418349964311,
+                "last_response_complete_seconds": 2.1768766839959426
+              },
+              "28": {
+                "first_request_seconds": 1.9457886649906868,
+                "last_response_complete_seconds": 2.201544986994122
+              },
+              "29": {
+                "first_request_seconds": 2.116145432999474,
+                "last_response_complete_seconds": 2.3011255609890213
+              },
+              "30": {
+                "first_request_seconds": 2.12388676199771,
+                "last_response_complete_seconds": 2.305376238989993
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "d06e1f5751383a6027695df23837db389942846e4c52afab31f73fa822ec8cb1",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.3522351870051352,
+            "child_wall_seconds": 2.350734329,
+            "user_cpu_seconds": 2.205141,
+            "system_cpu_seconds": 2.882047,
+            "peak_rss_kib": 107212,
+            "last_response_complete_seconds": 2.344299411008251,
+            "child_exit_after_last_response_seconds": 0.007935775996884331,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005951632003416307,
+                "last_response_complete_seconds": 0.34488309599692
+              },
+              "2": {
+                "first_request_seconds": 0.006486081008915789,
+                "last_response_complete_seconds": 0.3440432680072263
+              },
+              "3": {
+                "first_request_seconds": 0.0069046700082253665,
+                "last_response_complete_seconds": 0.3855189110036008
+              },
+              "4": {
+                "first_request_seconds": 0.007775960999424569,
+                "last_response_complete_seconds": 0.3274701900081709
+              },
+              "5": {
+                "first_request_seconds": 0.3394454619992757,
+                "last_response_complete_seconds": 0.6638415439956589
+              },
+              "6": {
+                "first_request_seconds": 0.35300937900319695,
+                "last_response_complete_seconds": 0.6943433870037552
+              },
+              "7": {
+                "first_request_seconds": 0.3543876970070414,
+                "last_response_complete_seconds": 0.7094980670080986
+              },
+              "8": {
+                "first_request_seconds": 0.39603086200077087,
+                "last_response_complete_seconds": 0.743515391004621
+              },
+              "9": {
+                "first_request_seconds": 0.6878220689977752,
+                "last_response_complete_seconds": 0.9560256969998591
+              },
+              "10": {
+                "first_request_seconds": 0.6990037210052833,
+                "last_response_complete_seconds": 1.0049056870047934
+              },
+              "11": {
+                "first_request_seconds": 0.7158345659991028,
+                "last_response_complete_seconds": 1.0168988310033455
+              },
+              "12": {
+                "first_request_seconds": 0.7502992350055138,
+                "last_response_complete_seconds": 1.0727572269970551
+              },
+              "13": {
+                "first_request_seconds": 0.9713621650007553,
+                "last_response_complete_seconds": 1.2571216430078493
+              },
+              "14": {
+                "first_request_seconds": 1.0294652519951342,
+                "last_response_complete_seconds": 1.305655112999375
+              },
+              "15": {
+                "first_request_seconds": 1.0308511699986411,
+                "last_response_complete_seconds": 1.2979494769970188
+              },
+              "16": {
+                "first_request_seconds": 1.07820695299597,
+                "last_response_complete_seconds": 1.3739641749998555
+              },
+              "17": {
+                "first_request_seconds": 1.272435877006501,
+                "last_response_complete_seconds": 1.5804903100070078
+              },
+              "18": {
+                "first_request_seconds": 1.3035793760063825,
+                "last_response_complete_seconds": 1.6133368340088055
+              },
+              "19": {
+                "first_request_seconds": 1.3144005509966519,
+                "last_response_complete_seconds": 1.6614060150022851
+              },
+              "20": {
+                "first_request_seconds": 1.3786207100056345,
+                "last_response_complete_seconds": 1.7211696849990403
+              },
+              "21": {
+                "first_request_seconds": 1.5942929750017356,
+                "last_response_complete_seconds": 1.8631213229964487
+              },
+              "22": {
+                "first_request_seconds": 1.6288928520079935,
+                "last_response_complete_seconds": 1.876297260998399
+              },
+              "23": {
+                "first_request_seconds": 1.6681872909975937,
+                "last_response_complete_seconds": 1.9405397990049096
+              },
+              "24": {
+                "first_request_seconds": 1.7303372330061393,
+                "last_response_complete_seconds": 2.0025041790067917
+              },
+              "25": {
+                "first_request_seconds": 1.8684178249968681,
+                "last_response_complete_seconds": 2.1177065090014366
+              },
+              "26": {
+                "first_request_seconds": 1.8829167229996528,
+                "last_response_complete_seconds": 2.1746088700019754
+              },
+              "27": {
+                "first_request_seconds": 1.9445278509956552,
+                "last_response_complete_seconds": 2.2053527270036284
+              },
+              "28": {
+                "first_request_seconds": 2.0093825590010965,
+                "last_response_complete_seconds": 2.281179041005089
+              },
+              "29": {
+                "first_request_seconds": 2.1235123710066546,
+                "last_response_complete_seconds": 2.3251647200086154
+              },
+              "30": {
+                "first_request_seconds": 2.1807368870067876,
+                "last_response_complete_seconds": 2.344299411008251
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "b2c3f45e38a137b0d48e78de17efa51d1caa4c4740b1be4aaae110213949e70b",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.197475837994716,
+            "child_wall_seconds": 2.195901145,
+            "user_cpu_seconds": 1.87187,
+            "system_cpu_seconds": 2.661834,
+            "peak_rss_kib": 114544,
+            "last_response_complete_seconds": 2.1877473959903,
+            "child_exit_after_last_response_seconds": 0.009728442004416138,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006377651996444911,
+                "last_response_complete_seconds": 0.2767251859913813
+              },
+              "2": {
+                "first_request_seconds": 0.00695381299010478,
+                "last_response_complete_seconds": 0.2959078189887805
+              },
+              "3": {
+                "first_request_seconds": 0.007469459000276402,
+                "last_response_complete_seconds": 0.2822911619878141
+              },
+              "4": {
+                "first_request_seconds": 0.007989249992533587,
+                "last_response_complete_seconds": 0.2761821699969005
+              },
+              "5": {
+                "first_request_seconds": 0.28834000098868273,
+                "last_response_complete_seconds": 0.5323195479868446
+              },
+              "6": {
+                "first_request_seconds": 0.28970701700018253,
+                "last_response_complete_seconds": 0.5726212529989425
+              },
+              "7": {
+                "first_request_seconds": 0.2912579609983368,
+                "last_response_complete_seconds": 0.5595314359961776
+              },
+              "8": {
+                "first_request_seconds": 0.30780357999901753,
+                "last_response_complete_seconds": 0.5560575509880437
+              },
+              "9": {
+                "first_request_seconds": 0.5468830759928096,
+                "last_response_complete_seconds": 0.8294558589986991
+              },
+              "10": {
+                "first_request_seconds": 0.5611368499958189,
+                "last_response_complete_seconds": 0.8407237419887679
+              },
+              "11": {
+                "first_request_seconds": 0.5617830919945845,
+                "last_response_complete_seconds": 0.8748384869977599
+              },
+              "12": {
+                "first_request_seconds": 0.5780755169980694,
+                "last_response_complete_seconds": 0.8766997219936457
+              },
+              "13": {
+                "first_request_seconds": 0.8374316649860702,
+                "last_response_complete_seconds": 1.130614665991743
+              },
+              "14": {
+                "first_request_seconds": 0.8536853209952824,
+                "last_response_complete_seconds": 1.1222477269911906
+              },
+              "15": {
+                "first_request_seconds": 0.8794125769927632,
+                "last_response_complete_seconds": 1.2041359869908774
+              },
+              "16": {
+                "first_request_seconds": 0.8830013150000013,
+                "last_response_complete_seconds": 1.17544434798765
+              },
+              "17": {
+                "first_request_seconds": 1.138805444992613,
+                "last_response_complete_seconds": 1.4318450259888778
+              },
+              "18": {
+                "first_request_seconds": 1.1407457839959534,
+                "last_response_complete_seconds": 1.4629819269903237
+              },
+              "19": {
+                "first_request_seconds": 1.1939856249955483,
+                "last_response_complete_seconds": 1.4970129219873343
+              },
+              "20": {
+                "first_request_seconds": 1.2084800849988824,
+                "last_response_complete_seconds": 1.4586759609956061
+              },
+              "21": {
+                "first_request_seconds": 1.447500381997088,
+                "last_response_complete_seconds": 1.7624931219907012
+              },
+              "22": {
+                "first_request_seconds": 1.4706351829954656,
+                "last_response_complete_seconds": 1.7714928619971033
+              },
+              "23": {
+                "first_request_seconds": 1.4747689459909452,
+                "last_response_complete_seconds": 1.7679978300002404
+              },
+              "24": {
+                "first_request_seconds": 1.5040882839966798,
+                "last_response_complete_seconds": 1.784516456988058
+              },
+              "25": {
+                "first_request_seconds": 1.7681768299953546,
+                "last_response_complete_seconds": 2.0247832679888234
+              },
+              "26": {
+                "first_request_seconds": 1.7717364139971323,
+                "last_response_complete_seconds": 2.014668563992018
+              },
+              "27": {
+                "first_request_seconds": 1.7788583069923334,
+                "last_response_complete_seconds": 2.0587843319954118
+              },
+              "28": {
+                "first_request_seconds": 1.790252563994727,
+                "last_response_complete_seconds": 2.0547333739959868
+              },
+              "29": {
+                "first_request_seconds": 2.026562508995994,
+                "last_response_complete_seconds": 2.1877473959903
+              },
+              "30": {
+                "first_request_seconds": 2.035933927996666,
+                "last_response_complete_seconds": 2.1871246399969095
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "34e7960270546a3b68c55abd611a5f71912d2d7dcc03d6a0348b2c0e6d007e62",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.2625322339881677,
+            "child_wall_seconds": 2.261288473,
+            "user_cpu_seconds": 1.95168,
+            "system_cpu_seconds": 2.616856,
+            "peak_rss_kib": 98732,
+            "last_response_complete_seconds": 2.25494462599454,
+            "child_exit_after_last_response_seconds": 0.007587607993627898,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006154217000585049,
+                "last_response_complete_seconds": 0.2803561889886623
+              },
+              "2": {
+                "first_request_seconds": 0.005724829999962822,
+                "last_response_complete_seconds": 0.27918278898869175
+              },
+              "3": {
+                "first_request_seconds": 0.006515790999401361,
+                "last_response_complete_seconds": 0.3033110999967903
+              },
+              "4": {
+                "first_request_seconds": 0.007203158995253034,
+                "last_response_complete_seconds": 0.2864324029942509
+              },
+              "5": {
+                "first_request_seconds": 0.2820532259938773,
+                "last_response_complete_seconds": 0.5557061469880864
+              },
+              "6": {
+                "first_request_seconds": 0.2831894049886614,
+                "last_response_complete_seconds": 0.5317896060005296
+              },
+              "7": {
+                "first_request_seconds": 0.295812810989446,
+                "last_response_complete_seconds": 0.5890353129943833
+              },
+              "8": {
+                "first_request_seconds": 0.30756569899676833,
+                "last_response_complete_seconds": 0.5749813139991602
+              },
+              "9": {
+                "first_request_seconds": 0.5481985509977676,
+                "last_response_complete_seconds": 0.8318884139880538
+              },
+              "10": {
+                "first_request_seconds": 0.569323188989074,
+                "last_response_complete_seconds": 0.8845275359926745
+              },
+              "11": {
+                "first_request_seconds": 0.5937304989929544,
+                "last_response_complete_seconds": 0.9046966119931312
+              },
+              "12": {
+                "first_request_seconds": 0.5973629669897491,
+                "last_response_complete_seconds": 0.9060921299969777
+              },
+              "13": {
+                "first_request_seconds": 0.8430544469883898,
+                "last_response_complete_seconds": 1.1601122729916824
+              },
+              "14": {
+                "first_request_seconds": 0.892627557986998,
+                "last_response_complete_seconds": 1.1936834809894208
+              },
+              "15": {
+                "first_request_seconds": 0.9104491329926532,
+                "last_response_complete_seconds": 1.2367921139957616
+              },
+              "16": {
+                "first_request_seconds": 0.9109487949899631,
+                "last_response_complete_seconds": 1.2482708989991806
+              },
+              "17": {
+                "first_request_seconds": 1.1768377289990894,
+                "last_response_complete_seconds": 1.4794094669923652
+              },
+              "18": {
+                "first_request_seconds": 1.2137474289920647,
+                "last_response_complete_seconds": 1.4917106929933652
+              },
+              "19": {
+                "first_request_seconds": 1.2427555239992216,
+                "last_response_complete_seconds": 1.551052881986834
+              },
+              "20": {
+                "first_request_seconds": 1.255360667986679,
+                "last_response_complete_seconds": 1.57187883098959
+              },
+              "21": {
+                "first_request_seconds": 1.4909720919968095,
+                "last_response_complete_seconds": 1.7847708639892517
+              },
+              "22": {
+                "first_request_seconds": 1.5092968829994788,
+                "last_response_complete_seconds": 1.809308334995876
+              },
+              "23": {
+                "first_request_seconds": 1.5598391529929359,
+                "last_response_complete_seconds": 1.8334562949894462
+              },
+              "24": {
+                "first_request_seconds": 1.576581333996728,
+                "last_response_complete_seconds": 1.8663722130004317
+              },
+              "25": {
+                "first_request_seconds": 1.8000075509917224,
+                "last_response_complete_seconds": 2.0657629549968988
+              },
+              "26": {
+                "first_request_seconds": 1.8217475149867823,
+                "last_response_complete_seconds": 2.079433382998104
+              },
+              "27": {
+                "first_request_seconds": 1.8391264179954305,
+                "last_response_complete_seconds": 2.1056390599987935
+              },
+              "28": {
+                "first_request_seconds": 1.8762081879976904,
+                "last_response_complete_seconds": 2.154301855000085
+              },
+              "29": {
+                "first_request_seconds": 2.0837932199938223,
+                "last_response_complete_seconds": 2.2480972679913975
+              },
+              "30": {
+                "first_request_seconds": 2.087398863994167,
+                "last_response_complete_seconds": 2.25494462599454
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "00a542eea38efeccc06f3ee4bda3d940cd802de36890263455c528774cc20ec7",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          }
+        ],
+        "output-lock": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.4065199230099097,
+            "child_wall_seconds": 2.405277929,
+            "user_cpu_seconds": 2.257479,
+            "system_cpu_seconds": 3.115657,
+            "peak_rss_kib": 107064,
+            "last_response_complete_seconds": 2.39820556199993,
+            "child_exit_after_last_response_seconds": 0.00831436100997962,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006362234009429812,
+                "last_response_complete_seconds": 0.3355850560037652
+              },
+              "2": {
+                "first_request_seconds": 0.0069212600064929575,
+                "last_response_complete_seconds": 0.35072748600214254
+              },
+              "3": {
+                "first_request_seconds": 0.007276044008904137,
+                "last_response_complete_seconds": 0.3388523199973861
+              },
+              "4": {
+                "first_request_seconds": 0.00790262600639835,
+                "last_response_complete_seconds": 0.35248312600015197
+              },
+              "5": {
+                "first_request_seconds": 0.3481970410066424,
+                "last_response_complete_seconds": 0.6762674729980063
+              },
+              "6": {
+                "first_request_seconds": 0.35050728400528897,
+                "last_response_complete_seconds": 0.6706460130080814
+              },
+              "7": {
+                "first_request_seconds": 0.35717430200020317,
+                "last_response_complete_seconds": 0.6787155690108193
+              },
+              "8": {
+                "first_request_seconds": 0.3677879460010445,
+                "last_response_complete_seconds": 0.6809375410084613
+              },
+              "9": {
+                "first_request_seconds": 0.6778175740037113,
+                "last_response_complete_seconds": 0.954414143008762
+              },
+              "10": {
+                "first_request_seconds": 0.6816402980039129,
+                "last_response_complete_seconds": 0.9512304939999012
+              },
+              "11": {
+                "first_request_seconds": 0.6831518120015971,
+                "last_response_complete_seconds": 1.0075523249979597
+              },
+              "12": {
+                "first_request_seconds": 0.6874093060032465,
+                "last_response_complete_seconds": 0.9912168610026129
+              },
+              "13": {
+                "first_request_seconds": 0.967359212008887,
+                "last_response_complete_seconds": 1.2418347810016712
+              },
+              "14": {
+                "first_request_seconds": 0.9789594449975993,
+                "last_response_complete_seconds": 1.2805061450053472
+              },
+              "15": {
+                "first_request_seconds": 1.0150331769982586,
+                "last_response_complete_seconds": 1.3046349049982382
+              },
+              "16": {
+                "first_request_seconds": 1.0231492390012136,
+                "last_response_complete_seconds": 1.3478282560099615
+              },
+              "17": {
+                "first_request_seconds": 1.258240035007475,
+                "last_response_complete_seconds": 1.5981643760023871
+              },
+              "18": {
+                "first_request_seconds": 1.2947880200081272,
+                "last_response_complete_seconds": 1.605871728999773
+              },
+              "19": {
+                "first_request_seconds": 1.3268008700106293,
+                "last_response_complete_seconds": 1.5967014269990614
+              },
+              "20": {
+                "first_request_seconds": 1.3686191610031528,
+                "last_response_complete_seconds": 1.6536786780052353
+              },
+              "21": {
+                "first_request_seconds": 1.6024487050017342,
+                "last_response_complete_seconds": 1.8900499800074613
+              },
+              "22": {
+                "first_request_seconds": 1.605513679998694,
+                "last_response_complete_seconds": 1.9115695820073597
+              },
+              "23": {
+                "first_request_seconds": 1.621237370010931,
+                "last_response_complete_seconds": 1.9267689179978333
+              },
+              "24": {
+                "first_request_seconds": 1.6611335909983609,
+                "last_response_complete_seconds": 2.0073202869971283
+              },
+              "25": {
+                "first_request_seconds": 1.9173661800014088,
+                "last_response_complete_seconds": 2.211156759003643
+              },
+              "26": {
+                "first_request_seconds": 1.9277692260075128,
+                "last_response_complete_seconds": 2.2061652510019485
+              },
+              "27": {
+                "first_request_seconds": 1.952589924010681,
+                "last_response_complete_seconds": 2.26164846100437
+              },
+              "28": {
+                "first_request_seconds": 2.0332617340027355,
+                "last_response_complete_seconds": 2.3075757440092275
+              },
+              "29": {
+                "first_request_seconds": 2.2136821020103525,
+                "last_response_complete_seconds": 2.39820556199993
+              },
+              "30": {
+                "first_request_seconds": 2.2249506450025365,
+                "last_response_complete_seconds": 2.3923355730075855
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "30472c677e7d91fed4cd4784083aaf32623931b0fcbc1aaa02466afd462562d9",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.2796306609961903,
+            "child_wall_seconds": 2.278354377,
+            "user_cpu_seconds": 2.09341,
+            "system_cpu_seconds": 3.205268,
+            "peak_rss_kib": 107276,
+            "last_response_complete_seconds": 2.27072525100084,
+            "child_exit_after_last_response_seconds": 0.008905409995350055,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.00790652699652128,
+                "last_response_complete_seconds": 0.3349608150019776
+              },
+              "2": {
+                "first_request_seconds": 0.006898795996676199,
+                "last_response_complete_seconds": 0.3232791629998246
+              },
+              "3": {
+                "first_request_seconds": 0.0063973210053518414,
+                "last_response_complete_seconds": 0.33046335900144186
+              },
+              "4": {
+                "first_request_seconds": 0.008715869000297971,
+                "last_response_complete_seconds": 0.33752042999549303
+              },
+              "5": {
+                "first_request_seconds": 0.3329867150023347,
+                "last_response_complete_seconds": 0.6211085359973367
+              },
+              "6": {
+                "first_request_seconds": 0.33422538900049403,
+                "last_response_complete_seconds": 0.6268065159965772
+              },
+              "7": {
+                "first_request_seconds": 0.3415338759950828,
+                "last_response_complete_seconds": 0.6350580230064224
+              },
+              "8": {
+                "first_request_seconds": 0.3446527180058183,
+                "last_response_complete_seconds": 0.6339780289999908
+              },
+              "9": {
+                "first_request_seconds": 0.6460678889998235,
+                "last_response_complete_seconds": 0.9628920480026864
+              },
+              "10": {
+                "first_request_seconds": 0.6473992870014627,
+                "last_response_complete_seconds": 0.9564068830077304
+              },
+              "11": {
+                "first_request_seconds": 0.6532458709989442,
+                "last_response_complete_seconds": 0.9817511349974666
+              },
+              "12": {
+                "first_request_seconds": 0.6551536900078645,
+                "last_response_complete_seconds": 0.9798154940071981
+              },
+              "13": {
+                "first_request_seconds": 0.9756033830053639,
+                "last_response_complete_seconds": 1.3218732609966537
+              },
+              "14": {
+                "first_request_seconds": 0.9818790279969107,
+                "last_response_complete_seconds": 1.290433889007545
+              },
+              "15": {
+                "first_request_seconds": 0.998741572999279,
+                "last_response_complete_seconds": 1.321788672998082
+              },
+              "16": {
+                "first_request_seconds": 1.0030698390037287,
+                "last_response_complete_seconds": 1.3184632560005412
+              },
+              "17": {
+                "first_request_seconds": 1.3154208689957159,
+                "last_response_complete_seconds": 1.5929727600014303
+              },
+              "18": {
+                "first_request_seconds": 1.3255380430055084,
+                "last_response_complete_seconds": 1.6141314429987688
+              },
+              "19": {
+                "first_request_seconds": 1.3308684250077931,
+                "last_response_complete_seconds": 1.6198286069993628
+              },
+              "20": {
+                "first_request_seconds": 1.3354073130030883,
+                "last_response_complete_seconds": 1.6006922219967237
+              },
+              "21": {
+                "first_request_seconds": 1.608344363005017,
+                "last_response_complete_seconds": 1.8656357830041088
+              },
+              "22": {
+                "first_request_seconds": 1.6195109999971464,
+                "last_response_complete_seconds": 1.8446881139971083
+              },
+              "23": {
+                "first_request_seconds": 1.630601160999504,
+                "last_response_complete_seconds": 1.8897542970080394
+              },
+              "24": {
+                "first_request_seconds": 1.6375934480020078,
+                "last_response_complete_seconds": 1.9071342350071063
+              },
+              "25": {
+                "first_request_seconds": 1.8516505970037542,
+                "last_response_complete_seconds": 2.0895792420051293
+              },
+              "26": {
+                "first_request_seconds": 1.873128788996837,
+                "last_response_complete_seconds": 2.120073035999667
+              },
+              "27": {
+                "first_request_seconds": 1.8955017130065244,
+                "last_response_complete_seconds": 2.1465350500075147
+              },
+              "28": {
+                "first_request_seconds": 1.9143129930016585,
+                "last_response_complete_seconds": 2.1631078890059143
+              },
+              "29": {
+                "first_request_seconds": 2.099590055004228,
+                "last_response_complete_seconds": 2.2660212199989473
+              },
+              "30": {
+                "first_request_seconds": 2.1296016889973544,
+                "last_response_complete_seconds": 2.27072525100084
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "b3c764f1cf2c15826eee336ca6276213297a390446ce34cd9a375bdeca558452",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.247285584991914,
+            "child_wall_seconds": 2.245949991,
+            "user_cpu_seconds": 1.933924,
+            "system_cpu_seconds": 2.86148,
+            "peak_rss_kib": 106244,
+            "last_response_complete_seconds": 2.2383635290025268,
+            "child_exit_after_last_response_seconds": 0.008922055989387445,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006332434000796638,
+                "last_response_complete_seconds": 0.29384714299521875
+              },
+              "2": {
+                "first_request_seconds": 0.006780142997740768,
+                "last_response_complete_seconds": 0.29619186000491027
+              },
+              "3": {
+                "first_request_seconds": 0.007614357004058547,
+                "last_response_complete_seconds": 0.28481472899147775
+              },
+              "4": {
+                "first_request_seconds": 0.008458757991320454,
+                "last_response_complete_seconds": 0.29337045099237
+              },
+              "5": {
+                "first_request_seconds": 0.29185786099697,
+                "last_response_complete_seconds": 0.5599025650008116
+              },
+              "6": {
+                "first_request_seconds": 0.2977329379937146,
+                "last_response_complete_seconds": 0.5653753579972545
+              },
+              "7": {
+                "first_request_seconds": 0.29877912100346293,
+                "last_response_complete_seconds": 0.6065684999921359
+              },
+              "8": {
+                "first_request_seconds": 0.30025559199566487,
+                "last_response_complete_seconds": 0.5760685309942346
+              },
+              "9": {
+                "first_request_seconds": 0.5667512030049693,
+                "last_response_complete_seconds": 0.8499280209944118
+              },
+              "10": {
+                "first_request_seconds": 0.5752207309997175,
+                "last_response_complete_seconds": 0.8369027250009822
+              },
+              "11": {
+                "first_request_seconds": 0.5840210470050806,
+                "last_response_complete_seconds": 0.8974334380036453
+              },
+              "12": {
+                "first_request_seconds": 0.6147642790019745,
+                "last_response_complete_seconds": 0.9055748489918187
+              },
+              "13": {
+                "first_request_seconds": 0.8693641339923488,
+                "last_response_complete_seconds": 1.215882470991346
+              },
+              "14": {
+                "first_request_seconds": 0.8750333719945047,
+                "last_response_complete_seconds": 1.2074648199923104
+              },
+              "15": {
+                "first_request_seconds": 0.9129394009942189,
+                "last_response_complete_seconds": 1.2571673070051474
+              },
+              "16": {
+                "first_request_seconds": 0.9231117059971439,
+                "last_response_complete_seconds": 1.2550012889987556
+              },
+              "17": {
+                "first_request_seconds": 1.227101975993719,
+                "last_response_complete_seconds": 1.5208827250025934
+              },
+              "18": {
+                "first_request_seconds": 1.2368021010042867,
+                "last_response_complete_seconds": 1.5066506290022517
+              },
+              "19": {
+                "first_request_seconds": 1.2636658510018606,
+                "last_response_complete_seconds": 1.5766072550031822
+              },
+              "20": {
+                "first_request_seconds": 1.263985141995363,
+                "last_response_complete_seconds": 1.571234237999306
+              },
+              "21": {
+                "first_request_seconds": 1.525221756004612,
+                "last_response_complete_seconds": 1.7749660050030798
+              },
+              "22": {
+                "first_request_seconds": 1.5359659569949144,
+                "last_response_complete_seconds": 1.8119438959984109
+              },
+              "23": {
+                "first_request_seconds": 1.5812778899999103,
+                "last_response_complete_seconds": 1.8235760630050208
+              },
+              "24": {
+                "first_request_seconds": 1.58385804099089,
+                "last_response_complete_seconds": 1.8316955310001504
+              },
+              "25": {
+                "first_request_seconds": 1.7826183900033357,
+                "last_response_complete_seconds": 2.0506475580041297
+              },
+              "26": {
+                "first_request_seconds": 1.8174178199988091,
+                "last_response_complete_seconds": 2.0497974189929664
+              },
+              "27": {
+                "first_request_seconds": 1.8334523789962986,
+                "last_response_complete_seconds": 2.10500008300005
+              },
+              "28": {
+                "first_request_seconds": 1.8447466969955713,
+                "last_response_complete_seconds": 2.0954034780006623
+              },
+              "29": {
+                "first_request_seconds": 2.0647005710052326,
+                "last_response_complete_seconds": 2.2358606240013614
+              },
+              "30": {
+                "first_request_seconds": 2.0765542659937637,
+                "last_response_complete_seconds": 2.2383635290025268
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "f8afaf7766c0a05da690d228893e17adcec2c59463c679b1c04db1ea84b373c8",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.1728052760008723,
+            "child_wall_seconds": 2.171412331,
+            "user_cpu_seconds": 2.005287,
+            "system_cpu_seconds": 2.798863,
+            "peak_rss_kib": 107128,
+            "last_response_complete_seconds": 2.1651033050002297,
+            "child_exit_after_last_response_seconds": 0.007701971000642516,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006184757003211416,
+                "last_response_complete_seconds": 0.2819383430032758
+              },
+              "2": {
+                "first_request_seconds": 0.006733322006766684,
+                "last_response_complete_seconds": 0.2741675550059881
+              },
+              "3": {
+                "first_request_seconds": 0.007203670000308193,
+                "last_response_complete_seconds": 0.2773680390091613
+              },
+              "4": {
+                "first_request_seconds": 0.007927227998152375,
+                "last_response_complete_seconds": 0.260672104996047
+              },
+              "5": {
+                "first_request_seconds": 0.2656879599962849,
+                "last_response_complete_seconds": 0.5190831229992909
+              },
+              "6": {
+                "first_request_seconds": 0.28270080500806216,
+                "last_response_complete_seconds": 0.5556994860089617
+              },
+              "7": {
+                "first_request_seconds": 0.2839564629975939,
+                "last_response_complete_seconds": 0.5346919270086801
+              },
+              "8": {
+                "first_request_seconds": 0.2854176760010887,
+                "last_response_complete_seconds": 0.55900183400081
+              },
+              "9": {
+                "first_request_seconds": 0.5379816610075068,
+                "last_response_complete_seconds": 0.8343876620056108
+              },
+              "10": {
+                "first_request_seconds": 0.5417099190090084,
+                "last_response_complete_seconds": 0.8643015160050709
+              },
+              "11": {
+                "first_request_seconds": 0.5771121900033904,
+                "last_response_complete_seconds": 0.8724431230075425
+              },
+              "12": {
+                "first_request_seconds": 0.5800524469959782,
+                "last_response_complete_seconds": 0.8782322650076821
+              },
+              "13": {
+                "first_request_seconds": 0.8606520379980793,
+                "last_response_complete_seconds": 1.1629516780085396
+              },
+              "14": {
+                "first_request_seconds": 0.8731096800038358,
+                "last_response_complete_seconds": 1.1550044230098138
+              },
+              "15": {
+                "first_request_seconds": 0.8773504990094807,
+                "last_response_complete_seconds": 1.1897378279973054
+              },
+              "16": {
+                "first_request_seconds": 0.8879748960025609,
+                "last_response_complete_seconds": 1.1864038320054533
+              },
+              "17": {
+                "first_request_seconds": 1.172846400004346,
+                "last_response_complete_seconds": 1.4706508740055142
+              },
+              "18": {
+                "first_request_seconds": 1.1848146069969516,
+                "last_response_complete_seconds": 1.479809185009799
+              },
+              "19": {
+                "first_request_seconds": 1.1919601999979932,
+                "last_response_complete_seconds": 1.4900589669996407
+              },
+              "20": {
+                "first_request_seconds": 1.1950611939973896,
+                "last_response_complete_seconds": 1.491719113997533
+              },
+              "21": {
+                "first_request_seconds": 1.491442858998198,
+                "last_response_complete_seconds": 1.7736789600021439
+              },
+              "22": {
+                "first_request_seconds": 1.4955728409986477,
+                "last_response_complete_seconds": 1.7883798830007436
+              },
+              "23": {
+                "first_request_seconds": 1.5011415220069466,
+                "last_response_complete_seconds": 1.7830498700059252
+              },
+              "24": {
+                "first_request_seconds": 1.507131083009881,
+                "last_response_complete_seconds": 1.7780976869980805
+              },
+              "25": {
+                "first_request_seconds": 1.7797319350065663,
+                "last_response_complete_seconds": 2.0305404990067473
+              },
+              "26": {
+                "first_request_seconds": 1.788177098002052,
+                "last_response_complete_seconds": 2.03251055200235
+              },
+              "27": {
+                "first_request_seconds": 1.7933289479988161,
+                "last_response_complete_seconds": 2.0319946109957527
+              },
+              "28": {
+                "first_request_seconds": 1.7948110169963911,
+                "last_response_complete_seconds": 2.056780155005981
+              },
+              "29": {
+                "first_request_seconds": 2.043064792000223,
+                "last_response_complete_seconds": 2.159070577006787
+              },
+              "30": {
+                "first_request_seconds": 2.0480446860019583,
+                "last_response_complete_seconds": 2.1651033050002297
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "21207b93d25d27298007de83e92b16deb16da1ae87c8ae147404810b495f9fa3",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 2.3254363880114397,
+            "child_wall_seconds": 2.324172587,
+            "user_cpu_seconds": 2.017686,
+            "system_cpu_seconds": 2.91827,
+            "peak_rss_kib": 115424,
+            "last_response_complete_seconds": 2.317066399002215,
+            "child_exit_after_last_response_seconds": 0.00836998900922481,
+            "requests": 3000,
+            "http_peak": 7,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005669548001606017,
+                "last_response_complete_seconds": 0.2941477260028478
+              },
+              "2": {
+                "first_request_seconds": 0.006162399004097097,
+                "last_response_complete_seconds": 0.2766131570097059
+              },
+              "3": {
+                "first_request_seconds": 0.006549211000674404,
+                "last_response_complete_seconds": 0.28748571600590367
+              },
+              "4": {
+                "first_request_seconds": 0.0078140080004232,
+                "last_response_complete_seconds": 0.2903464190021623
+              },
+              "5": {
+                "first_request_seconds": 0.28073607799888123,
+                "last_response_complete_seconds": 0.5250017790094716
+              },
+              "6": {
+                "first_request_seconds": 0.2961407090042485,
+                "last_response_complete_seconds": 0.5757147440017434
+              },
+              "7": {
+                "first_request_seconds": 0.30106012801115867,
+                "last_response_complete_seconds": 0.5841336419980507
+              },
+              "8": {
+                "first_request_seconds": 0.29755637800553814,
+                "last_response_complete_seconds": 0.5995072460063966
+              },
+              "9": {
+                "first_request_seconds": 0.5449106050073169,
+                "last_response_complete_seconds": 0.7986047880112892
+              },
+              "10": {
+                "first_request_seconds": 0.5952054100052919,
+                "last_response_complete_seconds": 0.9038503820047481
+              },
+              "11": {
+                "first_request_seconds": 0.5981723529985175,
+                "last_response_complete_seconds": 0.8700407470023492
+              },
+              "12": {
+                "first_request_seconds": 0.6095387000095798,
+                "last_response_complete_seconds": 0.9508865250099916
+              },
+              "13": {
+                "first_request_seconds": 0.8289159400010249,
+                "last_response_complete_seconds": 1.1295965669996804
+              },
+              "14": {
+                "first_request_seconds": 0.8884196670114761,
+                "last_response_complete_seconds": 1.1953458030038746
+              },
+              "15": {
+                "first_request_seconds": 0.9301574710116256,
+                "last_response_complete_seconds": 1.2306589390063891
+              },
+              "16": {
+                "first_request_seconds": 0.9577523879997898,
+                "last_response_complete_seconds": 1.275215968998964
+              },
+              "17": {
+                "first_request_seconds": 1.1517943299986655,
+                "last_response_complete_seconds": 1.4399788459995762
+              },
+              "18": {
+                "first_request_seconds": 1.213287279009819,
+                "last_response_complete_seconds": 1.5750002840068191
+              },
+              "19": {
+                "first_request_seconds": 1.250495801010402,
+                "last_response_complete_seconds": 1.5969964380055899
+              },
+              "20": {
+                "first_request_seconds": 1.28216103601153,
+                "last_response_complete_seconds": 1.6208006230008323
+              },
+              "21": {
+                "first_request_seconds": 1.4608258530060994,
+                "last_response_complete_seconds": 1.8045900040015113
+              },
+              "22": {
+                "first_request_seconds": 1.5948069490113994,
+                "last_response_complete_seconds": 1.9110177680122433
+              },
+              "23": {
+                "first_request_seconds": 1.6216370720067061,
+                "last_response_complete_seconds": 1.942624301998876
+              },
+              "24": {
+                "first_request_seconds": 1.6330920570035232,
+                "last_response_complete_seconds": 1.9285473500058288
+              },
+              "25": {
+                "first_request_seconds": 1.8099174420058262,
+                "last_response_complete_seconds": 2.0694248440122465
+              },
+              "26": {
+                "first_request_seconds": 1.9190070340118837,
+                "last_response_complete_seconds": 2.166077714005951
+              },
+              "27": {
+                "first_request_seconds": 1.935963479001657,
+                "last_response_complete_seconds": 2.1909323490108363
+              },
+              "28": {
+                "first_request_seconds": 1.9510470360110048,
+                "last_response_complete_seconds": 2.2087294580123853
+              },
+              "29": {
+                "first_request_seconds": 2.0785563890094636,
+                "last_response_complete_seconds": 2.2788056330027757
+              },
+              "30": {
+                "first_request_seconds": 2.180782852010452,
+                "last_response_complete_seconds": 2.317066399002215
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "0949554de9103b1491fbe7f9d2bc981fa9872d3016cd596c974c20a78b78e284",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": "temporary file"
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 2.2625322339881677,
+          "user_cpu_seconds": 1.95168,
+          "system_cpu_seconds": 2.731274,
+          "peak_rss_kib": 106876,
+          "last_response_complete_seconds": 2.25494462599454
+        },
+        "output-lock": {
+          "wall_seconds": 2.2796306609961903,
+          "user_cpu_seconds": 2.017686,
+          "system_cpu_seconds": 2.91827,
+          "peak_rss_kib": 107128,
+          "last_response_complete_seconds": 2.27072525100084
+        }
+      }
+    },
+    "no-sort-slow": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.847917238002992,
+            "child_wall_seconds": 12.846570558,
+            "user_cpu_seconds": 2.080994,
+            "system_cpu_seconds": 2.678926,
+            "peak_rss_kib": 106480,
+            "last_response_complete_seconds": 12.416674249994685,
+            "child_exit_after_last_response_seconds": 0.4312429880083073,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.00604851299431175,
+                "last_response_complete_seconds": 0.4533884529955685
+              },
+              "2": {
+                "first_request_seconds": 0.006622927001444623,
+                "last_response_complete_seconds": 0.2930686949985102
+              },
+              "3": {
+                "first_request_seconds": 0.007222428990644403,
+                "last_response_complete_seconds": 0.2910987219947856
+              },
+              "4": {
+                "first_request_seconds": 0.007677532994421199,
+                "last_response_complete_seconds": 0.2921222869917983
+              },
+              "5": {
+                "first_request_seconds": 0.45200092199957,
+                "last_response_complete_seconds": 2.5985605729947565
+              },
+              "6": {
+                "first_request_seconds": 1.30413611199765,
+                "last_response_complete_seconds": 2.0086113339930307
+              },
+              "7": {
+                "first_request_seconds": 1.304601506999461,
+                "last_response_complete_seconds": 2.0114229669998167
+              },
+              "8": {
+                "first_request_seconds": 1.7318309739930555,
+                "last_response_complete_seconds": 2.6012807079969207
+              },
+              "9": {
+                "first_request_seconds": 2.1701489129918627,
+                "last_response_complete_seconds": 3.894776050001383
+              },
+              "10": {
+                "first_request_seconds": 2.5973563360021217,
+                "last_response_complete_seconds": 3.891853248991538
+              },
+              "11": {
+                "first_request_seconds": 3.0218492860003607,
+                "last_response_complete_seconds": 3.688634110993007
+              },
+              "12": {
+                "first_request_seconds": 3.4484052539919503,
+                "last_response_complete_seconds": 3.893986031995155
+              },
+              "13": {
+                "first_request_seconds": 3.8821611820021644,
+                "last_response_complete_seconds": 5.4026347100007115
+              },
+              "14": {
+                "first_request_seconds": 4.309181217991863,
+                "last_response_complete_seconds": 6.012968634997378
+              },
+              "15": {
+                "first_request_seconds": 5.144090314992354,
+                "last_response_complete_seconds": 5.582803012002842
+              },
+              "16": {
+                "first_request_seconds": 5.1431932549894555,
+                "last_response_complete_seconds": 6.462401607990614
+              },
+              "17": {
+                "first_request_seconds": 5.582965064997552,
+                "last_response_complete_seconds": 7.068256817001384
+              },
+              "18": {
+                "first_request_seconds": 6.003570177999791,
+                "last_response_complete_seconds": 7.7212142089992994
+              },
+              "19": {
+                "first_request_seconds": 6.431399016000796,
+                "last_response_complete_seconds": 7.312887854990549
+              },
+              "20": {
+                "first_request_seconds": 6.861472249991493,
+                "last_response_complete_seconds": 8.163674598996295
+              },
+              "21": {
+                "first_request_seconds": 7.2911694569920655,
+                "last_response_complete_seconds": 8.77922980299627
+              },
+              "22": {
+                "first_request_seconds": 7.718355218996294,
+                "last_response_complete_seconds": 8.780769484990742
+              },
+              "23": {
+                "first_request_seconds": 8.146356992001529,
+                "last_response_complete_seconds": 9.439483875001315
+              },
+              "24": {
+                "first_request_seconds": 8.558603286001016,
+                "last_response_complete_seconds": 9.877503928000806
+              },
+              "25": {
+                "first_request_seconds": 8.997294701999635,
+                "last_response_complete_seconds": 10.508050520002143
+              },
+              "26": {
+                "first_request_seconds": 9.4250540810026,
+                "last_response_complete_seconds": 10.723220308995224
+              },
+              "27": {
+                "first_request_seconds": 9.853474467992783,
+                "last_response_complete_seconds": 11.161586782996892
+              },
+              "28": {
+                "first_request_seconds": 10.280324428997119,
+                "last_response_complete_seconds": 11.590970724995714
+              },
+              "29": {
+                "first_request_seconds": 10.720990499990876,
+                "last_response_complete_seconds": 12.095330804993864
+              },
+              "30": {
+                "first_request_seconds": 11.148292315992876,
+                "last_response_complete_seconds": 12.416674249994685
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "67ef6e6aab97cb809d0bacba825be21edc56dc74a481b4c2126a0f8e02ffb8d5",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.29258328999276273,
+              "finished_seconds": 13.10027074199752,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.903483656991739,
+            "child_wall_seconds": 12.902231889,
+            "user_cpu_seconds": 2.031456,
+            "system_cpu_seconds": 2.873769,
+            "peak_rss_kib": 107364,
+            "last_response_complete_seconds": 12.515910087997327,
+            "child_exit_after_last_response_seconds": 0.3875735689944122,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006660017999820411,
+                "last_response_complete_seconds": 0.49285845799022354
+              },
+              "2": {
+                "first_request_seconds": 0.006153039998025633,
+                "last_response_complete_seconds": 0.4937085260025924
+              },
+              "3": {
+                "first_request_seconds": 0.007292950002010912,
+                "last_response_complete_seconds": 0.4914224679960171
+              },
+              "4": {
+                "first_request_seconds": 0.0076898120023543015,
+                "last_response_complete_seconds": 0.30320035299519077
+              },
+              "5": {
+                "first_request_seconds": 0.472038096995675,
+                "last_response_complete_seconds": 1.9978563609911362
+              },
+              "6": {
+                "first_request_seconds": 0.899187738992623,
+                "last_response_complete_seconds": 2.2294721599901095
+              },
+              "7": {
+                "first_request_seconds": 1.3247452169889584,
+                "last_response_complete_seconds": 3.049359058990376
+              },
+              "8": {
+                "first_request_seconds": 1.754789651997271,
+                "last_response_complete_seconds": 2.2284097869996913
+              },
+              "9": {
+                "first_request_seconds": 2.1944360609923024,
+                "last_response_complete_seconds": 3.7196537269919645
+              },
+              "10": {
+                "first_request_seconds": 3.043530135997571,
+                "last_response_complete_seconds": 3.910914762993343
+              },
+              "11": {
+                "first_request_seconds": 3.045091975000105,
+                "last_response_complete_seconds": 4.326663186002406
+              },
+              "12": {
+                "first_request_seconds": 3.4550519629992777,
+                "last_response_complete_seconds": 4.328015915991273
+              },
+              "13": {
+                "first_request_seconds": 3.8980545139929745,
+                "last_response_complete_seconds": 5.3695772609935375
+              },
+              "14": {
+                "first_request_seconds": 4.322505026997533,
+                "last_response_complete_seconds": 5.655198822001694
+              },
+              "15": {
+                "first_request_seconds": 5.172974025001167,
+                "last_response_complete_seconds": 6.047233716992196
+              },
+              "16": {
+                "first_request_seconds": 5.174013287993148,
+                "last_response_complete_seconds": 6.0546477689931635
+              },
+              "17": {
+                "first_request_seconds": 5.609303705001366,
+                "last_response_complete_seconds": 7.107944634000887
+              },
+              "18": {
+                "first_request_seconds": 6.044436694995966,
+                "last_response_complete_seconds": 7.400166829000227
+              },
+              "19": {
+                "first_request_seconds": 6.4703546069940785,
+                "last_response_complete_seconds": 7.759218046994647
+              },
+              "20": {
+                "first_request_seconds": 6.880252281989669,
+                "last_response_complete_seconds": 7.756919799998286
+              },
+              "21": {
+                "first_request_seconds": 7.322512048995122,
+                "last_response_complete_seconds": 8.830017050990136
+              },
+              "22": {
+                "first_request_seconds": 7.752493622989277,
+                "last_response_complete_seconds": 9.482374739993247
+              },
+              "23": {
+                "first_request_seconds": 8.180713775989716,
+                "last_response_complete_seconds": 9.488204023000435
+              },
+              "24": {
+                "first_request_seconds": 8.611439514992526,
+                "last_response_complete_seconds": 9.10553389499546
+              },
+              "25": {
+                "first_request_seconds": 9.051912297989475,
+                "last_response_complete_seconds": 10.538908186994377
+              },
+              "26": {
+                "first_request_seconds": 9.48138941799698,
+                "last_response_complete_seconds": 11.20259940699907
+              },
+              "27": {
+                "first_request_seconds": 9.892044002001057,
+                "last_response_complete_seconds": 10.860259470995516
+              },
+              "28": {
+                "first_request_seconds": 10.318794640988926,
+                "last_response_complete_seconds": 11.633701482001925
+              },
+              "29": {
+                "first_request_seconds": 10.771753142995294,
+                "last_response_complete_seconds": 12.14089512899227
+              },
+              "30": {
+                "first_request_seconds": 11.201548041994101,
+                "last_response_complete_seconds": 12.515910087997327
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "628d204d67c38566c622b5eb57ccdd611845715a7400891670067e23577b6042",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.31289608699444216,
+              "finished_seconds": 13.162004322992289,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.879828085002373,
+            "child_wall_seconds": 12.878619042,
+            "user_cpu_seconds": 1.881892,
+            "system_cpu_seconds": 2.782794,
+            "peak_rss_kib": 115800,
+            "last_response_complete_seconds": 12.452995786996325,
+            "child_exit_after_last_response_seconds": 0.4268322980060475,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.0058139549946645275,
+                "last_response_complete_seconds": 0.3006989919958869
+              },
+              "2": {
+                "first_request_seconds": 0.006441334000555798,
+                "last_response_complete_seconds": 1.324603932996979
+              },
+              "3": {
+                "first_request_seconds": 0.00714458100264892,
+                "last_response_complete_seconds": 0.4752869319927413
+              },
+              "4": {
+                "first_request_seconds": 0.007648874990991317,
+                "last_response_complete_seconds": 0.9013659519987414
+              },
+              "5": {
+                "first_request_seconds": 0.47175287100253627,
+                "last_response_complete_seconds": 2.0289523039973574
+              },
+              "6": {
+                "first_request_seconds": 0.8984355299908202,
+                "last_response_complete_seconds": 2.20796495200193
+              },
+              "7": {
+                "first_request_seconds": 1.3233272329962347,
+                "last_response_complete_seconds": 2.214017389997025
+              },
+              "8": {
+                "first_request_seconds": 1.7511617519921856,
+                "last_response_complete_seconds": 3.057473487991956
+              },
+              "9": {
+                "first_request_seconds": 2.199730175998411,
+                "last_response_complete_seconds": 3.720302518995595
+              },
+              "10": {
+                "first_request_seconds": 3.0535309089900693,
+                "last_response_complete_seconds": 3.9505965449934592
+              },
+              "11": {
+                "first_request_seconds": 3.0581371969892643,
+                "last_response_complete_seconds": 4.362888100993587
+              },
+              "12": {
+                "first_request_seconds": 3.4883303239912493,
+                "last_response_complete_seconds": 4.363492395001231
+              },
+              "13": {
+                "first_request_seconds": 3.9193409889994655,
+                "last_response_complete_seconds": 5.41316810400167
+              },
+              "14": {
+                "first_request_seconds": 4.346683441995992,
+                "last_response_complete_seconds": 5.701298922998831
+              },
+              "15": {
+                "first_request_seconds": 4.772863042002427,
+                "last_response_complete_seconds": 5.713527386993519
+              },
+              "16": {
+                "first_request_seconds": 5.1840842370002065,
+                "last_response_complete_seconds": 6.045207503993879
+              },
+              "17": {
+                "first_request_seconds": 5.616118607998942,
+                "last_response_complete_seconds": 7.095078209997155
+              },
+              "18": {
+                "first_request_seconds": 6.044075240002712,
+                "last_response_complete_seconds": 7.385998199999449
+              },
+              "19": {
+                "first_request_seconds": 6.899524036998628,
+                "last_response_complete_seconds": 7.767121789991506
+              },
+              "20": {
+                "first_request_seconds": 6.901098695001565,
+                "last_response_complete_seconds": 7.775445665989537
+              },
+              "21": {
+                "first_request_seconds": 7.334572124993429,
+                "last_response_complete_seconds": 8.817805646001943
+              },
+              "22": {
+                "first_request_seconds": 7.763224102993263,
+                "last_response_complete_seconds": 9.056670470003155
+              },
+              "23": {
+                "first_request_seconds": 8.174164436000865,
+                "last_response_complete_seconds": 9.492264057000284
+              },
+              "24": {
+                "first_request_seconds": 8.601861713992548,
+                "last_response_complete_seconds": 9.898703275990556
+              },
+              "25": {
+                "first_request_seconds": 9.03699089300062,
+                "last_response_complete_seconds": 10.517927793000126
+              },
+              "26": {
+                "first_request_seconds": 9.464304804991116,
+                "last_response_complete_seconds": 10.513318575001904
+              },
+              "27": {
+                "first_request_seconds": 9.891183141997317,
+                "last_response_complete_seconds": 11.206037255993579
+              },
+              "28": {
+                "first_request_seconds": 10.318013812997378,
+                "last_response_complete_seconds": 11.600861644998076
+              },
+              "29": {
+                "first_request_seconds": 10.751928411002154,
+                "last_response_complete_seconds": 12.104826752998633
+              },
+              "30": {
+                "first_request_seconds": 11.170006360000116,
+                "last_response_complete_seconds": 12.452995786996325
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "30c05a4b4d96e62109ba61be2762c20d8a662188cfb25ff4783f8e12e5911f40",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.3121175749984104,
+              "finished_seconds": 13.126932069993927,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 13.029256027002702,
+            "child_wall_seconds": 13.027717319,
+            "user_cpu_seconds": 2.232947,
+            "system_cpu_seconds": 2.929376,
+            "peak_rss_kib": 107372,
+            "last_response_complete_seconds": 12.269745718003833,
+            "child_exit_after_last_response_seconds": 0.7595103089988697,
+            "requests": 3000,
+            "http_peak": 6,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006185103004099801,
+                "last_response_complete_seconds": 0.31469619400741067
+              },
+              "2": {
+                "first_request_seconds": 0.007710178004344925,
+                "last_response_complete_seconds": 0.3130909600004088
+              },
+              "3": {
+                "first_request_seconds": 0.006630663003306836,
+                "last_response_complete_seconds": 0.47454162100621033
+              },
+              "4": {
+                "first_request_seconds": 0.008155827003065497,
+                "last_response_complete_seconds": 1.3294331770011922
+              },
+              "5": {
+                "first_request_seconds": 0.474285971999052,
+                "last_response_complete_seconds": 2.025197830997058
+              },
+              "6": {
+                "first_request_seconds": 0.900231691004592,
+                "last_response_complete_seconds": 2.036672800008091
+              },
+              "7": {
+                "first_request_seconds": 1.3277200949960388,
+                "last_response_complete_seconds": 2.028855062002549
+              },
+              "8": {
+                "first_request_seconds": 1.7541148220043397,
+                "last_response_complete_seconds": 2.6289207070076372
+              },
+              "9": {
+                "first_request_seconds": 3.05576298199594,
+                "last_response_complete_seconds": 4.831299362995196
+              },
+              "10": {
+                "first_request_seconds": 3.054848426996614,
+                "last_response_complete_seconds": 3.9576231069950154
+              },
+              "11": {
+                "first_request_seconds": 3.0580226599995513,
+                "last_response_complete_seconds": 3.7793672569969203
+              },
+              "12": {
+                "first_request_seconds": 3.4813103180058533,
+                "last_response_complete_seconds": 4.381289105003816
+              },
+              "13": {
+                "first_request_seconds": 3.953867539006751,
+                "last_response_complete_seconds": 5.492891786998371
+              },
+              "14": {
+                "first_request_seconds": 4.380173932004254,
+                "last_response_complete_seconds": 5.6586622949980665
+              },
+              "15": {
+                "first_request_seconds": 4.806069122001645,
+                "last_response_complete_seconds": 5.663333283999236
+              },
+              "16": {
+                "first_request_seconds": 5.234132042998681,
+                "last_response_complete_seconds": 6.561589739998453
+              },
+              "17": {
+                "first_request_seconds": 5.657224056994892,
+                "last_response_complete_seconds": 7.230379824002739
+              },
+              "18": {
+                "first_request_seconds": 6.083685607998632,
+                "last_response_complete_seconds": 7.231920717007597
+              },
+              "19": {
+                "first_request_seconds": 6.5116184880025685,
+                "last_response_complete_seconds": 7.852440835995367
+              },
+              "20": {
+                "first_request_seconds": 6.94540596799925,
+                "last_response_complete_seconds": 8.282355771996663
+              },
+              "21": {
+                "first_request_seconds": 7.401824369997485,
+                "last_response_complete_seconds": 9.011110563995317
+              },
+              "22": {
+                "first_request_seconds": 7.830952296993928,
+                "last_response_complete_seconds": 9.020526195003185
+              },
+              "23": {
+                "first_request_seconds": 8.255982606002362,
+                "last_response_complete_seconds": 9.64785273000598
+              },
+              "24": {
+                "first_request_seconds": 8.687756953004282,
+                "last_response_complete_seconds": 10.04385648900643
+              },
+              "25": {
+                "first_request_seconds": 9.183292988003814,
+                "last_response_complete_seconds": 10.65280703100143
+              },
+              "26": {
+                "first_request_seconds": 9.60831000500184,
+                "last_response_complete_seconds": 10.650254110994865
+              },
+              "27": {
+                "first_request_seconds": 10.038036027006456,
+                "last_response_complete_seconds": 11.373015788005432
+              },
+              "28": {
+                "first_request_seconds": 10.465187990994309,
+                "last_response_complete_seconds": 11.759257326004445
+              },
+              "29": {
+                "first_request_seconds": 10.89969207100512,
+                "last_response_complete_seconds": 12.269425385995419
+              },
+              "30": {
+                "first_request_seconds": 11.327048332997947,
+                "last_response_complete_seconds": 12.269745718003833
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "a59296162d057210168354e1467719552a9673a4e611721d2721860bec80e648",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.31473082200682256,
+              "finished_seconds": 13.282682710996596,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.913922969004489,
+            "child_wall_seconds": 12.912587085,
+            "user_cpu_seconds": 2.22856,
+            "system_cpu_seconds": 2.81979,
+            "peak_rss_kib": 114676,
+            "last_response_complete_seconds": 12.478904262010474,
+            "child_exit_after_last_response_seconds": 0.4350187069940148,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005818546007503755,
+                "last_response_complete_seconds": 0.2915030300064245
+              },
+              "2": {
+                "first_request_seconds": 0.006536466011311859,
+                "last_response_complete_seconds": 0.471717559004901
+              },
+              "3": {
+                "first_request_seconds": 0.00786681700265035,
+                "last_response_complete_seconds": 0.47020612000778783
+              },
+              "4": {
+                "first_request_seconds": 0.0071467990055680275,
+                "last_response_complete_seconds": 1.3174166240060003
+              },
+              "5": {
+                "first_request_seconds": 0.4638948240026366,
+                "last_response_complete_seconds": 1.9672710920131067
+              },
+              "6": {
+                "first_request_seconds": 1.3147739340056432,
+                "last_response_complete_seconds": 3.054101052999613
+              },
+              "7": {
+                "first_request_seconds": 1.3157901230006246,
+                "last_response_complete_seconds": 2.6133202519995393
+              },
+              "8": {
+                "first_request_seconds": 1.7432397330121603,
+                "last_response_complete_seconds": 2.1951699780038325
+              },
+              "9": {
+                "first_request_seconds": 2.186147879008786,
+                "last_response_complete_seconds": 3.662836054005311
+              },
+              "10": {
+                "first_request_seconds": 2.6111560220015235,
+                "last_response_complete_seconds": 3.9270718330080854
+              },
+              "11": {
+                "first_request_seconds": 3.0381903540110216,
+                "last_response_complete_seconds": 4.337475819003885
+              },
+              "12": {
+                "first_request_seconds": 3.4532942730002105,
+                "last_response_complete_seconds": 4.75239798000257
+              },
+              "13": {
+                "first_request_seconds": 3.884262570005376,
+                "last_response_complete_seconds": 5.374121066008229
+              },
+              "14": {
+                "first_request_seconds": 4.314567393012112,
+                "last_response_complete_seconds": 5.638745407006354
+              },
+              "15": {
+                "first_request_seconds": 4.742291058006231,
+                "last_response_complete_seconds": 5.639647569012595
+              },
+              "16": {
+                "first_request_seconds": 5.167123760009417,
+                "last_response_complete_seconds": 6.45033934400999
+              },
+              "17": {
+                "first_request_seconds": 5.606474093001452,
+                "last_response_complete_seconds": 7.16614999101148
+              },
+              "18": {
+                "first_request_seconds": 6.028943561002961,
+                "last_response_complete_seconds": 7.768690155004151
+              },
+              "19": {
+                "first_request_seconds": 6.442822658005753,
+                "last_response_complete_seconds": 7.399554149000323
+              },
+              "20": {
+                "first_request_seconds": 6.867044612008613,
+                "last_response_complete_seconds": 7.764680578009575
+              },
+              "21": {
+                "first_request_seconds": 7.335972757005948,
+                "last_response_complete_seconds": 8.824313205012004
+              },
+              "22": {
+                "first_request_seconds": 7.764231086999644,
+                "last_response_complete_seconds": 9.921069499003352
+              },
+              "23": {
+                "first_request_seconds": 8.1894134900067,
+                "last_response_complete_seconds": 9.482254506001482
+              },
+              "24": {
+                "first_request_seconds": 8.6162438570027,
+                "last_response_complete_seconds": 9.06650431000162
+              },
+              "25": {
+                "first_request_seconds": 9.050813455003663,
+                "last_response_complete_seconds": 10.585231958000804
+              },
+              "26": {
+                "first_request_seconds": 9.478898575005587,
+                "last_response_complete_seconds": 11.62805616800324
+              },
+              "27": {
+                "first_request_seconds": 9.908247399012907,
+                "last_response_complete_seconds": 10.767328906003968
+              },
+              "28": {
+                "first_request_seconds": 10.319974765006918,
+                "last_response_complete_seconds": 11.19710690100328
+              },
+              "29": {
+                "first_request_seconds": 10.765392238012282,
+                "last_response_complete_seconds": 12.190251054998953
+              },
+              "30": {
+                "first_request_seconds": 11.193406907012104,
+                "last_response_complete_seconds": 12.478904262010474
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "e295d57e865f263ccb24dcea01b8ba9c2eb1d418a188ad71e9f27fbdfc7ff11f",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.30352701400988735,
+              "finished_seconds": 13.160345296011656,
+              "bytes": 3300000
+            }
+          }
+        ],
+        "output-lock": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.831090677995235,
+            "child_wall_seconds": 12.829874835,
+            "user_cpu_seconds": 1.706858,
+            "system_cpu_seconds": 2.258823,
+            "peak_rss_kib": 139968,
+            "last_response_complete_seconds": 11.202808959002141,
+            "child_exit_after_last_response_seconds": 1.6282817189930938,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.00634407700272277,
+                "last_response_complete_seconds": 0.32112943699758034
+              },
+              "2": {
+                "first_request_seconds": 0.007179002001066692,
+                "last_response_complete_seconds": 0.3137988509988645
+              },
+              "3": {
+                "first_request_seconds": 0.007694468004046939,
+                "last_response_complete_seconds": 0.32164150700555183
+              },
+              "4": {
+                "first_request_seconds": 0.00800810000509955,
+                "last_response_complete_seconds": 0.3032931089983322
+              },
+              "5": {
+                "first_request_seconds": 0.47234917200694326,
+                "last_response_complete_seconds": 0.5391022069961764
+              },
+              "6": {
+                "first_request_seconds": 0.8995523610064993,
+                "last_response_complete_seconds": 0.9776031539950054
+              },
+              "7": {
+                "first_request_seconds": 1.3279551479936345,
+                "last_response_complete_seconds": 1.4223793830024078
+              },
+              "8": {
+                "first_request_seconds": 1.755134683000506,
+                "last_response_complete_seconds": 1.847745377002866
+              },
+              "9": {
+                "first_request_seconds": 2.1832604619994527,
+                "last_response_complete_seconds": 2.2803454249951756
+              },
+              "10": {
+                "first_request_seconds": 2.6103318399982527,
+                "last_response_complete_seconds": 2.7136688830069033
+              },
+              "11": {
+                "first_request_seconds": 3.0385944959998596,
+                "last_response_complete_seconds": 3.123747371995705
+              },
+              "12": {
+                "first_request_seconds": 3.4527473930065753,
+                "last_response_complete_seconds": 3.5475058870069915
+              },
+              "13": {
+                "first_request_seconds": 3.881458753006882,
+                "last_response_complete_seconds": 3.976516676993924
+              },
+              "14": {
+                "first_request_seconds": 4.30890419500065,
+                "last_response_complete_seconds": 4.4051635899959365
+              },
+              "15": {
+                "first_request_seconds": 4.735467954000342,
+                "last_response_complete_seconds": 4.8231667340005515
+              },
+              "16": {
+                "first_request_seconds": 5.162989114003722,
+                "last_response_complete_seconds": 5.26455626799725
+              },
+              "17": {
+                "first_request_seconds": 5.5908698749990435,
+                "last_response_complete_seconds": 5.686610620992724
+              },
+              "18": {
+                "first_request_seconds": 6.022452928998973,
+                "last_response_complete_seconds": 6.128464413006441
+              },
+              "19": {
+                "first_request_seconds": 6.436547003002488,
+                "last_response_complete_seconds": 6.539434859005269
+              },
+              "20": {
+                "first_request_seconds": 6.869028885004809,
+                "last_response_complete_seconds": 6.994997611996951
+              },
+              "21": {
+                "first_request_seconds": 7.297062340003322,
+                "last_response_complete_seconds": 7.398731267996482
+              },
+              "22": {
+                "first_request_seconds": 7.726931822006009,
+                "last_response_complete_seconds": 7.813055107006221
+              },
+              "23": {
+                "first_request_seconds": 8.154618511005538,
+                "last_response_complete_seconds": 8.234652287006611
+              },
+              "24": {
+                "first_request_seconds": 8.584106704001897,
+                "last_response_complete_seconds": 8.656392912002048
+              },
+              "25": {
+                "first_request_seconds": 9.01146105499356,
+                "last_response_complete_seconds": 9.0842189410032
+              },
+              "26": {
+                "first_request_seconds": 9.424012268005754,
+                "last_response_complete_seconds": 9.512316086998908
+              },
+              "27": {
+                "first_request_seconds": 9.852215905004414,
+                "last_response_complete_seconds": 9.93031438899925
+              },
+              "28": {
+                "first_request_seconds": 10.279470198001945,
+                "last_response_complete_seconds": 10.35417492799752
+              },
+              "29": {
+                "first_request_seconds": 10.706157453998458,
+                "last_response_complete_seconds": 10.790938409001683
+              },
+              "30": {
+                "first_request_seconds": 11.133995755997603,
+                "last_response_complete_seconds": 11.202808959002141
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "a3377db61de1dd42e5262485de5e44631607d351e7124f6eebc7dadc6c78ec7d",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.3138203029957367,
+              "finished_seconds": 13.08654527500039,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.819299590002629,
+            "child_wall_seconds": 12.817834862,
+            "user_cpu_seconds": 1.858013,
+            "system_cpu_seconds": 2.147798,
+            "peak_rss_kib": 139948,
+            "last_response_complete_seconds": 11.196340520007652,
+            "child_exit_after_last_response_seconds": 1.6229590699949767,
+            "requests": 3000,
+            "http_peak": 4,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006387247005477548,
+                "last_response_complete_seconds": 0.2810105460084742
+              },
+              "2": {
+                "first_request_seconds": 0.0057835589977912605,
+                "last_response_complete_seconds": 0.28704510400712024
+              },
+              "3": {
+                "first_request_seconds": 0.006733718008035794,
+                "last_response_complete_seconds": 0.2587929180008359
+              },
+              "4": {
+                "first_request_seconds": 0.007313024005270563,
+                "last_response_complete_seconds": 0.2723317979980493
+              },
+              "5": {
+                "first_request_seconds": 0.4289384220028296,
+                "last_response_complete_seconds": 0.5068288570037112
+              },
+              "6": {
+                "first_request_seconds": 0.8582709360052831,
+                "last_response_complete_seconds": 0.9549328660068568
+              },
+              "7": {
+                "first_request_seconds": 1.2877158940100344,
+                "last_response_complete_seconds": 1.3867765480099479
+              },
+              "8": {
+                "first_request_seconds": 1.7167773310065968,
+                "last_response_complete_seconds": 1.816017474004184
+              },
+              "9": {
+                "first_request_seconds": 2.1436812580068363,
+                "last_response_complete_seconds": 2.253624603996286
+              },
+              "10": {
+                "first_request_seconds": 2.5710465029987972,
+                "last_response_complete_seconds": 2.681179505001637
+              },
+              "11": {
+                "first_request_seconds": 2.9998603080020985,
+                "last_response_complete_seconds": 3.1126647100027185
+              },
+              "12": {
+                "first_request_seconds": 3.4176300340041053,
+                "last_response_complete_seconds": 3.509652577005909
+              },
+              "13": {
+                "first_request_seconds": 3.848165889008669,
+                "last_response_complete_seconds": 3.9503518840065226
+              },
+              "14": {
+                "first_request_seconds": 4.280422727009864,
+                "last_response_complete_seconds": 4.383029775999603
+              },
+              "15": {
+                "first_request_seconds": 4.7086654730082955,
+                "last_response_complete_seconds": 4.813459566998063
+              },
+              "16": {
+                "first_request_seconds": 5.138567764995969,
+                "last_response_complete_seconds": 5.231091968002147
+              },
+              "17": {
+                "first_request_seconds": 5.56577732200094,
+                "last_response_complete_seconds": 5.673383625005954
+              },
+              "18": {
+                "first_request_seconds": 5.992880619000061,
+                "last_response_complete_seconds": 6.111696417006897
+              },
+              "19": {
+                "first_request_seconds": 6.409213286009617,
+                "last_response_complete_seconds": 6.540484479002771
+              },
+              "20": {
+                "first_request_seconds": 6.843868647003546,
+                "last_response_complete_seconds": 6.940878081004485
+              },
+              "21": {
+                "first_request_seconds": 7.270653094004956,
+                "last_response_complete_seconds": 7.361510689006536
+              },
+              "22": {
+                "first_request_seconds": 7.698854982998455,
+                "last_response_complete_seconds": 7.774723474009079
+              },
+              "23": {
+                "first_request_seconds": 8.12718186499842,
+                "last_response_complete_seconds": 8.199673035996966
+              },
+              "24": {
+                "first_request_seconds": 8.554785100001027,
+                "last_response_complete_seconds": 8.622588523998274
+              },
+              "25": {
+                "first_request_seconds": 8.983223784001893,
+                "last_response_complete_seconds": 9.056965912008309
+              },
+              "26": {
+                "first_request_seconds": 9.394958414995926,
+                "last_response_complete_seconds": 9.484754279008484
+              },
+              "27": {
+                "first_request_seconds": 9.83634526199603,
+                "last_response_complete_seconds": 9.909596405006596
+              },
+              "28": {
+                "first_request_seconds": 10.265616524004145,
+                "last_response_complete_seconds": 10.33788660200662
+              },
+              "29": {
+                "first_request_seconds": 10.692925896000816,
+                "last_response_complete_seconds": 10.769494735010085
+              },
+              "30": {
+                "first_request_seconds": 11.119482540001627,
+                "last_response_complete_seconds": 11.196340520007652
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "d78837ca4d759405eaf53887b8424d621ef14670b6a5fb052bb1a8b472ccdacf",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.2698987440089695,
+              "finished_seconds": 13.07613143400522,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.845998324992252,
+            "child_wall_seconds": 12.844682504,
+            "user_cpu_seconds": 1.681009,
+            "system_cpu_seconds": 2.427668,
+            "peak_rss_kib": 140136,
+            "last_response_complete_seconds": 11.253053965992876,
+            "child_exit_after_last_response_seconds": 1.5929443589993753,
+            "requests": 3000,
+            "http_peak": 4,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006934028002433479,
+                "last_response_complete_seconds": 0.3144384949991945
+              },
+              "2": {
+                "first_request_seconds": 0.007512195996241644,
+                "last_response_complete_seconds": 0.28011820100073237
+              },
+              "3": {
+                "first_request_seconds": 0.006405227002687752,
+                "last_response_complete_seconds": 0.29624094199971296
+              },
+              "4": {
+                "first_request_seconds": 0.008090475996141322,
+                "last_response_complete_seconds": 0.30723678499634843
+              },
+              "5": {
+                "first_request_seconds": 0.4462459249916719,
+                "last_response_complete_seconds": 0.524128531003953
+              },
+              "6": {
+                "first_request_seconds": 0.8729760269925464,
+                "last_response_complete_seconds": 0.9790855140017811
+              },
+              "7": {
+                "first_request_seconds": 1.305701560995658,
+                "last_response_complete_seconds": 1.3967370229947846
+              },
+              "8": {
+                "first_request_seconds": 1.7318369860004168,
+                "last_response_complete_seconds": 1.8290447969920933
+              },
+              "9": {
+                "first_request_seconds": 2.158661508001387,
+                "last_response_complete_seconds": 2.2441286190005485
+              },
+              "10": {
+                "first_request_seconds": 2.5878167990013026,
+                "last_response_complete_seconds": 2.6676950699911686
+              },
+              "11": {
+                "first_request_seconds": 3.0150010869983817,
+                "last_response_complete_seconds": 3.1033889219979756
+              },
+              "12": {
+                "first_request_seconds": 3.425131929994677,
+                "last_response_complete_seconds": 3.509113496998907
+              },
+              "13": {
+                "first_request_seconds": 3.852728693993413,
+                "last_response_complete_seconds": 3.9420986059994902
+              },
+              "14": {
+                "first_request_seconds": 4.281611728001735,
+                "last_response_complete_seconds": 4.370580210001208
+              },
+              "15": {
+                "first_request_seconds": 4.708389306004392,
+                "last_response_complete_seconds": 4.806532101996709
+              },
+              "16": {
+                "first_request_seconds": 5.138196854997659,
+                "last_response_complete_seconds": 5.284403722995194
+              },
+              "17": {
+                "first_request_seconds": 5.569674650003435,
+                "last_response_complete_seconds": 5.69340521999402
+              },
+              "18": {
+                "first_request_seconds": 6.014205676998245,
+                "last_response_complete_seconds": 6.165240906004328
+              },
+              "19": {
+                "first_request_seconds": 6.433409197998117,
+                "last_response_complete_seconds": 6.564756024003145
+              },
+              "20": {
+                "first_request_seconds": 6.862923837004928,
+                "last_response_complete_seconds": 6.989968159003183
+              },
+              "21": {
+                "first_request_seconds": 7.292935568999383,
+                "last_response_complete_seconds": 7.386898715994903
+              },
+              "22": {
+                "first_request_seconds": 7.72213339600421,
+                "last_response_complete_seconds": 7.8125858349958435
+              },
+              "23": {
+                "first_request_seconds": 8.151296761992853,
+                "last_response_complete_seconds": 8.225690270002815
+              },
+              "24": {
+                "first_request_seconds": 8.581976116998703,
+                "last_response_complete_seconds": 8.6671772050031
+              },
+              "25": {
+                "first_request_seconds": 9.010977974001435,
+                "last_response_complete_seconds": 9.123658794997027
+              },
+              "26": {
+                "first_request_seconds": 9.425573182001244,
+                "last_response_complete_seconds": 9.520893684995826
+              },
+              "27": {
+                "first_request_seconds": 9.856318270001793,
+                "last_response_complete_seconds": 9.929417138002464
+              },
+              "28": {
+                "first_request_seconds": 10.284722664000583,
+                "last_response_complete_seconds": 10.354046509994077
+              },
+              "29": {
+                "first_request_seconds": 10.711621130991261,
+                "last_response_complete_seconds": 10.788539159999345
+              },
+              "30": {
+                "first_request_seconds": 11.14149756799452,
+                "last_response_complete_seconds": 11.253053965992876
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "b4592107e7a3f4caab9bfa5a9653014b027bb83b1867f7ca092503e4f9af84a8",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.2877352359937504,
+              "finished_seconds": 13.102199895001831,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.90156249300344,
+            "child_wall_seconds": 12.900058778,
+            "user_cpu_seconds": 1.782725,
+            "system_cpu_seconds": 2.388483,
+            "peak_rss_kib": 123200,
+            "last_response_complete_seconds": 11.280003410007339,
+            "child_exit_after_last_response_seconds": 1.6215590829961002,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.006347101996652782,
+                "last_response_complete_seconds": 0.35630888999730814
+              },
+              "2": {
+                "first_request_seconds": 0.006894966005347669,
+                "last_response_complete_seconds": 0.3470616720005637
+              },
+              "3": {
+                "first_request_seconds": 0.007393360006972216,
+                "last_response_complete_seconds": 0.3325184330024058
+              },
+              "4": {
+                "first_request_seconds": 0.0084377650055103,
+                "last_response_complete_seconds": 0.3511259670049185
+              },
+              "5": {
+                "first_request_seconds": 0.4977642360026948,
+                "last_response_complete_seconds": 0.5842102930037072
+              },
+              "6": {
+                "first_request_seconds": 0.9264029000041774,
+                "last_response_complete_seconds": 1.009225964997313
+              },
+              "7": {
+                "first_request_seconds": 1.354568469003425,
+                "last_response_complete_seconds": 1.4560794139979407
+              },
+              "8": {
+                "first_request_seconds": 1.7835737190034706,
+                "last_response_complete_seconds": 1.8987321320018964
+              },
+              "9": {
+                "first_request_seconds": 2.2160395520040765,
+                "last_response_complete_seconds": 2.378291289001936
+              },
+              "10": {
+                "first_request_seconds": 2.674035828007618,
+                "last_response_complete_seconds": 2.793739954009652
+              },
+              "11": {
+                "first_request_seconds": 3.1038575950078666,
+                "last_response_complete_seconds": 3.204858764001983
+              },
+              "12": {
+                "first_request_seconds": 3.5146354230091674,
+                "last_response_complete_seconds": 3.621522426008596
+              },
+              "13": {
+                "first_request_seconds": 3.943385243008379,
+                "last_response_complete_seconds": 4.05245936200663
+              },
+              "14": {
+                "first_request_seconds": 4.371248805007781,
+                "last_response_complete_seconds": 4.511163942006533
+              },
+              "15": {
+                "first_request_seconds": 4.799476269996376,
+                "last_response_complete_seconds": 4.907153132007807
+              },
+              "16": {
+                "first_request_seconds": 5.230449909999152,
+                "last_response_complete_seconds": 5.330432750008185
+              },
+              "17": {
+                "first_request_seconds": 5.659564444998978,
+                "last_response_complete_seconds": 5.761167871009093
+              },
+              "18": {
+                "first_request_seconds": 6.089957250995212,
+                "last_response_complete_seconds": 6.190469973007566
+              },
+              "19": {
+                "first_request_seconds": 6.504032422002638,
+                "last_response_complete_seconds": 6.601269045000663
+              },
+              "20": {
+                "first_request_seconds": 6.932775859007961,
+                "last_response_complete_seconds": 7.028461616006098
+              },
+              "21": {
+                "first_request_seconds": 7.361484274006216,
+                "last_response_complete_seconds": 7.438283481009421
+              },
+              "22": {
+                "first_request_seconds": 7.792892494006082,
+                "last_response_complete_seconds": 7.8608133050001925
+              },
+              "23": {
+                "first_request_seconds": 8.220704589999514,
+                "last_response_complete_seconds": 8.294430922003812
+              },
+              "24": {
+                "first_request_seconds": 8.649501449006493,
+                "last_response_complete_seconds": 8.722317556006601
+              },
+              "25": {
+                "first_request_seconds": 9.077623121003853,
+                "last_response_complete_seconds": 9.150044930996955
+              },
+              "26": {
+                "first_request_seconds": 9.490493049001088,
+                "last_response_complete_seconds": 9.571248401000048
+              },
+              "27": {
+                "first_request_seconds": 9.92071727399889,
+                "last_response_complete_seconds": 9.99468557399814
+              },
+              "28": {
+                "first_request_seconds": 10.349146894004662,
+                "last_response_complete_seconds": 10.445060094003566
+              },
+              "29": {
+                "first_request_seconds": 10.777811919004307,
+                "last_response_complete_seconds": 10.854146633006167
+              },
+              "30": {
+                "first_request_seconds": 11.206143372008228,
+                "last_response_complete_seconds": 11.280003410007339
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "4c627a6c8d51897f0a2f62f29e39bcc83a60d17c4ff81f71aa7961a36b23f60a",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.33827744600421283,
+              "finished_seconds": 13.157402651006123,
+              "bytes": 3300000
+            }
+          },
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/output-lock",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2",
+              "nicovideo.jp/user/3",
+              "nicovideo.jp/user/4",
+              "nicovideo.jp/user/5",
+              "nicovideo.jp/user/6",
+              "nicovideo.jp/user/7",
+              "nicovideo.jp/user/8",
+              "nicovideo.jp/user/9",
+              "nicovideo.jp/user/10",
+              "nicovideo.jp/user/11",
+              "nicovideo.jp/user/12",
+              "nicovideo.jp/user/13",
+              "nicovideo.jp/user/14",
+              "nicovideo.jp/user/15",
+              "nicovideo.jp/user/16",
+              "nicovideo.jp/user/17",
+              "nicovideo.jp/user/18",
+              "nicovideo.jp/user/19",
+              "nicovideo.jp/user/20",
+              "nicovideo.jp/user/21",
+              "nicovideo.jp/user/22",
+              "nicovideo.jp/user/23",
+              "nicovideo.jp/user/24",
+              "nicovideo.jp/user/25",
+              "nicovideo.jp/user/26",
+              "nicovideo.jp/user/27",
+              "nicovideo.jp/user/28",
+              "nicovideo.jp/user/29",
+              "nicovideo.jp/user/30"
+            ],
+            "wall_seconds": 12.898761218995787,
+            "child_wall_seconds": 12.897377212,
+            "user_cpu_seconds": 1.764889,
+            "system_cpu_seconds": 2.390041,
+            "peak_rss_kib": 140180,
+            "last_response_complete_seconds": 11.277987011999357,
+            "child_exit_after_last_response_seconds": 1.6207742069964297,
+            "requests": 3000,
+            "http_peak": 5,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.008680751998326741,
+                "last_response_complete_seconds": 0.31906967199756764
+              },
+              "2": {
+                "first_request_seconds": 0.0073622479976620525,
+                "last_response_complete_seconds": 0.33620623699971475
+              },
+              "3": {
+                "first_request_seconds": 0.007811593997757882,
+                "last_response_complete_seconds": 0.3350576090015238
+              },
+              "4": {
+                "first_request_seconds": 0.009243537992006168,
+                "last_response_complete_seconds": 0.30454219999955967
+              },
+              "5": {
+                "first_request_seconds": 0.47542831700411625,
+                "last_response_complete_seconds": 0.569550847998471
+              },
+              "6": {
+                "first_request_seconds": 0.9037206069915555,
+                "last_response_complete_seconds": 1.0107768409943674
+              },
+              "7": {
+                "first_request_seconds": 1.3300790729990695,
+                "last_response_complete_seconds": 1.4327452440047637
+              },
+              "8": {
+                "first_request_seconds": 1.7573819950048346,
+                "last_response_complete_seconds": 1.8546668619965203
+              },
+              "9": {
+                "first_request_seconds": 2.185375959990779,
+                "last_response_complete_seconds": 2.2852229609998176
+              },
+              "10": {
+                "first_request_seconds": 2.612107246997766,
+                "last_response_complete_seconds": 2.7048493019974558
+              },
+              "11": {
+                "first_request_seconds": 3.041967224999098,
+                "last_response_complete_seconds": 3.138858189995517
+              },
+              "12": {
+                "first_request_seconds": 3.454071505999309,
+                "last_response_complete_seconds": 3.5499008890037658
+              },
+              "13": {
+                "first_request_seconds": 3.887512383997091,
+                "last_response_complete_seconds": 3.9846647669910453
+              },
+              "14": {
+                "first_request_seconds": 4.31486001900339,
+                "last_response_complete_seconds": 4.4087997040041955
+              },
+              "15": {
+                "first_request_seconds": 4.743680270999903,
+                "last_response_complete_seconds": 4.84102371300105
+              },
+              "16": {
+                "first_request_seconds": 5.176261672997498,
+                "last_response_complete_seconds": 5.286478962996625
+              },
+              "17": {
+                "first_request_seconds": 5.61181416499312,
+                "last_response_complete_seconds": 5.748625121996156
+              },
+              "18": {
+                "first_request_seconds": 6.0411504819931,
+                "last_response_complete_seconds": 6.151024915991002
+              },
+              "19": {
+                "first_request_seconds": 6.4574499589944026,
+                "last_response_complete_seconds": 6.589382474994636
+              },
+              "20": {
+                "first_request_seconds": 6.888206561998231,
+                "last_response_complete_seconds": 6.996764837997034
+              },
+              "21": {
+                "first_request_seconds": 7.321328082995024,
+                "last_response_complete_seconds": 7.434814729000209
+              },
+              "22": {
+                "first_request_seconds": 7.7513693060027435,
+                "last_response_complete_seconds": 7.843300836000708
+              },
+              "23": {
+                "first_request_seconds": 8.183587708001141,
+                "last_response_complete_seconds": 8.286235845996998
+              },
+              "24": {
+                "first_request_seconds": 8.617074060995947,
+                "last_response_complete_seconds": 8.704121007001959
+              },
+              "25": {
+                "first_request_seconds": 9.049837106998893,
+                "last_response_complete_seconds": 9.13309200599906
+              },
+              "26": {
+                "first_request_seconds": 9.465999220992671,
+                "last_response_complete_seconds": 9.550479772995459
+              },
+              "27": {
+                "first_request_seconds": 9.896693692004192,
+                "last_response_complete_seconds": 9.982182740001008
+              },
+              "28": {
+                "first_request_seconds": 10.325431755991303,
+                "last_response_complete_seconds": 10.436170264001703
+              },
+              "29": {
+                "first_request_seconds": 10.766597601003014,
+                "last_response_complete_seconds": 10.848993929001153
+              },
+              "30": {
+                "first_request_seconds": 11.196905851000338,
+                "last_response_complete_seconds": 11.277987011999357
+              }
+            },
+            "stdout_bytes": 3300000,
+            "stdout_sha256": "47328226c51920b712620b4e943b3c5f78ec352750bfdcc10c160c1e31f1a95f",
+            "canonical_result_sha256": "af0388dd69d55f5b9be2bb6b0eece2ec615263d0413d242a9d15a746f0d6f5b8",
+            "output_count": 300000,
+            "sink": {
+              "first_read_seconds": 0.315831956002512,
+              "finished_seconds": 13.155335553994519,
+              "bytes": 3300000
+            }
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 12.903483656991739,
+          "user_cpu_seconds": 2.080994,
+          "system_cpu_seconds": 2.81979,
+          "peak_rss_kib": 107372,
+          "last_response_complete_seconds": 12.452995786996325
+        },
+        "output-lock": {
+          "wall_seconds": 12.845998324992252,
+          "user_cpu_seconds": 1.764889,
+          "system_cpu_seconds": 2.388483,
+          "peak_rss_kib": 139968,
+          "last_response_complete_seconds": 11.253053965992876
+        }
+      }
+    }
+  },
+  "reported_toolchain": {
+    "source_revision_label": "unspecified",
+    "note": "Toolchain metadata supplied by caller; not inferred from binary. Per-binary reported manifests, when supplied, are hash-checked against binaries.",
+    "v_version": "V 0.5.2 6701135",
+    "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+    "gcc_version": "gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "execution_order": "warmups then repetitions; forward/reverse binary order alternates per case, measured first repetition forward",
+  "harness_sha256": "310fe3095de4ccafa1d4d8bfd2a6f69fcf6cd1d6ef5ddadb251e82d17ddf6fd0",
+  "supervisor_source_sha256": "3492111deacbec2e6221e989a7e57d0cd489f5f6dcf6696937fea16aa4591295"
+}
