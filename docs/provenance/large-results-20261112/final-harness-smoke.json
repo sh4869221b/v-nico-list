@@ -1,0 +1,138 @@
+{
+  "scope": "Synthetic loopback end-to-end child process; no live API inference.",
+  "measurement": "Fresh C supervisor forks and wait4-reaps CLI (excludes Python pre-exec RSS floor). Linux wait4 per-child ru_maxrss (KiB), ru_utime, ru_stime; wall excludes sink tail drain and validation. No parent/server memory. Response completion means server handler finished after body flush, not client consumption.",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "parameters": {
+    "binary": [
+      "baseline=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline"
+    ],
+    "binary_manifest": [
+      "baseline=/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline-manifest.json"
+    ],
+    "targets": 2,
+    "pages": 3,
+    "repetitions": 1,
+    "warmups": 0,
+    "mode": [
+      "no-sort-slow"
+    ],
+    "target_workers": 4,
+    "page_workers": 4,
+    "http_workers": 8,
+    "latency_ms": 0,
+    "slow_bytes_per_second": 262144,
+    "slow_chunk_bytes": 4096,
+    "slow_start_ms": 250,
+    "timeout": 180,
+    "source_revision": "unspecified",
+    "v": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "output": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/final-harness-smoke.json"
+  },
+  "binaries": {
+    "baseline": {
+      "path": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+      "sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43",
+      "reported_build_manifest": {
+        "base_commit": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+        "base_tree": "b936c55c1073c2d6d6fdaadcbe9e793f1f3a1d77",
+        "compiler_commit": "67011350d000d86c3fc2a925b505c590dbfdea88",
+        "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+        "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+        "build_command": "V=/workspace/scratch/b81277eea609/v-nico-toolchain/v scripts/build.sh",
+        "flags": [
+          "-cc",
+          "gcc",
+          "-d",
+          "use_openssl",
+          "-prod"
+        ],
+        "source_sha256": {
+          "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+          "src/config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688",
+          "src/control.v": "f8b4a2d0026b4dd900d53811c46873afc3757c1c74164e768060ce0cd3c824ca",
+          "src/domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+          "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+          "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+          "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+          "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+          "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+          "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+          "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+          "v.mod": "05543acc86b209f05bdc588481f4ede25e4f80190a83b7cedfb8cefb47a388e1"
+        },
+        "binary_sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43"
+      },
+      "manifest_sha256": "69e1c85b3ae9514e1803af9896a99c8a3e6994c9ed8bdf995130426dd2bbdca1"
+    }
+  },
+  "cases": {
+    "no-sort-slow": {
+      "samples": {
+        "baseline": [
+          {
+            "command": [
+              "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/baseline",
+              "-T4",
+              "-P4",
+              "-H8",
+              "--no-progress",
+              "--retries=1",
+              "--no-sort",
+              "nicovideo.jp/user/1",
+              "nicovideo.jp/user/2"
+            ],
+            "wall_seconds": 0.014370418997714296,
+            "child_wall_seconds": 0.013344757,
+            "user_cpu_seconds": 0.013758,
+            "system_cpu_seconds": 0.0,
+            "peak_rss_kib": 7780,
+            "last_response_complete_seconds": 0.01184492999163922,
+            "child_exit_after_last_response_seconds": 0.0025254890060750768,
+            "requests": 6,
+            "http_peak": 3,
+            "target_timing": {
+              "1": {
+                "first_request_seconds": 0.005918544004089199,
+                "last_response_complete_seconds": 0.011133619991596788
+              },
+              "2": {
+                "first_request_seconds": 0.00626259099226445,
+                "last_response_complete_seconds": 0.01184492999163922
+              }
+            },
+            "stdout_bytes": 6600,
+            "stdout_sha256": "63e01d76849bc10c38c6bdb14c13a9391e25f51d29747772e8823d43d3944eaf",
+            "canonical_result_sha256": "63e01d76849bc10c38c6bdb14c13a9391e25f51d29747772e8823d43d3944eaf",
+            "output_count": 600,
+            "sink": {
+              "first_read_seconds": 0.25084896499174647,
+              "finished_seconds": 0.2762872360035544,
+              "bytes": 6600
+            }
+          }
+        ]
+      },
+      "medians": {
+        "baseline": {
+          "wall_seconds": 0.014370418997714296,
+          "user_cpu_seconds": 0.013758,
+          "system_cpu_seconds": 0.0,
+          "peak_rss_kib": 7780,
+          "last_response_complete_seconds": 0.01184492999163922
+        }
+      }
+    }
+  },
+  "reported_toolchain": {
+    "source_revision_label": "unspecified",
+    "note": "Toolchain metadata supplied by caller; not inferred from binary. Per-binary reported manifests, when supplied, are hash-checked against binaries.",
+    "v_version": "V 0.5.2 6701135",
+    "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+    "gcc_version": "gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "execution_order": "warmups then repetitions; forward/reverse binary order alternates per case, measured first repetition forward",
+  "harness_sha256": "86ea9e061d5f083d3360cb4dc6b873f3629ece321439bd7aef0250608b49e7e3",
+  "supervisor_source_sha256": "27edff329820ae6e7c2e954d77004421d144193a4e0afa9a5400cd881b74f3ea"
+}

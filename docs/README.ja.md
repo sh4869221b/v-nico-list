@@ -84,6 +84,8 @@ python3 scripts/benchmark.py --binary v=bin/v-nico-list --output /tmp/v-benchmar
 
 統合テストは合成 HTTP/HTTPS ループバックサーバーだけを使います。TLS 証明書生成に OpenSSL コマンドが必要です。CLI・日時・ページ分割・部分結果・再試行・同時実行・ペーシング・キャンセル・TLS 検証・gzip・chunked 応答・展開後 8 MiB 上限を検証します。ローカル合成測定を実サービスの性能と解釈しないでください。実行済みの検証結果は [VALIDATION.md](VALIDATION.md) を参照してください。
 
+[大量結果と遅い出力先の検証](LARGE-RESULTS.md)には、ピークRSS・CPU計測、不採用にした結果保持の変更、出力用ロックの分離を記録しています。`python3 tests/output_concurrency.py --binary bin/v-nico-list` で出力とHTTPの並行処理を検証できます。`scripts/benchmark_results.py` はLinux・Python・GCCを使用し、出力全体とリクエスト数を照合します。CIに速度の合否基準は設けていません。
+
 開発用の `NICO_BASE_URL` で API 基底 URL（既定 `https://nvapi.nicovideo.jp/v3`）を変更できます。テストでは末尾が `/v3` のループバック URL を指定します。TLS 検証やプロキシ設定は引き続き適用されます。
 
 `--reuse-connections` を指定すると TCP/TLS 接続の確立回数を減らせます。未指定は従来どおり毎回接続を閉じます。再利用予定の接続がサーバー側で無通知切断されていた場合も通常の試行を 1 回消費するため、`--retries 1` ではそのページが失敗する場合があります。詳細と合成測定結果は [接続再利用の制限](CONNECTION-REUSE.md) を参照してください。

@@ -1,0 +1,12 @@
+[
+  {
+    "allocated_parent_mib": 0,
+    "direct_wait4_peak_rss_kib": 17388,
+    "native_supervisor_child_peak_rss_kib": 384
+  },
+  {
+    "allocated_parent_mib": 64,
+    "direct_wait4_peak_rss_kib": 82924,
+    "native_supervisor_child_peak_rss_kib": 384
+  }
+]

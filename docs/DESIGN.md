@@ -19,6 +19,8 @@ The main thread validates configuration, creates per-command control state and s
 
 Buffered modes aggregate per-target results. Default output sorts combined IDs numerically; JSON additionally sorts target records by type and numeric target ID. JSON with `--no-sort` restores input order for combined items. Per-target IDs preserve page order. Unsorted line output writes completed target batches as they arrive and shares one deduplication map when requested. All JSON strings are validated before stdout encoding so invalid UTF-8 cannot leave partial JSON.
 
+A dedicated output mutex serializes whole-target line output and its deduplication/count/error state. Blocking stdout writes do not hold the HTTP-control mutex. Output failure briefly takes the control mutex to set the stop flag; the reverse lock order is forbidden. Main reads final output state only after every target worker reports completion. No writer queue is introduced, and target concurrency still bounds completed targets waiting to emit. See [large-result and slow-output measurements](LARGE-RESULTS.md).
+
 Output errors stop scheduling and trigger shared cancellation. Input read failures do the same, even under best-effort mode. Signals set the native atomic cancellation flag; workers and waits observe it. Fetch cancellation/deadline results follow the Go baseline's successful-empty convention. Input/output errors and strict invalid inputs still determine their documented exit precedence.
 
 ## Collection and request admission

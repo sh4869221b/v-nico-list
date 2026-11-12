@@ -29,6 +29,8 @@ jobs:
         run: v fmt -verify src scripts/parse_benchmark
       - name: Parser benchmark fixture contracts
         run: python3 tests/benchmark_parse_test.py
+      - name: Large-result benchmark fixture contracts
+        run: python3 tests/benchmark_results_test.py
       - name: Parser benchmark smoke (no performance threshold)
         run: python3 scripts/benchmark_parse.py --source main=. --size 4 --iterations 2 --warmups 1 --repetitions 1 --output /tmp/parser-smoke.json
       - name: Unit tests
@@ -37,6 +39,10 @@ jobs:
         run: scripts/build.sh
       - name: Loopback integration contracts
         run: python3 tests/integration.py --binary bin/v-nico-list
+      - name: Output concurrency contracts
+        run: python3 tests/output_concurrency.py --binary bin/v-nico-list
+      - name: Large-result benchmark smoke (no performance threshold)
+        run: python3 scripts/benchmark_results.py --binary v=bin/v-nico-list --targets 2 --pages 2 --warmups 0 --repetitions 1 --mode sorted-lines --mode json --mode no-sort-slow --slow-start-ms 0 --slow-bytes-per-second 1048576 --output /tmp/large-results-smoke.json
       - name: Benchmark smoke (no performance threshold)
         run: python3 scripts/benchmark.py --binary v=bin/v-nico-list --targets 3 --pages 3 --repetitions 1 --output /tmp/benchmark-smoke.json
 
@@ -80,3 +86,5 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Run contracts on Windows
         run: python tests/integration.py --binary bin/v-nico-list.exe
+      - name: Output concurrency contracts
+        run: python tests/output_concurrency.py --binary bin/v-nico-list.exe

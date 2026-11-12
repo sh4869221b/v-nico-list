@@ -1,0 +1,8 @@
+test_broken_stdout_releases_waiting_emitters (__main__.OutputConcurrency.test_broken_stdout_releases_waiting_emitters) ... ok
+test_concurrent_targets_remain_contiguous_and_deduplicated (__main__.OutputConcurrency.test_concurrent_targets_remain_contiguous_and_deduplicated) ... ok
+test_full_stdout_does_not_block_http_completion (__main__.OutputConcurrency.test_full_stdout_does_not_block_http_completion) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.344s
+
+OK

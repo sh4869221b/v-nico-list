@@ -1,0 +1,210 @@
+{
+  "scope": "Isolated parse_page wall time plus loop/assignment/scalar checksum; includes normal GC. Excludes file IO, startup, validation, output, HTTP, workers and sorting. No CLI/live API speed claim.",
+  "started_at_utc": "2026-11-12T02:32:11.995971+00:00",
+  "harness_sha256": "4f6e1bdc8b2753249d3224797661505ed0d57b23da97ebcd2df73e0f83d1ad97",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "python": "3.12.14",
+  "cpu": "",
+  "parameters": {
+    "source": [
+      "candidate=/workspace/scratch/b81277eea609/v-nico-large-output"
+    ],
+    "binary": [],
+    "build_dir": null,
+    "v": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+    "cc": "gcc",
+    "size": [
+      4
+    ],
+    "profile": "full",
+    "iterations": 2,
+    "warmups": 1,
+    "repetitions": 1,
+    "output": "/workspace/scratch/b81277eea609/v-nico-large-output-evidence/parser-smoke.json"
+  },
+  "order": "fresh process per sample, warmups inside each process; alternating forward/reverse variants per repetition",
+  "memory": "Boehm gc_heap_usage total_bytes delta across timed batch (allocator-accounted bytes, not allocation count, RSS or peak/live memory). Heap snapshots are before/after only; GC remains enabled.",
+  "variants": {
+    "candidate": {
+      "source": "/workspace/scratch/b81277eea609/v-nico-large-output",
+      "git": {
+        "head": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+        "tree": "b936c55c1073c2d6d6fdaadcbe9e793f1f3a1d77",
+        "status": "M .github/workflows/ci.yml\n M src/control.v\n M tests/integration.py\n?? docs/LARGE-RESULTS.md\n?? scripts/benchmark_results.py\n?? tests/benchmark_results_test.py\n?? tests/output_concurrency.py"
+      },
+      "source_sha256": {
+        "domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+        "config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688"
+      },
+      "driver_sha256": "854aa3479b44fcba1a488373716fada99d8502b97ee14a44f677bb5fe30a5056",
+      "compiler": {
+        "path": "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+        "version": "V 0.5.2 6701135",
+        "git": {
+          "head": "67011350d000d86c3fc2a925b505c590dbfdea88",
+          "tree": "e2ec6c71c4cb394f84f65ac14dcaef1a475a9f31",
+          "status": ""
+        },
+        "cc": "gcc",
+        "cc_version": "gcc (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+        "flags": [
+          "-prod",
+          "-gc",
+          "boehm"
+        ],
+        "vmodules": null
+      },
+      "build_command": [
+        "/workspace/scratch/b81277eea609/v-nico-toolchain/v",
+        "-cc",
+        "gcc",
+        "-prod",
+        "-gc",
+        "boehm",
+        "-o",
+        "/tmp/nico-parse-fgpecr3c/build/candidate",
+        "/tmp/nico-parse-fgpecr3c/source-candidate"
+      ],
+      "binary_sha256": "7721f1364825da6136e16900804276f3ca5ab98f9bc728db1a9fd7bfd585992c",
+      "path": "/tmp/nico-parse-fgpecr3c/build/candidate",
+      "results": {
+        "user-ascii-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 262675,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 197760,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 131337.5,
+          "ns_per_page_min": 131337.5,
+          "ns_per_page_max": 131337.5,
+          "allocated_bytes_per_page_median": 98880.0
+        },
+        "user-unicode-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 234493,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 197760,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 117246.5,
+          "ns_per_page_min": 117246.5,
+          "ns_per_page_max": 117246.5,
+          "allocated_bytes_per_page_median": 98880.0
+        },
+        "user-escaped-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 293181,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 232816,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 146590.5,
+          "ns_per_page_min": 146590.5,
+          "ns_per_page_max": 146590.5,
+          "allocated_bytes_per_page_median": 116408.0
+        },
+        "mylist-ascii-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 234152,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 203472,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 117076.0,
+          "ns_per_page_min": 117076.0,
+          "ns_per_page_max": 117076.0,
+          "allocated_bytes_per_page_median": 101736.0
+        },
+        "mylist-unicode-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 580103,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 203472,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 290051.5,
+          "ns_per_page_min": 290051.5,
+          "ns_per_page_max": 290051.5,
+          "allocated_bytes_per_page_median": 101736.0
+        },
+        "mylist-escaped-full-4": {
+          "samples": [
+            {
+              "nanoseconds": 272760,
+              "iterations": 2,
+              "checksum": 420,
+              "allocated_bytes": 237728,
+              "heap_before": 274432,
+              "heap_after": 552960
+            }
+          ],
+          "ns_per_page_median": 136380.0,
+          "ns_per_page_min": 136380.0,
+          "ns_per_page_max": 136380.0,
+          "allocated_bytes_per_page_median": 118864.0
+        }
+      }
+    }
+  },
+  "fixtures": {
+    "user-ascii-full-4": {
+      "sha256": "5e85487c2be53bc5b9ebcf8afa9bda53d56980e9ed608b0063137bacbda9018a",
+      "bytes": 4789,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "user-unicode-full-4": {
+      "sha256": "f42d6cde1bd9a539bb154c46c5e35395e9441246880229ecea6ca5b36cefaf3a",
+      "bytes": 4789,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "user-escaped-full-4": {
+      "sha256": "fcb193a588c4706156fb0cce3971f124059b9d0c922e140cbad69468b5a8a142",
+      "bytes": 6381,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "mylist-ascii-full-4": {
+      "sha256": "820818cccecfdb4eb4e4749f9c833e42a31740b3f79179c1d240c072b63ba589",
+      "bytes": 4820,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "mylist-unicode-full-4": {
+      "sha256": "8f46f3270b764cef06f59f7fa394e04b66bedcd289ef6c2942b38013972c3b1f",
+      "bytes": 4820,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    },
+    "mylist-escaped-full-4": {
+      "sha256": "94c7c1174b45f2c8e55cb58a853e44ca2fc9bcaeb78f2f676dd22eee96af5fbb",
+      "bytes": 6412,
+      "items": 4,
+      "expected_page_sha256": "9ee07066f0162762b3b27be0261ef2555483f3a749c608aab6ddd2dfa1d64508"
+    }
+  }
+}

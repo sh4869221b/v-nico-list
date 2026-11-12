@@ -1,0 +1,42 @@
+diff --git a/src/main.v b/src/main.v
+index fbcc6e7..f616eba 100644
+--- a/src/main.v
++++ b/src/main.v
+@@ -145,6 +145,7 @@ fn run(cfg Config) ! {
+ 	mut counts := InputCounts{}
+ 	mut invalid := []string{}
+ 	mut results := []TargetResult{}
++	mut items := []string{}
+ 	mut errors := []string{}
+ 	mut input_error := ''
+ 	mut input_closed := false
+@@ -226,7 +227,13 @@ fn run(cfg Config) ! {
+ 		}
+ 		if got_result {
+ 			active--
+-			if !cfg.no_sort || cfg.json { results << result }
++			if cfg.json {
++				results << result
++			} else if !cfg.no_sort {
++				// Only JSON needs per-target arrays after completion. Sorted
++				// lines keep one combined list, allowing old arrays to be collected.
++				items << result.items
++			}
+ 			if result.error != '' {
+ 				fetch_err++
+ 				if cfg.json || errors.len == 0 { errors << result.error }
+@@ -242,10 +249,11 @@ fn run(cfg Config) ! {
+ 		}
+ 	}
+ 	if counts.total == 0 && input_error == '' { input_error = 'no inputs provided' }
+-	mut items := []string{}
+ 	if !cfg.no_sort || cfg.json {
+-		if cfg.no_sort { results.sort(a.order < b.order) }
+-		for result in results { items << result.items }
++		if cfg.json {
++			if cfg.no_sort { results.sort(a.order < b.order) }
++			for result in results { items << result.items }
++		}
+ 		if cfg.dedupe {
+ 			mut seen := map[string]bool{}
+ 			items = items.filter(fn [mut seen] (id string) bool {

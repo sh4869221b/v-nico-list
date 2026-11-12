@@ -1,0 +1,4 @@
+sorted-lines candidate iteration=0 wall=0.022s rss=6992KiB
+json candidate iteration=0 wall=0.013s rss=7120KiB
+no-sort-slow candidate iteration=0 wall=0.013s rss=6624KiB
+/workspace/scratch/b81277eea609/v-nico-large-output-evidence/results-smoke.json

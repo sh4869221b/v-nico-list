@@ -1,0 +1,186 @@
+{
+  "memory-ab-t3-p1000.json": {
+    "sorted-lines": {
+      "peak_rss_kib": {
+        "baseline": 89612,
+        "memory": 89080,
+        "change_percent": -0.5936704905592949
+      },
+      "wall_seconds": {
+        "baseline": 2.268718204999459,
+        "memory": 2.2090675519866636,
+        "change_percent": -2.6292667322608043
+      },
+      "user_cpu_seconds": {
+        "baseline": 1.964304,
+        "memory": 1.949527,
+        "change_percent": -0.752276633352067
+      },
+      "system_cpu_seconds": {
+        "baseline": 2.099739,
+        "memory": 2.076129,
+        "change_percent": -1.12442546430771
+      }
+    },
+    "json": {
+      "peak_rss_kib": {
+        "baseline": 90168,
+        "memory": 89164,
+        "change_percent": -1.113477065034163
+      },
+      "wall_seconds": {
+        "baseline": 2.1747586960118497,
+        "memory": 2.2021167319908272,
+        "change_percent": 1.2579803004879375
+      },
+      "user_cpu_seconds": {
+        "baseline": 1.876418,
+        "memory": 1.972496,
+        "change_percent": 5.120287697090942
+      },
+      "system_cpu_seconds": {
+        "baseline": 2.048695,
+        "memory": 1.997607,
+        "change_percent": -2.4936850043564385
+      }
+    }
+  },
+  "memory-ab-t3-p200.json": {
+    "sorted-lines": {
+      "peak_rss_kib": {
+        "baseline": 56088,
+        "memory": 48384,
+        "change_percent": -13.735558408215665
+      },
+      "wall_seconds": {
+        "baseline": 0.4789589270076249,
+        "memory": 0.45682212499377783,
+        "change_percent": -4.621858110496113
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.390532,
+        "memory": 0.388273,
+        "change_percent": -0.5784417154036103
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.580839,
+        "memory": 0.475105,
+        "change_percent": -18.20366745345956
+      }
+    },
+    "json": {
+      "peak_rss_kib": {
+        "baseline": 55684,
+        "memory": 47920,
+        "change_percent": -13.94296386753825
+      },
+      "wall_seconds": {
+        "baseline": 0.4470762429991737,
+        "memory": 0.4396132529946044,
+        "change_percent": -1.6692879841935793
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.401943,
+        "memory": 0.342376,
+        "change_percent": -14.819763001221563
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.475506,
+        "memory": 0.497724,
+        "change_percent": 4.672496246104152
+      }
+    }
+  },
+  "memory-ab-t30-p100.json": {
+    "sorted-lines": {
+      "peak_rss_kib": {
+        "baseline": 123128,
+        "memory": 122468,
+        "change_percent": -0.5360275485673416
+      },
+      "wall_seconds": {
+        "baseline": 2.5455426270054886,
+        "memory": 2.4172838480008068,
+        "change_percent": -5.038563394853157
+      },
+      "user_cpu_seconds": {
+        "baseline": 2.200149,
+        "memory": 2.10861,
+        "change_percent": -4.160581851501877
+      },
+      "system_cpu_seconds": {
+        "baseline": 3.030393,
+        "memory": 2.653583,
+        "change_percent": -12.43436082382715
+      }
+    },
+    "json": {
+      "peak_rss_kib": {
+        "baseline": 122732,
+        "memory": 130996,
+        "change_percent": 6.733370270182193
+      },
+      "wall_seconds": {
+        "baseline": 2.480398518993752,
+        "memory": 2.5169006969954353,
+        "change_percent": 1.4716255360647246
+      },
+      "user_cpu_seconds": {
+        "baseline": 2.140954,
+        "memory": 2.15888,
+        "change_percent": 0.8372902920847469
+      },
+      "system_cpu_seconds": {
+        "baseline": 3.058467,
+        "memory": 3.197202,
+        "change_percent": 4.53609602457703
+      }
+    }
+  },
+  "memory-ab-t30-p20.json": {
+    "sorted-lines": {
+      "peak_rss_kib": {
+        "baseline": 31568,
+        "memory": 56524,
+        "change_percent": 79.05473897617841
+      },
+      "wall_seconds": {
+        "baseline": 0.417582139998558,
+        "memory": 0.4780021040060092,
+        "change_percent": 14.469000998859727
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.422301,
+        "memory": 0.405729,
+        "change_percent": -3.924215192481184
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.369295,
+        "memory": 0.579756,
+        "change_percent": 56.9899402916368
+      }
+    },
+    "json": {
+      "peak_rss_kib": {
+        "baseline": 39072,
+        "memory": 31636,
+        "change_percent": -19.03153153153153
+      },
+      "wall_seconds": {
+        "baseline": 0.4556438870058628,
+        "memory": 0.43262115999823436,
+        "change_percent": -5.052789615793129
+      },
+      "user_cpu_seconds": {
+        "baseline": 0.438282,
+        "memory": 0.418774,
+        "change_percent": -4.451015556194415
+      },
+      "system_cpu_seconds": {
+        "baseline": 0.44384,
+        "memory": 0.395789,
+        "change_percent": -10.826198630136986
+      }
+    }
+  }
+}

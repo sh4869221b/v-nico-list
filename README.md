@@ -97,6 +97,8 @@ python3 scripts/benchmark.py --binary v=bin/v-nico-list --output /tmp/v-benchmar
 
 The integration suite uses synthetic HTTP/HTTPS loopback servers only. It covers CLI contracts, filters, pagination, partial results, retry timing, concurrency/pacing, cancellation, TLS verification, gzip/chunking and the 8 MiB decoded response limit. TLS fixtures need the OpenSSL command line tool. See [validation instructions and recorded evidence](docs/VALIDATION.md) for the Go comparison and platform limits.
 
+[Large-result and slow-output measurements](docs/LARGE-RESULTS.md) record peak RSS/CPU experiments, a rejected result-retention trial, and output-lock isolation. Run `python3 tests/output_concurrency.py --binary bin/v-nico-list` for its output/HTTP concurrency contracts. `scripts/benchmark_results.py` requires Linux, Python and GCC; it checks complete outputs and request counts without a CI performance threshold.
+
 `NICO_BASE_URL` is a development override for the API base (default `https://nvapi.nicovideo.jp/v3`). Fixtures set it to a loopback server ending in `/v3`; endpoint paths are appended beneath that base. It does not disable TLS verification or proxy handling.
 
 `--reuse-connections` can reduce TCP/TLS setups but remains opt-in: a silently closed idle connection consumes an ordinary attempt, so `--retries 1` may fail that page. Default behavior remains close-only. See [connection reuse limits and measurements](docs/CONNECTION-REUSE.md).

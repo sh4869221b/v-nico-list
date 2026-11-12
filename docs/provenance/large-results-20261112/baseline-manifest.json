@@ -1,0 +1,31 @@
+{
+  "base_commit": "b0bfd057485c88d8a0caa71c6bbbffd92c4e103e",
+  "base_tree": "b936c55c1073c2d6d6fdaadcbe9e793f1f3a1d77",
+  "compiler_commit": "67011350d000d86c3fc2a925b505c590dbfdea88",
+  "v_sha256": "8acdc39b27d7cceae48fb37b05c2824efff6abe27a958a0360bbea492c20b18f",
+  "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "build_command": "V=/workspace/scratch/b81277eea609/v-nico-toolchain/v scripts/build.sh",
+  "flags": [
+    "-cc",
+    "gcc",
+    "-d",
+    "use_openssl",
+    "-prod"
+  ],
+  "source_sha256": {
+    "src/client.v": "7c8b9115f4d8cec1a53167fa5ab180cca8b26862a5fcbb92a53d139f9f342991",
+    "src/config.v": "13162eff3b43e55b4b60055ffd8025e0b80a3985762d556e058ee8cbe683a688",
+    "src/control.v": "f8b4a2d0026b4dd900d53811c46873afc3757c1c74164e768060ce0cd3c824ca",
+    "src/domain.v": "9ed6d36b72855b4f12373115e7080ce61604193a1571231c5c281ffc93679647",
+    "src/main.v": "4766926707a6454093fe984e451ed947ae34ba902e38f5a34454a4ffcb5c3636",
+    "src/native.h": "cbd52527032f6a6bc7aa394847e67256b61b1002c40fc9fe7e45752b672df4d4",
+    "src/native_tls.h": "88713562941158fe6df360ee7cdcaf5fd3acb0dede75e3ac1492c4ed825e11fe",
+    "src/pool.v": "29fcbc69e0bdd20537ee470b3ce73aa322d886d516d9255a8836360a42b4ae51",
+    "src/timing.v": "860cfee80b7248a1239255634aec6659b7fc8415dfda17cd3c20bcb75bce6e9c",
+    "src/tls.v": "1b5c03149e3cc89d81a031d0f2b3f5f6ffe2f20021e90824e0fa87bfc20c05de",
+    "src/transport.v": "896a28501a53e4d25d0e5ae2eebe06bccc76c8f6edc191a90313d896a1735f94",
+    "v.mod": "05543acc86b209f05bdc588481f4ede25e4f80190a83b7cedfb8cefb47a388e1"
+  },
+  "binary_sha256": "39f94f4897c97c2424ee8df7b366eb1ebb50fb9effd3fbd3a072acd094683f43"
+}

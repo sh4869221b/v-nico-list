@@ -1,0 +1,49 @@
+# Base: b0bfd057485c88d8a0caa71c6bbbffd92c4e103e
+# V: 67011350d000d86c3fc2a925b505c590dbfdea88; GCC 14.2.0
+# Production build: v -cc gcc -d use_openssl -prod -o <binary> src
+# See manifests for all production input hashes and the actual binary hashes.
+# No live API requests; all workloads use synthetic loopback HTTP.
+
+# Build independent baseline and rejected trial from the exact base.
+git worktree add --detach /tmp/nico-base b0bfd057485c88d8a0caa71c6bbbffd92c4e103e
+git worktree add --detach /tmp/nico-memory b0bfd057485c88d8a0caa71c6bbbffd92c4e103e
+git -C /tmp/nico-memory apply "$REPO/docs/provenance/large-results-20261112/memory-only.patch"
+V=/path/to/pinned/v /tmp/nico-base/scripts/build.sh
+V=/path/to/pinned/v /tmp/nico-memory/scripts/build.sh
+# Build the accepted output-lock variant from the PR checkout with scripts/build.sh.
+
+# Paired retention trial. Repeat for targets/pages: 3/200, 30/20, 3/1000, 30/100.
+python3 scripts/benchmark_results.py \
+  --binary baseline=/tmp/nico-base/bin/v-nico-list \
+  --binary memory=/tmp/nico-memory/bin/v-nico-list \
+  --v /path/to/pinned/v --targets 3 --pages 200 \
+  --mode sorted-lines --mode json --warmups 1 --repetitions 7 \
+  --output memory-ab-t3-p200.json
+
+# Accepted lock variant. 60k cases: 3/200 and 30/20, all four modes.
+python3 scripts/benchmark_results.py \
+  --binary baseline=/tmp/nico-base/bin/v-nico-list \
+  --binary output-lock=bin/v-nico-list \
+  --v /path/to/pinned/v --targets 3 --pages 200 \
+  --mode sorted-lines --mode json --mode no-sort-fast --mode no-sort-slow \
+  --warmups 1 --repetitions 5 --output output-lock-ab-t3-p200.json
+# 300k cases: 3/1000 and 30/100, no-sort-fast and no-sort-slow only.
+
+# Actual lock measurements also passed --binary-manifest for each variant.
+# Recorded manifests describe the original binaries. Rebuilt binaries can have
+# different hashes; regenerate manifests or omit this option for new builds.
+# Each raw JSON retains its actual command, flags, hashes, and sample timings.
+
+v fmt -verify src scripts/parse_benchmark
+v -cc gcc -d use_openssl test src
+python3 tests/integration.py --binary bin/v-nico-list
+python3 tests/output_concurrency.py --binary bin/v-nico-list
+v -cc gcc test src
+v -cc gcc -prod -o /tmp/nico-mbedtls src
+python3 tests/integration.py --binary /tmp/nico-mbedtls
+python3 tests/output_concurrency.py --binary /tmp/nico-mbedtls
+python3 tests/benchmark_parse_test.py
+python3 tests/benchmark_results_test.py
+python3 scripts/benchmark_parse.py --source candidate=. --size 4 --iterations 2 --warmups 1 --repetitions 1 --output /tmp/parser-smoke.json
+python3 scripts/benchmark.py --binary candidate=bin/v-nico-list --targets 3 --pages 3 --repetitions 1 --output /tmp/cli-smoke.json
+python3 scripts/benchmark_results.py --binary candidate=bin/v-nico-list --targets 2 --pages 2 --warmups 0 --repetitions 1 --mode sorted-lines --mode json --mode no-sort-slow --slow-start-ms 0 --slow-bytes-per-second 1048576 --output /tmp/results-smoke.json

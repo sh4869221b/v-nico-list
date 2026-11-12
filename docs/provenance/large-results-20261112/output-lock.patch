@@ -1,0 +1,64 @@
+diff --git a/src/control.v b/src/control.v
+index 6774e08..04a20af 100644
+--- a/src/control.v
++++ b/src/control.v
+@@ -24,6 +24,7 @@ struct Permit {
+ struct Control {
+ mut:
+ 	mu               sync.Mutex
++	output_mu        sync.Mutex
+ 	dispatch_mu      sync.Mutex
+ 	pool_mu          sync.Mutex
+ 	idle             []WireIdle
+@@ -79,6 +80,7 @@ fn new_control(cfg Config) !&Control {
+ 	n := now_ns()
+ 	mut c := &Control{ cfg: cfg, started: n, window_started: n, last_change: n }
+ 	c.mu.init()
++	c.output_mu.init()
+ 	c.dispatch_mu.init()
+ 	c.pool_mu.init()
+ 	if cfg.adaptive && cfg.explicit_http && cfg.http > 0 {
+@@ -388,8 +390,10 @@ fn retry_delay(attempt int, header i64) i64 {
+ 	return ns_max(header, ns_min(30 * time.second, 100 * time.millisecond * (i64(1) << shift)))
+ }
+ 
+-// c.mu serializes complete target output and its dedupe/count state. Batches
+-// are local and bounded: no writer thread or queue can retain target results.
++// output_mu serializes complete target output and its dedupe/count/error state.
++// Never hold mu while acquiring output_mu: output failures briefly take mu to
++// set stop. Native writes must not hold mu and stall unrelated HTTP work.
++// Batches are local and bounded; there is no writer thread or output queue.
+ fn (mut c Control) emit_batch(data []u8, ends []int) bool {
+ 	written := int(C.nico_output_prefix(data.data, uint(data.len)))
+ 	for end in ends {
+@@ -398,7 +402,9 @@ fn (mut c Control) emit_batch(data []u8, ends []int) bool {
+ 	}
+ 	if written != data.len {
+ 		c.output_error = 'failed to write stdout'
++		c.mu.lock()
+ 		c.stop = true
++		c.mu.unlock()
+ 		C.nico_cancel()
+ 		return false
+ 	}
+@@ -406,8 +412,8 @@ fn (mut c Control) emit_batch(data []u8, ends []int) bool {
+ }
+ 
+ fn (mut c Control) emit_items(items []string) {
+-	c.mu.lock()
+-	defer { c.mu.unlock() }
++	c.output_mu.lock()
++	defer { c.output_mu.unlock() }
+ 	if c.output_error != '' { return }
+ 	mut data := []u8{cap: 32768}
+ 	mut ends := []int{}
+@@ -425,7 +431,9 @@ fn (mut c Control) emit_items(items []string) {
+ 		if line.len > 32768 {
+ 			if C.nico_output(line.str, uint(line.len)) == 0 {
+ 				c.output_error = 'failed to write stdout'
++				c.mu.lock()
+ 				c.stop = true
++				c.mu.unlock()
+ 				C.nico_cancel()
+ 				return
+ 			}

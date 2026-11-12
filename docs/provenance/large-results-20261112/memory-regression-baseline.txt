@@ -1,0 +1,6 @@
+test_sorted_lines_match_json_with_partial_and_repeated_targets (__main__.CLIContracts.test_sorted_lines_match_json_with_partial_and_repeated_targets) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.376s
+
+OK
