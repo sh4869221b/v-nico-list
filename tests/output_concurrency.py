@@ -7,8 +7,10 @@ import argparse
 import array
 import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import unittest
@@ -25,7 +27,7 @@ class OutputConcurrency(unittest.TestCase):
         if not Path(cls.binary).is_file():
             raise RuntimeError("build the CLI first: " + cls.binary)
 
-    def start(self, fixture, targets, stdout=subprocess.PIPE, *flags):
+    def start(self, fixture, targets, stdout=subprocess.PIPE, *flags, stdin=None):
         environment = os.environ.copy()
         environment.update(NICO_BASE_URL=fixture.url, NO_PROXY="localhost,127.0.0.1,::1",
                            no_proxy="localhost,127.0.0.1,::1")
@@ -33,7 +35,7 @@ class OutputConcurrency(unittest.TestCase):
             [self.binary, "--no-sort", "--no-progress", "--retries=1", "-P1",
              f"-T{targets}", f"-H{targets}", *flags,
              *[f"nicovideo.jp/user/{i}" for i in range(1, targets + 1)]],
-            stdout=stdout, stderr=subprocess.PIPE, env=environment)
+            stdin=stdin, stdout=stdout, stderr=subprocess.PIPE, env=environment)
 
     @staticmethod
     def reap(process):
@@ -41,19 +43,41 @@ class OutputConcurrency(unittest.TestCase):
             process.kill()
         process.communicate(timeout=5)
 
-    def wait_full(self, process, fd, capacity):
+    def wait_stdout_bytes(self, process, fd, size):
         import fcntl
         import termios
         until = time.monotonic() + 5
         while time.monotonic() < until:
             available = array.array("i", [0])
             fcntl.ioctl(fd, termios.FIONREAD, available, True)
-            if available[0] == capacity:
+            if available[0] == size:
                 return
             if process.poll() is not None:
                 self.fail("CLI exited before filling its stdout pipe")
             time.sleep(0.005)
-        self.fail("stdout pipe never filled")
+        self.fail(f"stdout pipe never held {size} bytes")
+
+    def wait_windows_stdout(self, process, fd):
+        import ctypes
+        from ctypes import wintypes
+        import msvcrt
+
+        peek = ctypes.WinDLL("kernel32", use_last_error=True).PeekNamedPipe
+        peek.argtypes = (wintypes.HANDLE, wintypes.LPVOID, wintypes.DWORD,
+                         wintypes.LPDWORD, wintypes.LPDWORD, wintypes.LPDWORD)
+        peek.restype = wintypes.BOOL
+        handle = msvcrt.get_osfhandle(fd)
+        available = wintypes.DWORD()
+        until = time.monotonic() + 5
+        while time.monotonic() < until:
+            if not peek(handle, None, 0, None, ctypes.byref(available), None):
+                raise ctypes.WinError(ctypes.get_last_error())
+            if available.value:
+                return
+            if process.poll() is not None:
+                self.fail("CLI exited before writing to its stdout pipe")
+            time.sleep(0.005)
+        self.fail("stdout pipe never received data")
 
     def blocked_output(self, break_pipe=False):
         import fcntl
@@ -80,7 +104,7 @@ class OutputConcurrency(unittest.TestCase):
                     process = self.start(fixture, 2, write_fd)
                     os.close(write_fd)
                     write_fd = -1
-                    self.wait_full(process, read_fd, capacity)
+                    self.wait_stdout_bytes(process, read_fd, capacity)
                     # No stdout byte has been consumed. Target 1 cannot finish
                     # emission; target 2 must nevertheless finish HTTP/page work.
                     release.set()
@@ -121,6 +145,145 @@ class OutputConcurrency(unittest.TestCase):
     @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe sizing and FIONREAD")
     def test_broken_stdout_releases_waiting_emitters(self):
         self.blocked_output(break_pipe=True)
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe sizing and POSIX signals")
+    def test_signals_cancel_full_stdout_without_draining_it(self):
+        import fcntl
+
+        for mode, flags, ids, partial_line in (
+            ("streamed", (), [f"sm{i:08d}" for i in range(9000)], True),
+            ("sorted", ("--no-sort=false",), [f"sm{i:08d}" for i in range(9000)], True),
+            ("oversized line", (), ["sm" + "1" * 40000], True),
+            ("whole lines", (), [f"sm{i:05d}" for i in range(9000)], False),
+            ("JSON", ("--json",), [f"sm{i:08d}" for i in range(9000)], False),
+        ):
+            def respond(request):
+                return Reply(payload(request.kind, [video(i) for i in ids] if request.page == 1 else []))
+
+            for sig in (signal.SIGINT, signal.SIGTERM):
+                with self.subTest(mode=mode, sig=sig), Fixture(respond) as fixture:
+                    read_fd, write_fd = os.pipe()
+                    process = None
+                    try:
+                        capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
+                        process = self.start(fixture, 1, write_fd, *flags)
+                        self.wait_stdout_bytes(process, read_fd, capacity)
+                        self.assertFalse(fcntl.fcntl(write_fd, fcntl.F_GETFL) & os.O_NONBLOCK)
+                        process.send_signal(sig)
+                        _, stderr = process.communicate(timeout=2)
+                        if partial_line:
+                            self.assertNotEqual(process.returncode, 0, stderr)
+                            self.assertIn(b"stdout interrupted in the middle of a line", stderr)
+                        else:
+                            self.assertEqual(process.returncode, 0, stderr)
+                        self.assertIn(b"summary inputs=1", stderr)
+                        self.assertFalse(fixture.errors, fixture.errors)
+                    finally:
+                        if process is not None:
+                            self.reap(process)
+                        os.close(write_fd)
+                        os.close(read_fd)
+
+    @unittest.skipIf(os.name == "nt", "requires POSIX SIGINT")
+    def test_sorted_stdout_preserves_completed_target_on_sigint(self):
+        second_started = threading.Event()
+        release = threading.Event()
+
+        def respond(r):
+            if r.identifier == "2":
+                second_started.set()
+                release.wait(5)
+            ids = [video("sm2"), video("sm1")] if r.page == 1 else []
+            return Reply(payload(r.kind, ids))
+
+        with Fixture(respond) as fixture:
+            process = self.start(fixture, 2, subprocess.PIPE, "--no-sort=false", "-T1")
+            try:
+                self.assertTrue(second_started.wait(3), "target 1 must finish before target 2 starts")
+                process.send_signal(signal.SIGINT)
+                stdout, stderr = process.communicate(timeout=2)
+                self.assertEqual(process.returncode, 0, stderr)
+                self.assertEqual(stdout, b"sm1\nsm2\n")
+                self.assertIn(b"output_count=2", stderr)
+            finally:
+                release.set()
+                self.reap(process)
+
+    @unittest.skipUnless(sys.platform.startswith("linux") or os.name == "nt", "requires Linux or Windows pipe inspection")
+    def test_input_error_releases_full_stdout_without_draining_it(self):
+        ids = [video(f"sm{i:08d}" + "0" * 32) for i in range(9000)]
+        with Fixture(lambda r: Reply(payload(r.kind, ids if r.page == 1 else []))) as fixture:
+            read_fd, write_fd = os.pipe()
+            process = None
+            try:
+                if os.name != "nt":
+                    import fcntl
+                    capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
+                process = self.start(fixture, 2, write_fd, "--stdin", "--best-effort", "-T1", stdin=subprocess.PIPE)
+                if os.name == "nt":
+                    self.wait_windows_stdout(process, read_fd)
+                else:
+                    self.wait_stdout_bytes(process, read_fd, capacity)
+                _, stderr = process.communicate(input=b"x" * (1024 * 1024), timeout=2)
+                self.assertNotEqual(process.returncode, 0, stderr)
+                self.assertIn(b"Error: input line exceeds 1 MiB limit", stderr)
+                self.assertNotIn(b"failed to write stdout", stderr)
+                self.assertEqual([r.identifier for r in fixture.records], ["1", "1"])
+            finally:
+                if process is not None:
+                    self.reap(process)
+                os.close(write_fd)
+                os.close(read_fd)
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe buffer merging and SIGINT")
+    def test_partial_line_cancellation_stops_other_targets(self):
+        import fcntl
+
+        read_fd, write_fd = os.pipe()
+        process = None
+        release = threading.Event()
+        try:
+            capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
+            prefix = b"\n" * (capacity - 128)
+            os.write(write_fd, prefix)
+            # The oversized write can merge its 64-byte remainder into the
+            # prefilled buffer. The remaining page-aligned bytes cannot fit,
+            # but another target's short line still fits in the last buffer.
+            long_id = "sm0" + "1" * (9 * capacity + 64 - 4)
+
+            def respond(r):
+                if r.identifier != "1" and not release.wait(5):
+                    raise RuntimeError("test did not release the other targets")
+                identifier = {"1": long_id, "2": "sm42", "3": "sm43"}[r.identifier]
+                body = payload(r.kind, [video(identifier)] if r.page == 1 else [])
+                if r.identifier != "1" and r.page == 2:
+                    body = body.replace(b'"status":200', b'"status":299', 1)
+                return Reply(body)
+
+            with tempfile.TemporaryDirectory() as directory, Fixture(respond) as fixture:
+                log = Path(directory) / "events.jsonl"
+                process = self.start(fixture, 3, write_fd, "--logfile", str(log))
+                self.wait_stdout_bytes(process, read_fd, len(prefix) + 64)
+                release.set()
+                until = time.monotonic() + 3
+                # Both later targets must have parsed their terminal pages.
+                while log.read_bytes().count(b"unexpected meta status") < 2:
+                    if time.monotonic() >= until:
+                        self.fail("later targets did not reach output while the first was blocked")
+                    time.sleep(0.005)
+                process.send_signal(signal.SIGINT)
+                _, stderr = process.communicate(timeout=2)
+                self.assertEqual(os.read(read_fd, capacity)[len(prefix):], long_id[:64].encode())
+                self.assertNotEqual(process.returncode, 0, stderr)
+                self.assertIn(b"stdout interrupted in the middle of a line", stderr)
+                self.assertIn(b"output_count=0", stderr)
+                self.assertFalse(fixture.errors, fixture.errors)
+        finally:
+            release.set()
+            if process is not None:
+                self.reap(process)
+            os.close(write_fd)
+            os.close(read_fd)
 
     def test_concurrent_targets_remain_contiguous_and_deduplicated(self):
         ready = threading.Barrier(3)

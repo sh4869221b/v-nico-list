@@ -1,5 +1,7 @@
 module main
 
+const max_page_workers = 32
+
 struct PageResult {
 	number int
 	page   Page
@@ -77,12 +79,15 @@ fn fetch_page(cfg Config, t Target, page int, mut c Control) !Page {
 	return error(last)
 }
 
-fn fetch_page_worker(cfg Config, t Target, page int, mut c Control, ch chan PageResult) {
-	p := fetch_page(cfg, t, page, mut c) or {
-		ch <- PageResult{ number: page, error: err.msg() }
-		return
+fn fetch_page_worker(cfg Config, t Target, mut c Control, jobs chan int, results chan PageResult) {
+	for {
+		page := <-jobs or { break }
+		p := fetch_page(cfg, t, page, mut c) or {
+			results <- PageResult{ number: page, error: err.msg() }
+			continue
+		}
+		results <- PageResult{ number: page, page: p }
 	}
-	ch <- PageResult{ number: page, page: p }
 }
 
 fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
@@ -127,32 +132,42 @@ fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
 		if sizeof(int) == 4 && total > 2147483647 {
 			return TargetResult{ kind: t.kind, id: t.id, items: items, error: 'totalCount requires too many pages', order: t.order }
 		}
-		// At most a worker window is outstanding beyond the next ordered page.
-		// Once a terminal page is observed, no later results are committed.
+		// The ordered window bounds completed pages waiting for an earlier
+		// result. HTTP admission independently caps active requests so other
+		// workers can make progress during a page's retry wait.
+		jobs := chan int{cap: max_page_workers}
 		ch := chan PageResult{cap: 16}
+		mut workers := []thread{cap: max_page_workers}
+		defer {
+			jobs.close()
+			workers.wait()
+		}
 		mut active := 0
-		mut next := 2
-		mut commit := 2
+		mut next := i64(2)
+		mut commit := i64(2)
 		mut stop := false
-		mut terminal := int(total) + 1
+		mut terminal := total + 1
 		mut failure := ''
-		mut pending := map[int]PageResult{}
-		for active > 0 || (!stop && next <= int(total)) {
+		mut pending := map[i64]PageResult{}
+		for active > 0 || (!stop && next <= total) {
 			c.mu.lock()
-			limit := if adaptive_pages { c.budget } else { cfg.pages }
+			limit := int_min(max_page_workers, if adaptive_pages { c.budget } else { cfg.pages })
 			c.mu.unlock()
-			for !stop && next <= int(total) && active < limit && next < commit + limit {
+			for !stop && next <= total && active < limit && next - commit < i64(limit) {
 				if c.stopped() {
 					stop = true
 					failure = 'context canceled'
 					break
 				}
-				spawn fetch_page_worker(cfg, t, next, mut c, ch)
+				if active == workers.len {
+					workers << spawn fetch_page_worker(cfg, t, mut c, jobs, ch)
+				}
+				jobs <- int(next)
 				next++
 				active++
 			}
 			if active == 0 { break }
-			waiting := !stop && next <= int(total)
+			waiting := !stop && next <= total
 			if waiting {
 				c.mu.lock()
 				c.page_pending++
@@ -165,9 +180,9 @@ fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
 				c.page_pending--
 				c.mu.unlock()
 			}
-			pending[r.number] = r
+			pending[i64(r.number)] = r
 			if r.error != '' || r.page.not_found || r.page.items.len == 0 {
-				terminal = int_min(terminal, r.number)
+				terminal = ns_min(terminal, i64(r.number))
 				stop = true
 			}
 			for (commit in pending) {

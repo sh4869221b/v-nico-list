@@ -10,13 +10,14 @@ import encoding.utf8
 fn C.nico_signals()
 fn C.nico_cancelled() int
 fn C.nico_cancel()
-fn C.nico_output(s &u8, n uint) int
-fn C.nico_output_prefix(s &u8, n uint) uint
+fn C.nico_output_prefix(s &u8, n uint, interrupted &i32) uint
+fn C.nico_log_open(path voidptr) voidptr
+fn C.nico_log_write(file voidptr, s &u8, n uint) int
+fn C.nico_log_close(file voidptr) int
 
 struct InputEvent {
 	present bool
 	line    string
-	error   string
 }
 
 struct InputCounts {
@@ -71,7 +72,7 @@ fn trim_input_line(s string) string {
 fn file_inputs(mut f os.File, ch chan InputEvent) ! {
 	mut line := []u8{}
 	for {
-		check_cancelled()!
+		if cancelled() { return }
 		data, n := os.fd_read(f.fd, 4096)
 		if n < 0 { return error('input read error') }
 		if n == 0 { break }
@@ -92,28 +93,43 @@ fn file_inputs(mut f os.File, ch chan InputEvent) ! {
 	}
 }
 
-fn produce_inputs(cfg Config, ch chan InputEvent) {
-	defer { ch.close() }
+fn enqueue_inputs(cfg Config, ch chan InputEvent) ! {
 	for arg in cfg.args { ch <- InputEvent{ present: true, line: arg } }
 	if cfg.input_file != '' {
-		mut f := os.open(cfg.input_file) or {
-			ch <- InputEvent{ error: err.msg() }
-			return
-		}
+		mut f := os.open(cfg.input_file)!
 		file_inputs(mut f, ch) or {
 			f.close()
-			ch <- InputEvent{ error: err.msg() }
-			return
+			return err
 		}
 		f.close()
 	}
 	if cfg.stdin {
 		mut f := os.stdin()
-		file_inputs(mut f, ch) or {
-			ch <- InputEvent{ error: err.msg() }
-			return
-		}
+		file_inputs(mut f, ch)!
 	}
+}
+
+fn produce_inputs(cfg Config, ch chan InputEvent, failures chan string) {
+	defer { ch.close() }
+	enqueue_inputs(cfg, ch) or {
+		// All preceding inputs are already queued before this terminal error.
+		failures <- err.msg()
+		C.nico_cancel()
+	}
+}
+
+fn (mut c Control) count_input(line string, mut counts InputCounts, mut invalid []string) ?Target {
+	counts.total++
+	if t := parse_target(line) {
+		counts.valid++
+		return t
+	}
+	counts.invalid++
+	if c.cfg.json { invalid << line }
+	c.log_event('WARN', 'invalid input', {
+		'input': line
+	})
+	return none
 }
 
 fn compare_targets(a &TargetResult, b &TargetResult) int {
@@ -134,14 +150,10 @@ fn compare_targets(a &TargetResult, b &TargetResult) int {
 
 fn run(cfg Config) ! {
 	mut c := new_control(cfg)!
-	defer {
-		c.close_idle()
-		if cfg.metrics { c.metrics_log() }
-		if c.has_log { c.log.close() }
-	}
 	input := chan InputEvent{cap: 16}
+	input_failures := chan string{cap: 1}
 	done := chan TargetResult{cap: 16}
-	spawn produce_inputs(cfg, input)
+	spawn produce_inputs(cfg, input, input_failures)
 	mut counts := InputCounts{}
 	mut invalid := []string{}
 	mut results := []TargetResult{}
@@ -156,6 +168,9 @@ fn run(cfg Config) ! {
 	mut order := 0
 	show_progress := !cfg.no_progress && (cfg.progress || os.is_atty(2) > 0)
 	for !input_closed || active > 0 || has_pending {
+		// Poll the separate failure mailbox even while a target is waiting
+		// for a slot and ordinary input is backpressured.
+		if input_failures.try_pop(mut input_error) == .success { C.nico_cancel() }
 		if c.stopped() {
 			input_closed = true
 			has_pending = false
@@ -188,7 +203,7 @@ fn run(cfg Config) ! {
 		} else {
 			select {
 				e := <-input {
-					if input.closed && !e.present && e.error == '' {
+					if input.closed && !e.present {
 						input_closed = true
 					} else {
 						event = e
@@ -204,24 +219,10 @@ fn run(cfg Config) ! {
 			}
 		}
 		if got_input {
-			if event.error != '' {
-				input_error = event.error
-				input_closed = true
-				C.nico_cancel()
-			} else {
-				counts.total++
-				if t := parse_target(event.line) {
-					counts.valid++
-					pending = Target{ kind: t.kind, id: t.id, order: order }
-					order++
-					has_pending = true
-				} else {
-					counts.invalid++
-					if cfg.json { invalid << event.line }
-					c.log_event('WARN', 'invalid input', {
-						'input': event.line
-					})
-				}
+			if t := c.count_input(event.line, mut counts, mut invalid) {
+				pending = Target{ kind: t.kind, id: t.id, order: order }
+				order++
+				has_pending = true
 			}
 		}
 		if got_result {
@@ -239,6 +240,15 @@ fn run(cfg Config) ! {
 			if show_progress {
 				eprint('\rprocessed ${fetch_ok + fetch_err + counts.invalid}/${counts.total}')
 			}
+		}
+	}
+	// A close can win the select just after the producer reports an error.
+	if input_failures.try_pop(mut input_error) == .success { C.nico_cancel() }
+	if input_error != '' {
+		// Classify the remaining FIFO prefix without scheduling new targets.
+		mut event := InputEvent{}
+		for input.try_pop(mut event) == .success {
+			c.count_input(event.line, mut counts, mut invalid) or {}
 		}
 	}
 	if counts.total == 0 && input_error == '' { input_error = 'no inputs provided' }
@@ -262,11 +272,13 @@ fn run(cfg Config) ! {
 				c.output_error = 'JSON output contains invalid UTF-8'
 			} else {
 				line := json2.encode(payload) + '\n'
-				if C.nico_output(line.str, uint(line.len)) == 0 {
+				mut interrupted := i32(0)
+				if C.nico_output_prefix(line.str, uint(line.len), &interrupted) == uint(line.len) {
+					c.output_count = items.len
+				} else if interrupted == 0 {
 					c.output_error = 'failed to write stdout'
 				}
 			}
-			c.output_count = items.len
 		} else {
 			c.emit_items(items)
 		}
@@ -276,8 +288,14 @@ fn run(cfg Config) ! {
 	})
 	if show_progress { eprintln('') }
 	eprintln('summary inputs=${counts.total} valid=${counts.valid} invalid=${counts.invalid} fetch_ok=${fetch_ok} fetch_err=${fetch_err} output_count=${c.output_count}')
-	if c.output_error != '' { return error(c.output_error) }
+	c.close_idle()
+	if cfg.metrics { c.metrics_log() }
+	if c.log != unsafe { nil } && C.nico_log_close(c.log) != 0 && c.log_error == '' {
+		c.log_error = 'failed to close logfile ${cfg.logfile}'
+	}
 	if input_error != '' { return error(input_error) }
+	if c.output_error != '' { return error(c.output_error) }
+	if c.log_error != '' { return error(c.log_error) }
 	if cfg.strict && counts.invalid > 0 { return error('invalid input detected') }
 	if !cfg.best_effort && errors.len > 0 { return error(errors[0]) }
 }
@@ -288,12 +306,13 @@ fn main() {
 		eprintln('Error: ${err.msg()}')
 		exit(1)
 	}
-	if cfg.help {
-		println(help_text)
-		return
-	}
-	if cfg.version {
-		println('v-nico-list version 0.1.0')
+	if cfg.help || cfg.version {
+		line := if cfg.help { help_text + '\n' } else { 'v-nico-list version 0.1.0\n' }
+		mut interrupted := i32(0)
+		if C.nico_output_prefix(line.str, uint(line.len), &interrupted) != uint(line.len) && interrupted == 0 {
+			eprintln('Error: failed to write stdout')
+			exit(1)
+		}
 		return
 	}
 	run(cfg) or {

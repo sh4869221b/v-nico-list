@@ -3,10 +3,29 @@ module main
 import net
 import time
 import io
+import net.ssl
 
 $if !use_openssl ? {
 	#include "@VMODROOT/src/native_tls.h"
 	fn C.nico_tls_connect(context voidptr, io voidptr, hostname &u8, send_callback fn (voidptr, &u8, uint) i32, recv_callback fn (voidptr, &u8, uint) i32) i32
+	$if windows {
+		#flag -lcrypt32
+		fn C.nico_tls_windows_verify(context voidptr, hostname &u16) int
+	}
+}
+
+fn new_wire_tls(ca_file string) !&ssl.SSLConn {
+	mut verify_during_handshake := true
+	$if windows && !use_openssl ? {
+		// V's default Mbed TLS setup searches for a PEM file. Use Windows
+		// trust in connect_tls when the caller has not supplied one.
+		verify_during_handshake = ca_file != ''
+	}
+	return ssl.new_ssl_conn(
+		validate:       verify_during_handshake
+		verify:         ca_file
+		alpn_protocols: ['http/1.1']
+	)
 }
 
 // A local socket shutdown need not wake a Windows select already in progress.
@@ -60,6 +79,15 @@ fn (mut stream WireStream) connect_tls(hostname string) ! {
 			// transport_once's owner defer releases context and borrowed socket.
 			stream.check()!
 			return error_with_code('TLS handshake failed (${result})', result)
+		}
+		$if windows {
+			if !stream.tls.config.validate {
+				stream.check()!
+				verify_result := C.nico_tls_windows_verify(&stream.tls.ssl, hostname.to_wide())
+				if verify_result != 0 {
+					return error_with_code('TLS Windows certificate verification failed', verify_result)
+				}
+			}
 		}
 		stream.tls.opened = true
 	}

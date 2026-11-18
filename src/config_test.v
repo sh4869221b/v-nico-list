@@ -32,6 +32,20 @@ fn test_go_duration_units_and_signs() {
 	}
 }
 
+fn test_duration_preserves_signed_nanosecond_boundaries() {
+	assert parse_duration('9223372036854775807ns')! == time.Duration(max_wait_ns)
+	assert parse_duration('2562047h47m16.854775807s')! == time.Duration(max_wait_ns)
+	assert parse_duration('-9223372036854775808ns')! == -time.Duration(max_wait_ns) - 1
+	assert parse_duration('9.223372036854775806s')! == 9223372036
+	assert parse_duration('0.6ns0.6ns')! == 0
+	for s in ['9223372036854775808ns', '2562047h47m16.854775808s', '-9223372036854775809ns',
+		'1000000000000000000000000000000h'] {
+		if _ := parse_duration(s) {
+			assert false, s
+		}
+	}
+}
+
 fn test_native_integer_flags_accept_go_base_prefixes_and_64bit_comments() {
 	cfg := parse_config(['-c0x80000000', '-T0x2', '-P010']) or { panic(err) }
 	assert cfg.comment == 2147483648
