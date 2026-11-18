@@ -131,28 +131,28 @@ fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
 		// Once a terminal page is observed, no later results are committed.
 		ch := chan PageResult{cap: 16}
 		mut active := 0
-		mut next := 2
-		mut commit := 2
+		mut next := i64(2)
+		mut commit := i64(2)
 		mut stop := false
-		mut terminal := int(total) + 1
+		mut terminal := total + 1
 		mut failure := ''
-		mut pending := map[int]PageResult{}
-		for active > 0 || (!stop && next <= int(total)) {
+		mut pending := map[i64]PageResult{}
+		for active > 0 || (!stop && next <= total) {
 			c.mu.lock()
 			limit := if adaptive_pages { c.budget } else { cfg.pages }
 			c.mu.unlock()
-			for !stop && next <= int(total) && active < limit && next < commit + limit {
+			for !stop && next <= total && active < limit && next - commit < i64(limit) {
 				if c.stopped() {
 					stop = true
 					failure = 'context canceled'
 					break
 				}
-				spawn fetch_page_worker(cfg, t, next, mut c, ch)
+				spawn fetch_page_worker(cfg, t, int(next), mut c, ch)
 				next++
 				active++
 			}
 			if active == 0 { break }
-			waiting := !stop && next <= int(total)
+			waiting := !stop && next <= total
 			if waiting {
 				c.mu.lock()
 				c.page_pending++
@@ -165,9 +165,9 @@ fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
 				c.page_pending--
 				c.mu.unlock()
 			}
-			pending[r.number] = r
+			pending[i64(r.number)] = r
 			if r.error != '' || r.page.not_found || r.page.items.len == 0 {
-				terminal = int_min(terminal, r.number)
+				terminal = ns_min(terminal, i64(r.number))
 				stop = true
 			}
 			for (commit in pending) {

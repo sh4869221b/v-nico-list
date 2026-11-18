@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import email.utils
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -26,6 +27,7 @@ from loopback import Fixture, Reply, TunnelProxy, payload, single_page, video
 PARSER = argparse.ArgumentParser(description=__doc__)
 PARSER.add_argument("--binary", default="bin/v-nico-list")
 PARSER.add_argument("--only", help="Run test names containing this substring")
+PARSER.add_argument("--windows-system-trust", action="store_true", help="temporarily install an ephemeral CA in the Windows current-user ROOT store")
 PARSER.add_argument("--profile", choices=("v", "go-reference"), default="v", help="Go excludes force-proxy loopback cases and V-specific extreme-duration overflow regressions")
 OPTIONS = None
 
@@ -616,11 +618,11 @@ class CLIContracts(unittest.TestCase):
     def test_extreme_timeout_serves_normally_and_is_cancellable(self):
         if OPTIONS.profile == "go-reference":
             self.skipTest("V-specific near-maximum wall-deadline arithmetic regression")
-        maximum = "9223372036854000000ns"
+        maximum = "9223372036854775807ns"
         with Fixture(single_page) as fixture:
             result = self.run_cli(fixture, "nicovideo.jp/user/1", "--timeout", maximum)
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(result.stdout, "sm1\n", "a near-maximum positive timeout must not wrap into an immediate deadline")
+            self.assertEqual(result.stdout, "sm1\n", "the maximum positive timeout must not wrap into an immediate deadline")
             self.assertEqual(len(fixture.records), 2)
         with Fixture(lambda r: Reply(payload(r.kind), delay=3)) as fixture:
             self.assert_pending_request_is_cancellable(fixture, "--timeout", maximum)
@@ -651,6 +653,32 @@ class CLIContracts(unittest.TestCase):
             throttled = next(r for r in fixture.records if r.identifier == "1" and r.attempt == 1)
             during_pause = [r for r in fixture.records if 0.10 < r.started - throttled.started < 0.90]
             self.assertEqual(during_pause, [], "new work dispatched during adaptive command-wide cooldown")
+
+    def test_adaptive_429_pauses_inflight_redirect_with_no_interval(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("the V transport applies cooldown to individual redirect GETs")
+        redirect_started = threading.Event()
+
+        def respond(r):
+            if r.identifier == "1":
+                if not redirect_started.wait(3):
+                    raise RuntimeError("the other target did not start its initial GET")
+                return Reply(status=429, headers={"Retry-After": "1"})
+            if r.identifier == "2":
+                redirect_started.set()
+                return Reply(status=302, delay=0.25,
+                             headers={"Location": f"/v3/users/3/videos?pageSize=100&page={r.page}"})
+            return Reply(payload(r.kind, [video("sm3")] if r.page == 1 else [], total=100))
+
+        with Fixture(respond) as fixture:
+            result = self.run_cli(fixture, "nicovideo.jp/user/1", "nicovideo.jp/user/2",
+                                  "-A", "-T2", "--best-effort")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "sm3\n")
+            throttled = next(r for r in fixture.records if r.identifier == "1")
+            redirected = [r for r in fixture.records if r.identifier == "3"]
+            self.assertEqual(len(redirected), 1)
+            self.assertGreaterEqual(redirected[0].started - throttled.started, 0.90)
 
     def test_adaptive_grows_with_sustained_known_total_supply(self):
         pages = 225
@@ -742,6 +770,29 @@ class CLIContracts(unittest.TestCase):
             self.assertNotIn("nicovideo.jp", json.dumps(metrics))
             self.assertIn("summary inputs=1 valid=1 invalid=0 fetch_ok=1 fetch_err=0 output_count=1", result.stderr)
 
+    @unittest.skipUnless(sys.platform.startswith("linux") and Path("/dev/full").exists(), "requires /dev/full")
+    def test_logfile_write_error_is_fatal_even_in_best_effort(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("the V CLI treats structured log I/O failures as fatal")
+        with Fixture(single_page) as fixture:
+            result = self.run_cli(fixture, "nicovideo.jp/user/1", "--logfile=/dev/full",
+                                  "--http-metrics", "--best-effort")
+            self.assertNotEqual(result.returncode, 0, result.stderr)
+            self.assertIn("failed to write logfile /dev/full", result.stderr)
+            self.assertEqual(result.stdout, "sm1\n")
+
+    def test_maximum_page_concurrency_collects_all_known_pages(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("native-width page window overflow regression for V")
+        def respond(r):
+            return Reply(payload(r.kind, [video(f"sm{r.page}")], total=300))
+
+        with Fixture(respond) as fixture:
+            result = self.run_cli(fixture, "nicovideo.jp/user/1", f"-P{sys.maxsize}")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "sm1\nsm2\nsm3\n")
+            self.assertEqual(sorted(r.page for r in fixture.records), [1, 2, 3])
+
     def test_http_proxy_absolute_form_and_basic_auth(self):
         if OPTIONS.profile == "go-reference":
             self.skipTest("Go ProxyFromEnvironment always bypasses loopback, independent of NO_PROXY")
@@ -808,6 +859,44 @@ class TLSContracts(CLIContracts):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(result.stdout, "sm1\n")
 
+    @unittest.skipUnless(os.name == "nt", "requires the Windows certificate store")
+    def test_tls_windows_system_trust(self):
+        if not OPTIONS.windows_system_trust or OPTIONS.profile != "v":
+            self.skipTest("requires --windows-system-trust on a disposable Windows test runner")
+
+        der = ssl.PEM_cert_to_DER_cert(self.ca.read_text(encoding="ascii"))
+        fingerprint = hashlib.sha1(der, usedforsecurity=False).hexdigest()
+        target = "nicovideo.jp/user/1"
+        system_trust = {"SSL_CERT_FILE": ""}
+        with self.tls_fixture() as fixture:
+            before = self.run_cli(fixture, target, env=system_trust)
+            self.assertNotEqual(before.returncode, 0, before.stderr)
+            self.assertEqual(fixture.records, [])
+
+        added = False
+        try:
+            install = subprocess.run(["certutil", "-f", "-user", "-addstore", "Root", str(self.ca)],
+                                     capture_output=True, timeout=30)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            added = True
+            with self.tls_fixture() as fixture:
+                trusted = self.run_cli(fixture, target, env=system_trust)
+                self.assertEqual(trusted.returncode, 0, trusted.stderr)
+                self.assertEqual(trusted.stdout, "sm1\n")
+            with self.tls_fixture("wrong-host") as fixture:
+                mismatch = self.run_cli(fixture, target, env=system_trust)
+                self.assertNotEqual(mismatch.returncode, 0, mismatch.stderr)
+                self.assertEqual(fixture.records, [])
+            with self.tls_fixture() as fixture:
+                override = self.run_cli(fixture, target, env={"SSL_CERT_FILE": str(self.root / "missing.pem")})
+                self.assertNotEqual(override.returncode, 0, override.stderr)
+                self.assertEqual(fixture.records, [])
+        finally:
+            remove = subprocess.run(["certutil", "-user", "-delstore", "Root", fingerprint],
+                                    capture_output=True, timeout=30)
+            if added:
+                self.assertEqual(remove.returncode, 0, remove.stdout + remove.stderr)
+
     def test_tls_input_error_cancels_delayed_response_promptly(self):
         with self.tls_fixture(respond=lambda r: Reply(payload(r.kind), delay=3)) as fixture:
             self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records,
@@ -842,7 +931,7 @@ class TLSContracts(CLIContracts):
     def test_tls_extreme_timeout_serves_normally_and_is_cancellable(self):
         if OPTIONS.profile == "go-reference":
             self.skipTest("V-specific near-maximum TLS-backend deadline arithmetic regression")
-        maximum = "9223372036854000000ns"
+        maximum = "9223372036854775807ns"
         trust = {"SSL_CERT_FILE": str(self.ca)}
         with self.tls_fixture() as fixture:
             result = self.run_cli(fixture, "nicovideo.jp/user/1", "--timeout", maximum, env=trust)

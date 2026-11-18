@@ -85,6 +85,6 @@ jobs:
           v -cc msvc -prod -o bin/v-nico-list.exe src
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Run contracts on Windows
-        run: python tests/integration.py --binary bin/v-nico-list.exe
+        run: python tests/integration.py --binary bin/v-nico-list.exe --windows-system-trust
       - name: Output concurrency contracts
         run: python tests/output_concurrency.py --binary bin/v-nico-list.exe

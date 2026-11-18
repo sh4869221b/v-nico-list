@@ -7,6 +7,7 @@ import argparse
 import array
 import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
 import threading
@@ -121,6 +122,39 @@ class OutputConcurrency(unittest.TestCase):
     @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe sizing and FIONREAD")
     def test_broken_stdout_releases_waiting_emitters(self):
         self.blocked_output(break_pipe=True)
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe sizing and POSIX signals")
+    def test_signals_cancel_full_stdout_without_draining_it(self):
+        import fcntl
+
+        for mode, flags, ids in (
+            ("streamed", (), [f"sm{i:08d}" for i in range(9000)]),
+            ("sorted", ("--no-sort=false",), [f"sm{i:08d}" for i in range(9000)]),
+            ("oversized line", (), ["sm" + "1" * 40000]),
+            ("JSON", ("--json",), [f"sm{i:08d}" for i in range(9000)]),
+        ):
+            def respond(request):
+                return Reply(payload(request.kind, [video(i) for i in ids] if request.page == 1 else []))
+
+            for sig in (signal.SIGINT, signal.SIGTERM):
+                with self.subTest(mode=mode, sig=sig), Fixture(respond) as fixture:
+                    read_fd, write_fd = os.pipe()
+                    process = None
+                    try:
+                        capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
+                        process = self.start(fixture, 1, write_fd, *flags)
+                        self.wait_full(process, read_fd, capacity)
+                        self.assertFalse(fcntl.fcntl(write_fd, fcntl.F_GETFL) & os.O_NONBLOCK)
+                        process.send_signal(sig)
+                        _, stderr = process.communicate(timeout=2)
+                        self.assertEqual(process.returncode, 0, stderr)
+                        self.assertIn(b"summary inputs=1", stderr)
+                        self.assertFalse(fixture.errors, fixture.errors)
+                    finally:
+                        if process is not None:
+                            self.reap(process)
+                        os.close(write_fd)
+                        os.close(read_fd)
 
     def test_concurrent_targets_remain_contiguous_and_deduplicated(self):
         ready = threading.Barrier(3)

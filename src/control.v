@@ -2,7 +2,6 @@ module main
 
 import sync
 import time
-import os
 import json2
 import encoding.utf8
 
@@ -25,7 +24,6 @@ struct Control {
 mut:
 	mu               sync.Mutex
 	output_mu        sync.Mutex
-	dispatch_mu      sync.Mutex
 	pool_mu          sync.Mutex
 	idle             []WireIdle
 	pool_closed      bool
@@ -66,8 +64,8 @@ mut:
 	counters         map[string]i64
 	durations        map[string]i64
 	status_counts    map[string]i64
-	log              os.File
-	has_log          bool
+	log              voidptr
+	log_error        string
 	seen             map[string]bool
 	output_count     int
 	output_error     string
@@ -81,7 +79,6 @@ fn new_control(cfg Config) !&Control {
 	mut c := &Control{ cfg: cfg, started: n, window_started: n, last_change: n }
 	c.mu.init()
 	c.output_mu.init()
-	c.dispatch_mu.init()
 	c.pool_mu.init()
 	if cfg.adaptive && cfg.explicit_http && cfg.http > 0 {
 		c.maximum = cfg.http
@@ -89,8 +86,12 @@ fn new_control(cfg Config) !&Control {
 		c.initial = c.budget
 	}
 	if cfg.logfile != '' {
-		c.log = os.open_file(cfg.logfile, 'a')!
-		c.has_log = true
+		$if windows {
+			c.log = C.nico_log_open(cfg.logfile.to_wide())
+		} $else {
+			c.log = C.nico_log_open(cfg.logfile.str)
+		}
+		if c.log == unsafe { nil } { return error('failed to open logfile ${cfg.logfile}') }
 	}
 	return c
 }
@@ -121,7 +122,11 @@ fn (mut c Control) log_event(level string, msg string, attrs map[string]json2.An
 	raw_line := json2.encode(obj) + '\n'
 	line := if utf8.validate_str(raw_line) { raw_line } else { raw_line.runes().string() }
 	c.mu.lock()
-	if c.has_log { c.log.write_string(line) or {} } else { eprint(line) }
+	if c.log == unsafe { nil } {
+		eprint(line)
+	} else if c.log_error == '' && C.nico_log_write(c.log, line.str, uint(line.len)) == 0 {
+		c.log_error = 'failed to write logfile ${c.cfg.logfile}'
+	}
 	c.mu.unlock()
 }
 
@@ -394,13 +399,15 @@ fn retry_delay(attempt int, header i64) i64 {
 // Never hold mu while acquiring output_mu: output failures briefly take mu to
 // set stop. Native writes must not hold mu and stall unrelated HTTP work.
 // Batches are local and bounded; there is no writer thread or output queue.
-fn (mut c Control) emit_batch(data []u8, ends []int) bool {
-	written := int(C.nico_output_prefix(data.data, uint(data.len)))
+fn (mut c Control) emit_batch(data &u8, length int, ends []int) bool {
+	mut interrupted := i32(0)
+	written := int(C.nico_output_prefix(data, uint(length), &interrupted))
 	for end in ends {
 		if end > written { break }
 		c.output_count++
 	}
-	if written != data.len {
+	if written != length {
+		if interrupted != 0 { return false }
 		c.output_error = 'failed to write stdout'
 		c.mu.lock()
 		c.stop = true
@@ -408,13 +415,13 @@ fn (mut c Control) emit_batch(data []u8, ends []int) bool {
 		C.nico_cancel()
 		return false
 	}
-	return true
+	return C.nico_interrupted() == 0
 }
 
 fn (mut c Control) emit_items(items []string) {
 	c.output_mu.lock()
 	defer { c.output_mu.unlock() }
-	if c.output_error != '' { return }
+	if c.output_error != '' || C.nico_interrupted() != 0 { return }
 	mut data := []u8{cap: 32768}
 	mut ends := []int{}
 	for id in items {
@@ -422,29 +429,21 @@ fn (mut c Control) emit_items(items []string) {
 		if c.cfg.dedupe { c.seen[id] = true }
 		line := (if c.cfg.url { 'https://www.nicovideo.jp/watch/' } else { '' }) + id + '\n'
 		if data.len + line.len > 32768 && data.len > 0 {
-			if !c.emit_batch(data, ends) { return }
+			if !c.emit_batch(data.data, data.len, ends) { return }
 			data.clear()
 			ends.clear()
 		}
 		// Unusually large API IDs must not grow the bounded batch. Preserve
 		// the existing single-item write/error behavior for these records.
 		if line.len > 32768 {
-			if C.nico_output(line.str, uint(line.len)) == 0 {
-				c.output_error = 'failed to write stdout'
-				c.mu.lock()
-				c.stop = true
-				c.mu.unlock()
-				C.nico_cancel()
-				return
-			}
-			c.output_count++
+			if !c.emit_batch(line.str, line.len, [line.len]) { return }
 			continue
 		}
 		data << line.bytes()
 		ends << data.len
 	}
 	// Flush even a short final batch at every target completion (--no-sort).
-	if data.len > 0 { c.emit_batch(data, ends) }
+	if data.len > 0 { c.emit_batch(data.data, data.len, ends) }
 }
 
 fn (mut c Control) metrics_log() {

@@ -45,40 +45,60 @@ mut:
 fn parse_duration(s string) !time.Duration {
 	if s == '0' { return 0 }
 	mut text := s
-	mut sign := i64(1)
-	if text.starts_with('-') {
-		sign = -1
-		text = text[1..]
-	} else if text.starts_with('+') {
+	negative := text.starts_with('-')
+	if negative || text.starts_with('+') {
 		text = text[1..]
 	}
 	if text == '0' { return 0 }
 	if text.len == 0 { return error('invalid duration: ${s}') }
-	mut total := f64(0)
+	limit := u64(max_wait_ns) + if negative { u64(1) } else { u64(0) }
+	mut total := u64(0)
 	mut pos := 0
 	for pos < text.len {
 		start := pos
-		for pos < text.len && (text[pos].is_digit() || text[pos] == `.`) { pos++ }
-		if pos == start { return error('invalid duration: ${s}') }
-		num := strconv.atof64(text[start..pos])!
+		mut whole := u64(0)
+		for pos < text.len && text[pos].is_digit() {
+			digit := u64(text[pos] - `0`)
+			if whole > (limit - digit) / 10 { return error('invalid duration: ${s}') }
+			whole = whole * 10 + digit
+			pos++
+		}
+		whole_end := pos
+		mut fraction_start := pos
+		if pos < text.len && text[pos] == `.` {
+			pos++
+			fraction_start = pos
+			for pos < text.len && text[pos].is_digit() { pos++ }
+		}
+		if whole_end == start && pos == fraction_start { return error('invalid duration: ${s}') }
 		unit_start := pos
 		for pos < text.len && !text[pos].is_digit() && text[pos] != `.` { pos++ }
 		unit := text[unit_start..pos]
 		factor := match unit {
-			'ns' { f64(time.nanosecond) }
-			'us', 'µs', 'μs' { f64(time.microsecond) }
-			'ms' { f64(time.millisecond) }
-			's' { f64(time.second) }
-			'm' { f64(time.minute) }
-			'h' { f64(time.hour) }
+			'ns' { u64(time.nanosecond) }
+			'us', 'µs', 'μs' { u64(time.microsecond) }
+			'ms' { u64(time.millisecond) }
+			's' { u64(time.second) }
+			'm' { u64(time.minute) }
+			'h' { u64(time.hour) }
 			else { return error('invalid duration: ${s}') }
 		}
-		total += num * factor
+		// Scale from the least significant digit to truncate sub-nanosecond
+		// fractions exactly without ever building a large decimal numerator.
+		mut fraction := u64(0)
+		for i := unit_start - 1; i >= fraction_start; i-- {
+			fraction = (u64(text[i] - `0`) * factor + fraction) / 10
+		}
+		remaining := limit - total
+		if fraction > remaining || whole > (remaining - fraction) / factor {
+			return error('invalid duration: ${s}')
+		}
+		total += whole * factor + fraction
 	}
-	if !math.is_finite(total) || total >= 9.2233720368547758e18 {
-		return error('invalid duration: ${s}')
+	if negative && total != 0 {
+		return time.Duration(-i64(total - 1) - 1)
 	}
-	return time.Duration(i64(total) * sign)
+	return time.Duration(total)
 }
 
 fn parse_cli_int(s string) !int {

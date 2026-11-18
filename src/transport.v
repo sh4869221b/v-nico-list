@@ -449,33 +449,39 @@ fn wire_url(raw string) !urllib.URL {
 fn (mut c Control) write_http(mut stream WireStream, request string) ! {
 	mut interval := i64(c.cfg.interval)
 	if c.cfg.rate > 0 { interval = ns_max(interval, rate_interval(c.cfg.rate)) }
-	if interval == 0 {
+	if interval == 0 && !c.cfg.adaptive {
 		stream.write(request)!
 		return
 	}
 	for {
 		stream.check()!
-		if c.stopped() { return error_with_code('context canceled', 20003) }
-		n := now_ns()
 		c.mu.lock()
+		if c.stop {
+			c.mu.unlock()
+			return error_with_code('context canceled', 20003)
+		}
+		n := now_ns()
 		ready := !c.cfg.adaptive || n >= c.cooldown
-		c.mu.unlock()
-		c.dispatch_mu.lock()
+		if ready && interval == 0 {
+			c.mu.unlock()
+			stream.write(request)!
+			return
+		}
 		if ready && !c.dispatching && n >= c.next_dispatch {
 			c.dispatching = true
-			c.dispatch_mu.unlock()
+			c.mu.unlock()
 			break
 		}
-		c.dispatch_mu.unlock()
+		c.mu.unlock()
 		time.sleep(time.millisecond)
 	}
-	// The ownership flag serializes writes without holding either mutex across
+	// The ownership flag serializes paced writes without holding the mutex across
 	// network I/O. Other requests can still observe cancellation/deadlines.
 	defer {
-		c.dispatch_mu.lock()
+		c.mu.lock()
 		c.next_dispatch = deadline_after(now_ns(), interval)
 		c.dispatching = false
-		c.dispatch_mu.unlock()
+		c.mu.unlock()
 	}
 	stream.write(request)!
 }
@@ -580,11 +586,7 @@ fn transport_once(raw_url string, deadline time.Time, control &Control) !WireRes
 			if stream.pos != stream.end { return error('unexpected data after HTTP proxy CONNECT') }
 		}
 		if u.scheme == 'https' {
-			stream.tls = ssl.new_ssl_conn(
-				validate:       true
-				verify:         os.getenv('SSL_CERT_FILE')
-				alpn_protocols: ['http/1.1']
-			)!
+			stream.tls = new_wire_tls(os.getenv('SSL_CERT_FILE'))!
 			tcp.set_read_timeout(wire_remaining_timeout(deadline))
 			stream.connect_tls(u.hostname()) or {
 				return wire_io_error(stream.deadline, err)

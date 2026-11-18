@@ -10,8 +10,11 @@ import encoding.utf8
 fn C.nico_signals()
 fn C.nico_cancelled() int
 fn C.nico_cancel()
-fn C.nico_output(s &u8, n uint) int
-fn C.nico_output_prefix(s &u8, n uint) uint
+fn C.nico_interrupted() int
+fn C.nico_output_prefix(s &u8, n uint, interrupted &i32) uint
+fn C.nico_log_open(path voidptr) voidptr
+fn C.nico_log_write(file voidptr, s &u8, n uint) int
+fn C.nico_log_close(file voidptr) int
 
 struct InputEvent {
 	present bool
@@ -134,11 +137,6 @@ fn compare_targets(a &TargetResult, b &TargetResult) int {
 
 fn run(cfg Config) ! {
 	mut c := new_control(cfg)!
-	defer {
-		c.close_idle()
-		if cfg.metrics { c.metrics_log() }
-		if c.has_log { c.log.close() }
-	}
 	input := chan InputEvent{cap: 16}
 	done := chan TargetResult{cap: 16}
 	spawn produce_inputs(cfg, input)
@@ -262,11 +260,13 @@ fn run(cfg Config) ! {
 				c.output_error = 'JSON output contains invalid UTF-8'
 			} else {
 				line := json2.encode(payload) + '\n'
-				if C.nico_output(line.str, uint(line.len)) == 0 {
+				mut interrupted := i32(0)
+				if C.nico_output_prefix(line.str, uint(line.len), &interrupted) == uint(line.len) {
+					c.output_count = items.len
+				} else if interrupted == 0 {
 					c.output_error = 'failed to write stdout'
 				}
 			}
-			c.output_count = items.len
 		} else {
 			c.emit_items(items)
 		}
@@ -276,8 +276,14 @@ fn run(cfg Config) ! {
 	})
 	if show_progress { eprintln('') }
 	eprintln('summary inputs=${counts.total} valid=${counts.valid} invalid=${counts.invalid} fetch_ok=${fetch_ok} fetch_err=${fetch_err} output_count=${c.output_count}')
+	c.close_idle()
+	if cfg.metrics { c.metrics_log() }
+	if c.log != unsafe { nil } && C.nico_log_close(c.log) != 0 && c.log_error == '' {
+		c.log_error = 'failed to close logfile ${cfg.logfile}'
+	}
 	if c.output_error != '' { return error(c.output_error) }
 	if input_error != '' { return error(input_error) }
+	if c.log_error != '' { return error(c.log_error) }
 	if cfg.strict && counts.invalid > 0 { return error('invalid input detected') }
 	if !cfg.best_effort && errors.len > 0 { return error(errors[0]) }
 }
@@ -288,12 +294,13 @@ fn main() {
 		eprintln('Error: ${err.msg()}')
 		exit(1)
 	}
-	if cfg.help {
-		println(help_text)
-		return
-	}
-	if cfg.version {
-		println('v-nico-list version 0.1.0')
+	if cfg.help || cfg.version {
+		line := if cfg.help { help_text + '\n' } else { 'v-nico-list version 0.1.0\n' }
+		mut interrupted := i32(0)
+		if C.nico_output_prefix(line.str, uint(line.len), &interrupted) != uint(line.len) && interrupted == 0 {
+			eprintln('Error: failed to write stdout')
+			exit(1)
+		}
 		return
 	}
 	run(cfg) or {
