@@ -462,12 +462,19 @@ fn (mut c Control) write_http(mut stream WireStream, request string) ! {
 		}
 		n := now_ns()
 		ready := !c.cfg.adaptive || n >= c.cooldown
-		if ready && interval == 0 {
-			c.mu.unlock()
-			stream.write(request)!
-			return
-		}
 		if ready && !c.dispatching && n >= c.next_dispatch {
+			// Consume recovery at the GET, where redirects and retries can
+			// share it with requests that were admitted before the 429.
+			if c.recovery_starts > 0 {
+				c.recovery_starts--
+				pace := ns_min(250 * time.millisecond, ns_max(25 * time.millisecond, c.baseline / c.budget))
+				interval = ns_max(interval, pace)
+			}
+			if interval == 0 {
+				c.mu.unlock()
+				stream.write(request)!
+				return
+			}
 			c.dispatching = true
 			c.mu.unlock()
 			break

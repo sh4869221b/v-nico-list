@@ -5,16 +5,34 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #include <windows.h>
 #include <wincrypt.h>
+#include <string.h>
 
-/* Mbed TLS checks the hostname and certificate usages. For Windows default
-   trust, CryptoAPI verifies the presented chain against the Windows stores
-   before any HTTP bytes are sent. Keep issuer retrieval local to the OS cache. */
-static int nico_tls_windows_verify(void *context) {
+/* Both TLS implementations can fall back to the subject CN. Require a SAN
+   of the correct type before applying the Windows SSL hostname policy. */
+static int nico_tls_windows_has_san(const mbedtls_x509_crt *peer, const wchar_t *hostname) {
+  unsigned char address[16];
+  size_t length = 0;
+  if (InetPtonW(AF_INET, hostname, address) == 1) length = 4;
+  else if (InetPtonW(AF_INET6, hostname, address) == 1) length = 16;
+  for (const mbedtls_x509_sequence *san = &peer->subject_alt_names; san; san = san->next) {
+    int type = san->buf.tag & MBEDTLS_ASN1_TAG_VALUE_MASK;
+    if (length == 0 && type == MBEDTLS_X509_SAN_DNS_NAME) return 1;
+    if (length > 0 && type == MBEDTLS_X509_SAN_IP_ADDRESS && san->buf.len == length &&
+        memcmp(san->buf.p, address, length) == 0) return 1;
+  }
+  return 0;
+}
+
+/* Apply the Windows trust and SSL policies before sending HTTP data. Keep
+   issuer retrieval local to the OS cache. */
+static int nico_tls_windows_verify(void *context, wchar_t *hostname) {
   mbedtls_ssl_context *ssl = (mbedtls_ssl_context *)context;
   const mbedtls_x509_crt *peer = mbedtls_ssl_get_peer_cert(ssl);
-  if (!peer || (mbedtls_ssl_get_verify_result(ssl) & ~MBEDTLS_X509_BADCERT_NOT_TRUSTED)) {
+  if (!peer || !nico_tls_windows_has_san(peer, hostname) ||
+      (mbedtls_ssl_get_verify_result(ssl) & ~MBEDTLS_X509_BADCERT_NOT_TRUSTED)) {
     return MBEDTLS_ERR_X509_CERT_VERIFY_FAILED;
   }
 
@@ -40,7 +58,17 @@ static int nico_tls_windows_verify(void *context) {
   if (CertGetCertificateChain(NULL, leaf, NULL, intermediates, &params,
                               CERT_CHAIN_CACHE_ONLY_URL_RETRIEVAL, NULL, &chain) &&
       chain->TrustStatus.dwErrorStatus == CERT_TRUST_NO_ERROR) {
-    result = 0;
+    SSL_EXTRA_CERT_CHAIN_POLICY_PARA ssl_policy = {0};
+    ssl_policy.cbSize = sizeof(ssl_policy);
+    ssl_policy.dwAuthType = AUTHTYPE_SERVER;
+    ssl_policy.pwszServerName = hostname;
+    CERT_CHAIN_POLICY_PARA policy = {0};
+    policy.cbSize = sizeof(policy);
+    policy.pvExtraPolicyPara = &ssl_policy;
+    CERT_CHAIN_POLICY_STATUS status = {0};
+    status.cbSize = sizeof(status);
+    if (CertVerifyCertificateChainPolicy(CERT_CHAIN_POLICY_SSL, chain, &policy, &status) &&
+        status.dwError == ERROR_SUCCESS) result = 0;
   }
 
 cleanup:

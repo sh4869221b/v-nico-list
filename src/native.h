@@ -15,7 +15,7 @@ static volatile long nico_signal = 0;
 static int nico_cancelled(void) {
   return (int)_InterlockedCompareExchange(&nico_signal, 0, 0);
 }
-static void nico_mark_cancelled(int reason) { _InterlockedOr(&nico_signal, reason); }
+static void nico_cancel(void) { _InterlockedExchange(&nico_signal, 1); }
 #else
 /* int atomics are lock-free on the supported Linux/Windows architectures;
    the signal handler never enters the allocator or a library mutex. */
@@ -23,13 +23,11 @@ static int nico_signal = 0;
 static int nico_cancelled(void) {
   return __atomic_load_n(&nico_signal, __ATOMIC_RELAXED);
 }
-static void nico_mark_cancelled(int reason) {
-  __atomic_fetch_or(&nico_signal, reason, __ATOMIC_RELAXED);
+static void nico_cancel(void) {
+  __atomic_store_n(&nico_signal, 1, __ATOMIC_RELAXED);
 }
 #endif
-static void nico_cancel(void) { nico_mark_cancelled(1); }
-static int nico_interrupted(void) { return (nico_cancelled() & 2) != 0; }
-static void nico_handler(int sig) { (void)sig; nico_mark_cancelled(2); }
+static void nico_handler(int sig) { (void)sig; nico_cancel(); }
 static void nico_signals(void) {
   signal(SIGINT, nico_handler);
   signal(SIGTERM, nico_handler);
@@ -73,7 +71,8 @@ static int nico_pipe_writer(int fd, int *original_flags) {
 }
 #endif
 
-/* Report the accepted prefix even if a later write fails or a signal stops it. */
+/* Keep writing completed results if the pipe can take them. Once a write
+   would wait, both signal and internal cancellation abandon the remainder. */
 static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrupted) {
   size_t done = 0;
 #ifdef _WIN32
@@ -85,10 +84,6 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
   if (fd < 0) return 0;
 #endif
   while (done < n) {
-    if (done > 0 && nico_interrupted()) {
-      *interrupted = 1;
-      break;
-    }
 #ifdef _WIN32
     unsigned int chunk = n - done < 32768 ? (unsigned int)(n - done) : 32768;
     int written = _write(fd, s + done, chunk);
@@ -100,7 +95,7 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
       continue;
     }
     if (written < 0 && (errno == EINTR || errno == EAGAIN)) {
-      if (nico_interrupted()) {
+      if (nico_cancelled()) {
         *interrupted = 1;
         break;
       }

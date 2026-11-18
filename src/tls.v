@@ -10,7 +10,7 @@ $if !use_openssl ? {
 	fn C.nico_tls_connect(context voidptr, io voidptr, hostname &u8, send_callback fn (voidptr, &u8, uint) i32, recv_callback fn (voidptr, &u8, uint) i32) i32
 	$if windows {
 		#flag -lcrypt32
-		fn C.nico_tls_windows_verify(context voidptr) int
+		fn C.nico_tls_windows_verify(context voidptr, hostname &u16) int
 	}
 }
 
@@ -83,7 +83,7 @@ fn (mut stream WireStream) connect_tls(hostname string) ! {
 		$if windows {
 			if !stream.tls.config.validate {
 				stream.check()!
-				verify_result := C.nico_tls_windows_verify(&stream.tls.ssl)
+				verify_result := C.nico_tls_windows_verify(&stream.tls.ssl, hostname.to_wide())
 				if verify_result != 0 {
 					return error_with_code('TLS Windows certificate verification failed', verify_result)
 				}

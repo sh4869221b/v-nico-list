@@ -40,7 +40,6 @@ mut:
 	page_pending     int
 	next_start       i64
 	cooldown         i64
-	recovery_at      i64
 	recovery_starts  int
 	generation       u64
 	pressure_cutoff  u64
@@ -158,7 +157,7 @@ fn (mut c Control) acquire_http(attempt int) !Permit {
 		c.mu.lock()
 		n := now_ns()
 		limit := if c.cfg.adaptive && !c.cfg.explicit_http { c.budget } else { c.cfg.http }
-		ready := !c.cfg.adaptive || (n >= c.cooldown && n >= c.recovery_at)
+		ready := !c.cfg.adaptive || n >= c.cooldown
 		// Rate permission and admission are committed atomically: queued work
 		// never carries an old grant across an adaptive cooldown.
 		if (limit == 0 || c.active < limit) && ready && n >= c.next_start {
@@ -170,11 +169,6 @@ fn (mut c Control) acquire_http(attempt int) !Permit {
 			c.counters['attempts']++
 			if attempt > 1 { c.counters['retries']++ }
 			c.counters['max_in_flight'] = ns_max(c.counters['max_in_flight'], c.active)
-			if c.cfg.adaptive && c.recovery_starts > 0 {
-				c.recovery_starts--
-				pace := ns_min(250 * time.millisecond, ns_max(25 * time.millisecond, c.baseline / c.budget))
-				c.recovery_at = deadline_after(n, pace)
-			}
 			wait := n - wait_started
 			c.durations['admission_wait_ns'] += wait
 			permit := Permit{
@@ -415,13 +409,13 @@ fn (mut c Control) emit_batch(data &u8, length int, ends []int) bool {
 		C.nico_cancel()
 		return false
 	}
-	return C.nico_interrupted() == 0
+	return true
 }
 
 fn (mut c Control) emit_items(items []string) {
 	c.output_mu.lock()
 	defer { c.output_mu.unlock() }
-	if c.output_error != '' || C.nico_interrupted() != 0 { return }
+	if c.output_error != '' { return }
 	mut data := []u8{cap: 32768}
 	mut ends := []int{}
 	for id in items {

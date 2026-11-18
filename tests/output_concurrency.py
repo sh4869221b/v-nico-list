@@ -26,7 +26,7 @@ class OutputConcurrency(unittest.TestCase):
         if not Path(cls.binary).is_file():
             raise RuntimeError("build the CLI first: " + cls.binary)
 
-    def start(self, fixture, targets, stdout=subprocess.PIPE, *flags):
+    def start(self, fixture, targets, stdout=subprocess.PIPE, *flags, stdin=None):
         environment = os.environ.copy()
         environment.update(NICO_BASE_URL=fixture.url, NO_PROXY="localhost,127.0.0.1,::1",
                            no_proxy="localhost,127.0.0.1,::1")
@@ -34,7 +34,7 @@ class OutputConcurrency(unittest.TestCase):
             [self.binary, "--no-sort", "--no-progress", "--retries=1", "-P1",
              f"-T{targets}", f"-H{targets}", *flags,
              *[f"nicovideo.jp/user/{i}" for i in range(1, targets + 1)]],
-            stdout=stdout, stderr=subprocess.PIPE, env=environment)
+            stdin=stdin, stdout=stdout, stderr=subprocess.PIPE, env=environment)
 
     @staticmethod
     def reap(process):
@@ -155,6 +155,53 @@ class OutputConcurrency(unittest.TestCase):
                             self.reap(process)
                         os.close(write_fd)
                         os.close(read_fd)
+
+    @unittest.skipIf(os.name == "nt", "requires POSIX SIGINT")
+    def test_sorted_stdout_preserves_completed_target_on_sigint(self):
+        second_started = threading.Event()
+        release = threading.Event()
+
+        def respond(r):
+            if r.identifier == "2":
+                second_started.set()
+                release.wait(5)
+            ids = [video("sm2"), video("sm1")] if r.page == 1 else []
+            return Reply(payload(r.kind, ids))
+
+        with Fixture(respond) as fixture:
+            process = self.start(fixture, 2, subprocess.PIPE, "--no-sort=false", "-T1")
+            try:
+                self.assertTrue(second_started.wait(3), "target 1 must finish before target 2 starts")
+                process.send_signal(signal.SIGINT)
+                stdout, stderr = process.communicate(timeout=2)
+                self.assertEqual(process.returncode, 0, stderr)
+                self.assertEqual(stdout, b"sm1\nsm2\n")
+                self.assertIn(b"output_count=2", stderr)
+            finally:
+                release.set()
+                self.reap(process)
+
+    @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe sizing and FIONREAD")
+    def test_input_error_releases_full_stdout_without_draining_it(self):
+        import fcntl
+
+        ids = [video(f"sm{i:08d}") for i in range(9000)]
+        with Fixture(lambda r: Reply(payload(r.kind, ids if r.page == 1 else []))) as fixture:
+            read_fd, write_fd = os.pipe()
+            process = None
+            try:
+                capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
+                process = self.start(fixture, 1, write_fd, "--stdin", "--best-effort", stdin=subprocess.PIPE)
+                self.wait_full(process, read_fd, capacity)
+                _, stderr = process.communicate(input=b"x" * (1024 * 1024), timeout=2)
+                self.assertNotEqual(process.returncode, 0, stderr)
+                self.assertIn(b"Error: input line exceeds 1 MiB limit", stderr)
+                self.assertNotIn(b"failed to write stdout", stderr)
+            finally:
+                if process is not None:
+                    self.reap(process)
+                os.close(write_fd)
+                os.close(read_fd)
 
     def test_concurrent_targets_remain_contiguous_and_deduplicated(self):
         ready = threading.Barrier(3)

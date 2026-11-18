@@ -10,7 +10,6 @@ import encoding.utf8
 fn C.nico_signals()
 fn C.nico_cancelled() int
 fn C.nico_cancel()
-fn C.nico_interrupted() int
 fn C.nico_output_prefix(s &u8, n uint, interrupted &i32) uint
 fn C.nico_log_open(path voidptr) voidptr
 fn C.nico_log_write(file voidptr, s &u8, n uint) int
@@ -281,8 +280,8 @@ fn run(cfg Config) ! {
 	if c.log != unsafe { nil } && C.nico_log_close(c.log) != 0 && c.log_error == '' {
 		c.log_error = 'failed to close logfile ${cfg.logfile}'
 	}
-	if c.output_error != '' { return error(c.output_error) }
 	if input_error != '' { return error(input_error) }
+	if c.output_error != '' { return error(c.output_error) }
 	if c.log_error != '' { return error(c.log_error) }
 	if cfg.strict && counts.invalid > 0 { return error('invalid input detected') }
 	if !cfg.best_effort && errors.len > 0 { return error(errors[0]) }
