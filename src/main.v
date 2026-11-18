@@ -93,28 +93,43 @@ fn file_inputs(mut f os.File, ch chan InputEvent) ! {
 	}
 }
 
-fn produce_inputs(cfg Config, ch chan InputEvent, failures chan string) {
-	defer { ch.close() }
+fn enqueue_inputs(cfg Config, ch chan InputEvent) ! {
 	for arg in cfg.args { ch <- InputEvent{ present: true, line: arg } }
 	if cfg.input_file != '' {
-		mut f := os.open(cfg.input_file) or {
-			failures <- err.msg()
-			return
-		}
+		mut f := os.open(cfg.input_file)!
 		file_inputs(mut f, ch) or {
 			f.close()
-			failures <- err.msg()
-			return
+			return err
 		}
 		f.close()
 	}
 	if cfg.stdin {
 		mut f := os.stdin()
-		file_inputs(mut f, ch) or {
-			failures <- err.msg()
-			return
-		}
+		file_inputs(mut f, ch)!
 	}
+}
+
+fn produce_inputs(cfg Config, ch chan InputEvent, failures chan string) {
+	defer { ch.close() }
+	enqueue_inputs(cfg, ch) or {
+		// All preceding inputs are already queued before this terminal error.
+		failures <- err.msg()
+		C.nico_cancel()
+	}
+}
+
+fn (mut c Control) count_input(line string, mut counts InputCounts, mut invalid []string) ?Target {
+	counts.total++
+	if t := parse_target(line) {
+		counts.valid++
+		return t
+	}
+	counts.invalid++
+	if c.cfg.json { invalid << line }
+	c.log_event('WARN', 'invalid input', {
+		'input': line
+	})
+	return none
 }
 
 fn compare_targets(a &TargetResult, b &TargetResult) int {
@@ -204,18 +219,10 @@ fn run(cfg Config) ! {
 			}
 		}
 		if got_input {
-			counts.total++
-			if t := parse_target(event.line) {
-				counts.valid++
+			if t := c.count_input(event.line, mut counts, mut invalid) {
 				pending = Target{ kind: t.kind, id: t.id, order: order }
 				order++
 				has_pending = true
-			} else {
-				counts.invalid++
-				if cfg.json { invalid << event.line }
-				c.log_event('WARN', 'invalid input', {
-					'input': event.line
-				})
 			}
 		}
 		if got_result {
@@ -237,6 +244,13 @@ fn run(cfg Config) ! {
 	}
 	// A close can win the select just after the producer reports an error.
 	if input_failures.try_pop(mut input_error) == .success { C.nico_cancel() }
+	if input_error != '' {
+		// Classify the remaining FIFO prefix without scheduling new targets.
+		mut event := InputEvent{}
+		for input.try_pop(mut event) == .success {
+			c.count_input(event.line, mut counts, mut invalid) or {}
+		}
+	}
 	if counts.total == 0 && input_error == '' { input_error = 'no inputs provided' }
 	mut items := []string{}
 	if !cfg.no_sort || cfg.json {

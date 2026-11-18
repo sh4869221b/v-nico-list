@@ -239,6 +239,58 @@ class CLIContracts(unittest.TestCase):
             result = self.run_cli(fixture, "--input-file", str(source), "--best-effort")
             self.assertNotEqual(result.returncode, 0, result.stderr)
 
+    def test_missing_input_file_keeps_preceding_invalid_arguments(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("checks the V CLI's input accounting after a source error")
+        args = ["bad1", "bad2", "bad3", "bad4"]
+        with tempfile.TemporaryDirectory() as directory, Fixture(single_page) as fixture:
+            missing = Path(directory) / "nico-input-file"
+            for _ in range(8):
+                result = self.run_cli(fixture, "--json", *args, "--input-file", str(missing))
+                value = self.json_result(result, code=1)
+                self.assertEqual(value["inputs"], {"total": 4, "valid": 0, "invalid": 4})
+                self.assertEqual(value["invalid"], args)
+                self.assertEqual(value["targets"], [])
+                self.assertIn("summary inputs=4 valid=0 invalid=4 fetch_ok=0 fetch_err=0 output_count=0", result.stderr)
+                self.assertIn("Error: failed to open file", result.stderr)
+                self.assertIn(missing.name, result.stderr)
+            self.assertEqual(fixture.records, [])
+
+    def test_input_error_counts_queued_inputs_without_starting_more_fetches(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("checks the V CLI's input accounting after a source error")
+        request_started = threading.Event()
+        release = threading.Event()
+
+        def respond(r):
+            request_started.set()
+            release.wait(5)
+            return Reply(payload(r.kind, [video("sm1")]))
+
+        with Fixture(respond) as fixture:
+            env = {**os.environ, "NICO_BASE_URL": fixture.url, "NO_PROXY": "127.0.0.1", "no_proxy": "127.0.0.1"}
+            args = [self.binary, "--json", "--no-progress", "--stdin", "--retries=1", "-T1",
+                    "nicovideo.jp/user/1", "nicovideo.jp/user/2", "bad-arg"]
+            with subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                  text=True, env=env) as process:
+                try:
+                    self.assertTrue(request_started.wait(3))
+                    source = "bad-stdin\nnicovideo.jp/user/3\nbad-tail\n" + "x" * (1024 * 1024)
+                    stdout, stderr = process.communicate(input=source, timeout=2)
+                    value = self.json_result(subprocess.CompletedProcess(args, process.returncode, stdout, stderr), code=1)
+                    self.assertEqual(value["inputs"], {"total": 6, "valid": 3, "invalid": 3})
+                    self.assertEqual(value["invalid"], ["bad-arg", "bad-stdin", "bad-tail"])
+                    self.assertEqual([t["id"] for t in value["targets"]], ["1"])
+                    self.assertEqual(value["items"], [])
+                    self.assertEqual([r.identifier for r in fixture.records], ["1"])
+                    self.assertIn("summary inputs=6 valid=3 invalid=3 fetch_ok=1 fetch_err=0 output_count=0", stderr)
+                    self.assertIn("Error: input line exceeds 1 MiB limit", stderr)
+                finally:
+                    release.set()
+                    if process.poll() is None:
+                        process.kill()
+                        process.communicate()
+
     def test_input_error_cancels_inflight_fetch_promptly(self):
         with Fixture(lambda r: Reply(payload(r.kind), delay=3)) as fixture:
             self.assert_input_error_cancels_fetch(fixture.url, lambda: fixture.records)
