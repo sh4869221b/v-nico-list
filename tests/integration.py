@@ -27,7 +27,7 @@ from loopback import Fixture, Reply, TunnelProxy, payload, single_page, video
 PARSER = argparse.ArgumentParser(description=__doc__)
 PARSER.add_argument("--binary", default="bin/v-nico-list")
 PARSER.add_argument("--only", help="Run test names containing this substring")
-PARSER.add_argument("--windows-system-trust", action="store_true", help="temporarily install an ephemeral CA in the Windows current-user ROOT store")
+PARSER.add_argument("--windows-system-trust", action="store_true", help="temporarily install an ephemeral CA in the machine ROOT store of a disposable Windows runner")
 PARSER.add_argument("--profile", choices=("v", "go-reference"), default="v", help="Go excludes force-proxy loopback cases and V-specific extreme-duration overflow regressions")
 OPTIONS = None
 
@@ -865,6 +865,8 @@ class TLSContracts(CLIContracts):
             self.skipTest("requires --windows-system-trust on a disposable Windows test runner")
 
         der = ssl.PEM_cert_to_DER_cert(self.ca.read_text(encoding="ascii"))
+        certificate = self.root / "ca.cer"
+        certificate.write_bytes(der)
         fingerprint = hashlib.sha1(der, usedforsecurity=False).hexdigest()
         target = "nicovideo.jp/user/1"
         system_trust = {"SSL_CERT_FILE": ""}
@@ -875,8 +877,10 @@ class TLSContracts(CLIContracts):
 
         added = False
         try:
-            install = subprocess.run(["certutil", "-f", "-user", "-addstore", "Root", str(self.ca)],
-                                     capture_output=True, timeout=30)
+            # The current-user ROOT store can prompt for interactive consent.
+            # The disposable, elevated CI runner can use the machine store.
+            install = subprocess.run(["certutil", "-f", "-addstore", "Root", str(certificate)],
+                                     stdin=subprocess.DEVNULL, capture_output=True, timeout=30)
             self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
             added = True
             with self.tls_fixture() as fixture:
@@ -892,10 +896,14 @@ class TLSContracts(CLIContracts):
                 self.assertNotEqual(override.returncode, 0, override.stderr)
                 self.assertEqual(fixture.records, [])
         finally:
-            remove = subprocess.run(["certutil", "-user", "-delstore", "Root", fingerprint],
-                                    capture_output=True, timeout=30)
+            remove = subprocess.run(["certutil", "-delstore", "Root", fingerprint],
+                                    stdin=subprocess.DEVNULL, capture_output=True, timeout=30)
             if added:
                 self.assertEqual(remove.returncode, 0, remove.stdout + remove.stderr)
+        with self.tls_fixture() as fixture:
+            after = self.run_cli(fixture, target, env=system_trust)
+            self.assertNotEqual(after.returncode, 0, after.stderr)
+            self.assertEqual(fixture.records, [])
 
     def test_tls_input_error_cancels_delayed_response_promptly(self):
         with self.tls_fixture(respond=lambda r: Reply(payload(r.kind), delay=3)) as fixture:
