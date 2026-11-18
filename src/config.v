@@ -51,7 +51,7 @@ fn parse_duration(s string) !time.Duration {
 	}
 	if text == '0' { return 0 }
 	if text.len == 0 { return error('invalid duration: ${s}') }
-	limit := u64(max_wait_ns) + if negative { u64(1) } else { u64(0) }
+	limit := u64(max_i64) + if negative { u64(1) } else { u64(0) }
 	mut total := u64(0)
 	mut pos := 0
 	for pos < text.len {
