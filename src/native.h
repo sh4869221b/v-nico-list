@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <errno.h>
 #ifdef _WIN32
+#include <winsock2.h>
+#include <windows.h>
 #include <io.h>
+#include <stdlib.h>
 #else
 #include <unistd.h>
 #include <fcntl.h>
@@ -49,6 +52,35 @@ static int nico_log_write(void *file, const unsigned char *s, size_t n) {
 
 static int nico_log_close(void *file) { return fclose((FILE *)file); }
 
+#ifdef _WIN32
+typedef struct {
+  HANDLE writer;
+  HANDLE done;
+} NicoOutputWait;
+
+/* A redirected Windows pipe uses synchronous writes. Cancel only the owner
+   of this output call, and join the watcher before it can touch other I/O. */
+static DWORD WINAPI nico_watch_output(LPVOID context) {
+  NicoOutputWait *wait = (NicoOutputWait *)context;
+  while (WaitForSingleObject(wait->done, 20) == WAIT_TIMEOUT) {
+    if (nico_cancelled()) CancelSynchronousIo(wait->writer);
+  }
+  return 0;
+}
+
+static HANDLE nico_start_output_watch(NicoOutputWait *wait) {
+  wait->writer = OpenThread(THREAD_TERMINATE, FALSE, GetCurrentThreadId());
+  wait->done = CreateEventW(NULL, TRUE, FALSE, NULL);
+  if (wait->writer && wait->done) {
+    HANDLE watcher = CreateThread(NULL, 0, nico_watch_output, wait, 0, NULL);
+    if (watcher) return watcher;
+  }
+  if (wait->done) CloseHandle(wait->done);
+  if (wait->writer) CloseHandle(wait->writer);
+  return NULL;
+}
+#endif
+
 /* On Linux open a separate file description so setting O_NONBLOCK cannot
    affect another process that inherited the same pipe writer. With no procfs,
    temporarily set the flag on the original descriptor and restore it on exit. */
@@ -77,6 +109,13 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
   size_t done = 0;
 #ifdef _WIN32
   int fd = _fileno(stdout);
+  if (fd < 0) return 0;
+  NicoOutputWait wait;
+  HANDLE watcher = NULL;
+  if (GetFileType((HANDLE)_get_osfhandle(fd)) == FILE_TYPE_PIPE) {
+    watcher = nico_start_output_watch(&wait);
+    if (!watcher) return 0;
+  }
 #else
   int stdout_fd = fileno(stdout);
   int original_flags = -1;
@@ -86,7 +125,12 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
   while (done < n) {
 #ifdef _WIN32
     unsigned int chunk = n - done < 32768 ? (unsigned int)(n - done) : 32768;
+    _doserrno = 0;
     int written = _write(fd, s + done, chunk);
+    if (written < 0 && _doserrno == ERROR_OPERATION_ABORTED && nico_cancelled()) {
+      *interrupted = 1;
+      break;
+    }
 #else
     ssize_t written = write(fd, s + done, n - done);
 #endif
@@ -107,7 +151,15 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
     }
     break;
   }
-#ifndef _WIN32
+#ifdef _WIN32
+  if (watcher) {
+    SetEvent(wait.done);
+    WaitForSingleObject(watcher, INFINITE);
+    CloseHandle(watcher);
+    CloseHandle(wait.done);
+    CloseHandle(wait.writer);
+  }
+#else
   if (fd != stdout_fd) close(fd);
   if (original_flags >= 0) fcntl(fd, F_SETFL, original_flags);
 #endif

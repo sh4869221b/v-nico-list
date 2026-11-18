@@ -32,7 +32,7 @@ Network I/O and gzip decoding check cancellation/deadlines. V's synchronous name
 
 ## Diagnostics and platform scope
 
-On POSIX, SIGINT, SIGTERM, or an input error releases a write waiting for an unread stdout pipe. Completed targets stay eligible for output as long as stdout can accept it immediately. Any bytes already accepted by the pipe remain visible, including a possible partial line or JSON document. Line-mode summaries count complete lines. A `--logfile` write or close failure makes the command fail, including with `--best-effort`.
+Cancellation releases a write waiting for an unread stdout pipe. Input errors trigger this on Linux and Windows. SIGINT and SIGTERM also trigger it on POSIX. Completed targets stay eligible for output as long as stdout can accept it immediately. Any bytes already accepted by the pipe remain visible, including a possible partial line or JSON document. Line-mode summaries count complete lines. A `--logfile` write or close failure makes the command fail, including with `--best-effort`.
 
 Results, summary counters and stdout/stderr separation are compatibility contracts. Log wording/progress rendering, version text, detailed error strings and metrics fields are implementation-specific. HTTP metrics summarize the port's available counters, status counts, aggregate request/admission timings and adaptive decisions. They do not reproduce Go's `httptrace` connection-reuse, DNS/TLS phase timings or rolling timing percentiles. Consumers should not parse the Go-specific diagnostics schema from this port.
 

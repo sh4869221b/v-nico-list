@@ -56,6 +56,28 @@ class OutputConcurrency(unittest.TestCase):
             time.sleep(0.005)
         self.fail("stdout pipe never filled")
 
+    def wait_windows_stdout(self, process, fd):
+        import ctypes
+        from ctypes import wintypes
+        import msvcrt
+
+        peek = ctypes.WinDLL("kernel32", use_last_error=True).PeekNamedPipe
+        peek.argtypes = (wintypes.HANDLE, wintypes.LPVOID, wintypes.DWORD,
+                         wintypes.LPDWORD, wintypes.LPDWORD, wintypes.LPDWORD)
+        peek.restype = wintypes.BOOL
+        handle = msvcrt.get_osfhandle(fd)
+        available = wintypes.DWORD()
+        until = time.monotonic() + 5
+        while time.monotonic() < until:
+            if not peek(handle, None, 0, None, ctypes.byref(available), None):
+                raise ctypes.WinError(ctypes.get_last_error())
+            if available.value:
+                return
+            if process.poll() is not None:
+                self.fail("CLI exited before writing to its stdout pipe")
+            time.sleep(0.005)
+        self.fail("stdout pipe never received data")
+
     def blocked_output(self, break_pipe=False):
         import fcntl
         release = threading.Event()
@@ -181,18 +203,21 @@ class OutputConcurrency(unittest.TestCase):
                 release.set()
                 self.reap(process)
 
-    @unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux pipe sizing and FIONREAD")
+    @unittest.skipUnless(sys.platform.startswith("linux") or os.name == "nt", "requires Linux or Windows pipe inspection")
     def test_input_error_releases_full_stdout_without_draining_it(self):
-        import fcntl
-
-        ids = [video(f"sm{i:08d}") for i in range(9000)]
+        ids = [video(f"sm{i:08d}" + "0" * 32) for i in range(9000)]
         with Fixture(lambda r: Reply(payload(r.kind, ids if r.page == 1 else []))) as fixture:
             read_fd, write_fd = os.pipe()
             process = None
             try:
-                capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
+                if os.name != "nt":
+                    import fcntl
+                    capacity = fcntl.fcntl(write_fd, fcntl.F_SETPIPE_SZ, 4096)
                 process = self.start(fixture, 1, write_fd, "--stdin", "--best-effort", stdin=subprocess.PIPE)
-                self.wait_full(process, read_fd, capacity)
+                if os.name == "nt":
+                    self.wait_windows_stdout(process, read_fd)
+                else:
+                    self.wait_full(process, read_fd, capacity)
                 _, stderr = process.communicate(input=b"x" * (1024 * 1024), timeout=2)
                 self.assertNotEqual(process.returncode, 0, stderr)
                 self.assertIn(b"Error: input line exceeds 1 MiB limit", stderr)
