@@ -103,6 +103,8 @@ static int nico_pipe_writer(int fd, int *original_flags) {
 }
 #endif
 
+enum { NICO_OUTPUT_INTERRUPTED = 1, NICO_OUTPUT_PREFIX_UNCERTAIN };
+
 /* Keep writing completed results if the pipe can take them. Once a write
    would wait, both signal and internal cancellation abandon the remainder. */
 static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrupted) {
@@ -128,7 +130,8 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
     _doserrno = 0;
     int written = _write(fd, s + done, chunk);
     if (written < 0 && _doserrno == ERROR_OPERATION_ABORTED && nico_cancelled()) {
-      *interrupted = 1;
+      /* The CRT can lose the byte count for an aborted synchronous write. */
+      *interrupted = NICO_OUTPUT_PREFIX_UNCERTAIN;
       break;
     }
 #else
@@ -140,7 +143,7 @@ static size_t nico_output_prefix(const unsigned char *s, size_t n, int *interrup
     }
     if (written < 0 && (errno == EINTR || errno == EAGAIN)) {
       if (nico_cancelled()) {
-        *interrupted = 1;
+        *interrupted = NICO_OUTPUT_INTERRUPTED;
         break;
       }
       if (errno == EINTR) continue;

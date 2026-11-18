@@ -68,6 +68,7 @@ mut:
 	seen             map[string]bool
 	output_count     int
 	output_error     string
+	output_halted    bool
 	stop             bool
 }
 
@@ -396,12 +397,23 @@ fn retry_delay(attempt int, header i64) i64 {
 fn (mut c Control) emit_batch(data &u8, length int, ends []int) bool {
 	mut interrupted := i32(0)
 	written := int(C.nico_output_prefix(data, uint(length), &interrupted))
+	mut last_end := 0
 	for end in ends {
 		if end > written { break }
 		c.output_count++
+		last_end = end
 	}
 	if written != length {
-		if interrupted != 0 { return false }
+		if interrupted != 0 {
+			// A later writer must not append to a possibly incomplete line.
+			c.output_halted = true
+			if interrupted == C.NICO_OUTPUT_PREFIX_UNCERTAIN {
+				c.output_error = 'stdout interrupted with an uncertain line boundary'
+			} else if written != last_end {
+				c.output_error = 'stdout interrupted in the middle of a line'
+			}
+			return false
+		}
 		c.output_error = 'failed to write stdout'
 		c.mu.lock()
 		c.stop = true
@@ -415,7 +427,7 @@ fn (mut c Control) emit_batch(data &u8, length int, ends []int) bool {
 fn (mut c Control) emit_items(items []string) {
 	c.output_mu.lock()
 	defer { c.output_mu.unlock() }
-	if c.output_error != '' { return }
+	if c.output_error != '' || c.output_halted { return }
 	mut data := []u8{cap: 32768}
 	mut ends := []int{}
 	for id in items {

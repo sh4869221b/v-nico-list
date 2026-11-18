@@ -647,6 +647,30 @@ class CLIContracts(unittest.TestCase):
                 self.assertGreaterEqual(fixture.peak, expected_peak, "fixture must supply enough work to use the cap")
                 self.assertLessEqual(max(fixture.target_peaks.values()), expected_per_target)
 
+    def test_page_retry_after_waits_overlap_with_one_http_request(self):
+        if OPTIONS.profile == "go-reference":
+            self.skipTest("checks V page scheduling and HTTP metrics")
+
+        def respond(r):
+            if r.page > 1 and r.attempt == 1:
+                return Reply(status=429, headers={"Retry-After": "1"})
+            return Reply(payload(r.kind, [video(f"sm{r.page}")], total=300))
+
+        with Fixture(respond) as fixture:
+            result = self.run_cli(fixture, "nicovideo.jp/user/1", "-P2", "-H1", "--retries=2", "--http-metrics")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "sm1\nsm2\nsm3\n")
+            self.assertEqual(len(fixture.records), 5)
+            attempts = {(r.page, r.attempt): r.started for r in fixture.records}
+            firsts = [attempts[page, 1] for page in (2, 3)]
+            retries = [attempts[page, 2] for page in (2, 3)]
+            self.assertLess(max(firsts) - min(firsts), 0.50, "both pages must start their retry waits together")
+            for first, retry in zip(firsts, retries):
+                self.assertGreaterEqual(retry - first, 0.90)
+            metrics = next(json.loads(line)["http"] for line in result.stderr.splitlines()
+                           if line.startswith("{") and json.loads(line).get("msg") == "http_metrics")
+            self.assertEqual(metrics["max_in_flight"], 1)
+
     def test_adaptive_429_pauses_new_requests_globally(self):
         def respond(r):
             if r.identifier == "1" and r.page == 1 and r.attempt == 1:
@@ -865,7 +889,7 @@ class CLIContracts(unittest.TestCase):
                     expected = [f"sm{i}" for i in range(1, pages + 1)]
                     self.assertEqual(json.loads(out)["targets"][0]["items"], expected)
                     self.assertEqual(sorted(r.page for r in fixture.records), list(range(1, pages + 1)))
-                    self.assertLessEqual(peak, initial + 4, "-H1 should need only one page worker per target")
+                    self.assertLessEqual(peak, initial + 32 + 4, "a large -P must use a bounded page worker pool")
                 finally:
                     release_first.set()
                     release_second.set()

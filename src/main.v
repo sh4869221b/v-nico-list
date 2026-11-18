@@ -18,7 +18,6 @@ fn C.nico_log_close(file voidptr) int
 struct InputEvent {
 	present bool
 	line    string
-	error   string
 }
 
 struct InputCounts {
@@ -73,7 +72,7 @@ fn trim_input_line(s string) string {
 fn file_inputs(mut f os.File, ch chan InputEvent) ! {
 	mut line := []u8{}
 	for {
-		check_cancelled()!
+		if cancelled() { return }
 		data, n := os.fd_read(f.fd, 4096)
 		if n < 0 { return error('input read error') }
 		if n == 0 { break }
@@ -94,17 +93,17 @@ fn file_inputs(mut f os.File, ch chan InputEvent) ! {
 	}
 }
 
-fn produce_inputs(cfg Config, ch chan InputEvent) {
+fn produce_inputs(cfg Config, ch chan InputEvent, failures chan string) {
 	defer { ch.close() }
 	for arg in cfg.args { ch <- InputEvent{ present: true, line: arg } }
 	if cfg.input_file != '' {
 		mut f := os.open(cfg.input_file) or {
-			ch <- InputEvent{ error: err.msg() }
+			failures <- err.msg()
 			return
 		}
 		file_inputs(mut f, ch) or {
 			f.close()
-			ch <- InputEvent{ error: err.msg() }
+			failures <- err.msg()
 			return
 		}
 		f.close()
@@ -112,7 +111,7 @@ fn produce_inputs(cfg Config, ch chan InputEvent) {
 	if cfg.stdin {
 		mut f := os.stdin()
 		file_inputs(mut f, ch) or {
-			ch <- InputEvent{ error: err.msg() }
+			failures <- err.msg()
 			return
 		}
 	}
@@ -137,8 +136,9 @@ fn compare_targets(a &TargetResult, b &TargetResult) int {
 fn run(cfg Config) ! {
 	mut c := new_control(cfg)!
 	input := chan InputEvent{cap: 16}
+	input_failures := chan string{cap: 1}
 	done := chan TargetResult{cap: 16}
-	spawn produce_inputs(cfg, input)
+	spawn produce_inputs(cfg, input, input_failures)
 	mut counts := InputCounts{}
 	mut invalid := []string{}
 	mut results := []TargetResult{}
@@ -153,6 +153,9 @@ fn run(cfg Config) ! {
 	mut order := 0
 	show_progress := !cfg.no_progress && (cfg.progress || os.is_atty(2) > 0)
 	for !input_closed || active > 0 || has_pending {
+		// Poll the separate failure mailbox even while a target is waiting
+		// for a slot and ordinary input is backpressured.
+		if input_failures.try_pop(mut input_error) == .success { C.nico_cancel() }
 		if c.stopped() {
 			input_closed = true
 			has_pending = false
@@ -185,7 +188,7 @@ fn run(cfg Config) ! {
 		} else {
 			select {
 				e := <-input {
-					if input.closed && !e.present && e.error == '' {
+					if input.closed && !e.present {
 						input_closed = true
 					} else {
 						event = e
@@ -201,24 +204,18 @@ fn run(cfg Config) ! {
 			}
 		}
 		if got_input {
-			if event.error != '' {
-				input_error = event.error
-				input_closed = true
-				C.nico_cancel()
+			counts.total++
+			if t := parse_target(event.line) {
+				counts.valid++
+				pending = Target{ kind: t.kind, id: t.id, order: order }
+				order++
+				has_pending = true
 			} else {
-				counts.total++
-				if t := parse_target(event.line) {
-					counts.valid++
-					pending = Target{ kind: t.kind, id: t.id, order: order }
-					order++
-					has_pending = true
-				} else {
-					counts.invalid++
-					if cfg.json { invalid << event.line }
-					c.log_event('WARN', 'invalid input', {
-						'input': event.line
-					})
-				}
+				counts.invalid++
+				if cfg.json { invalid << event.line }
+				c.log_event('WARN', 'invalid input', {
+					'input': event.line
+				})
 			}
 		}
 		if got_result {
@@ -238,6 +235,8 @@ fn run(cfg Config) ! {
 			}
 		}
 	}
+	// A close can win the select just after the producer reports an error.
+	if input_failures.try_pop(mut input_error) == .success { C.nico_cancel() }
 	if counts.total == 0 && input_error == '' { input_error = 'no inputs provided' }
 	mut items := []string{}
 	if !cfg.no_sort || cfg.json {

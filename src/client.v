@@ -132,16 +132,12 @@ fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
 		if sizeof(int) == 4 && total > 2147483647 {
 			return TargetResult{ kind: t.kind, id: t.id, items: items, error: 'totalCount requires too many pages', order: t.order }
 		}
-		// Reuse workers up to the effective cap. The ordered window also
-		// bounds completed pages waiting for an earlier result.
-		worker_cap := if cfg.http > 0 {
-			int_min(max_page_workers, cfg.http)
-		} else {
-			max_page_workers
-		}
-		jobs := chan int{cap: worker_cap}
+		// The ordered window bounds completed pages waiting for an earlier
+		// result. HTTP admission independently caps active requests so other
+		// workers can make progress during a page's retry wait.
+		jobs := chan int{cap: max_page_workers}
 		ch := chan PageResult{cap: 16}
-		mut workers := []thread{cap: worker_cap}
+		mut workers := []thread{cap: max_page_workers}
 		defer {
 			jobs.close()
 			workers.wait()
@@ -155,7 +151,7 @@ fn collect_target(cfg Config, t Target, mut c Control) TargetResult {
 		mut pending := map[i64]PageResult{}
 		for active > 0 || (!stop && next <= total) {
 			c.mu.lock()
-			limit := int_min(worker_cap, if adaptive_pages { c.budget } else { cfg.pages })
+			limit := int_min(max_page_workers, if adaptive_pages { c.budget } else { cfg.pages })
 			c.mu.unlock()
 			for !stop && next <= total && active < limit && next - commit < i64(limit) {
 				if c.stopped() {

@@ -85,7 +85,7 @@ All arrays remain arrays when empty. Targets are sorted by type and numeric targ
 
 Exit status is 0 when there are no fetch errors; invalid inputs are skipped by default. `--strict` makes invalid inputs an error and takes precedence over `--best-effort`. Validation, input reading and output failures remain errors under `--best-effort`. Cancellation and request deadlines yield successful empty target results, matching the reference's behavior.
 
-Page 1 is fetched first. Without a known total, subsequent pages are sequential until empty/404. Fixed `-P1` also runs sequentially to empty/404 even with a total. Larger page concurrency uses a known total to bound scheduling. Each target reuses up to 32 page workers, subject to the requested or adaptive page limit and any fixed positive HTTP cap. Parallel results commit in page order and stop before the earliest terminating/failed page. Retries release HTTP admission while waiting, share global pacing, and use exponential backoff from 100 ms to 30 s. A 429 honors `Retry-After`; adaptive mode applies its cooldown command-wide.
+Page 1 is fetched first. Without a known total, subsequent pages are sequential until empty/404. Fixed `-P1` also runs sequentially to empty/404 even with a total. Larger page concurrency uses a known total to bound scheduling. Each target reuses up to 32 page workers, subject to the requested or adaptive page limit. Parallel results commit in page order and stop before the earliest terminating or failed page. Retry waits occupy a page worker and release the HTTP slot, so page waits can overlap even with `-H1`. Retries share global pacing and use exponential backoff from 100 ms to 30 s. A 429 honors `Retry-After`. Adaptive mode applies its cooldown command-wide.
 
 ## Development
 
